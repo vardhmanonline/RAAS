@@ -1,0 +1,11 @@
+{
+  "name": "RAAS — Rajasthani Desi Food",
+  "short_name": "RAAS",
+  "theme_color": "#7B1E1E",
+  "background_color": "#FAF3E0",
+  "display": "standalone",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [
+  ]
+}
