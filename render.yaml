@@ -1,0 +1,39 @@
+# Render.com — Backend API + optional Neon PostgreSQL
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: raas-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    region: singapore
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
+      - key: Jwt__Key
+        generateValue: true
+      - key: Jwt__Issuer
+        value: RAAS
+      - key: Jwt__Audience
+        value: RAAS
+      - key: Resend__ApiKey
+        sync: false
+      - key: Resend__FromEmail
+        value: RAAS <onboarding@resend.dev>
+      - key: Resend__AdminEmail
+        sync: false
+      - key: Frontend__AllowedOrigins__0
+        sync: false
+      - key: EnableSwagger
+        value: "false"
+
+# Uncomment to provision Neon via Render (or use external Neon/Supabase)
+# databases:
+#   - name: raas-db
+#     plan: free
+#     databaseName: raas_db
+#     user: raas
