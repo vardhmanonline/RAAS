@@ -1,0 +1,42 @@
+# Azure App Service — GitHub Actions deploy (optional)
+
+name: Deploy RAAS API to Azure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'Dockerfile'
+      - 'RAAS.sln'
+
+env:
+  AZURE_WEBAPP_NAME: raas-api
+  DOTNET_VERSION: '8.0.x'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Publish
+        run: dotnet publish src/RAAS.Api/RAAS.Api.csproj -c Release -o ./publish
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish
+
+# Setup:
+# 1. Create Azure App Service (Linux, .NET 8)
+# 2. Download Publish Profile → GitHub repo Secrets → AZURE_WEBAPP_PUBLISH_PROFILE
+# 3. Set App Service Configuration → Application settings (same as .env.example)
+# 4. Rename AZURE_WEBAPP_NAME above to match your app name
