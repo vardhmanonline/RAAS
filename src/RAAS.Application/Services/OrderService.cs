@@ -131,9 +131,9 @@ public class OrderService : IOrderService
         if (user.HasClaimedSample)
             throw new InvalidOperationException("You have already claimed your free sample");
 
-        var products = (await _uow.Repository<Product>().FindAsync(p => p.IsActive && p.Stock > 0)).ToList();
+        var products = (await _uow.Repository<Product>().FindAsync(p => p.IsActive && p.Stock > 0 && p.IsSampleEligible)).ToList();
         if (products.Count == 0)
-            throw new InvalidOperationException("No products available for sample");
+            throw new InvalidOperationException("No sample products are currently available");
 
         var orderItems = new List<OrderItem>();
         foreach (var product in products)

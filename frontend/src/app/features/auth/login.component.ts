@@ -10,27 +10,92 @@ import { AuthService } from '../../core/services/auth.service';
   template: `
     <div class="auth-page">
       <div class="auth-card card">
-        <h1>Welcome Back</h1>
-        <p>Login to your RAAS account</p>
+        <div class="brand-header">
+          <div class="brand-lotus">🪷</div>
+          <h1>RAAS</h1>
+          <p class="tagline">Taste the Roots of Rajasthan</p>
+        </div>
         <form (ngSubmit)="login()">
           <input class="input" type="email" [(ngModel)]="email" name="email" placeholder="Email" required />
           <input class="input" type="password" [(ngModel)]="password" name="password" placeholder="Password" required />
           @if (error) { <p class="error">{{ error }}</p> }
-          <button class="btn btn-primary full" type="submit" [disabled]="loading">{{ loading ? 'Logging in...' : 'Login' }}</button>
+          <button class="btn btn-primary full" type="submit" [disabled]="loading">
+            {{ loading ? 'Entering the Royal Kitchen…' : 'Enter RAAS' }}
+          </button>
         </form>
-        <p class="switch">Don't have an account? <a routerLink="/register">Register</a></p>
+        <p class="switch">New to RAAS? <a routerLink="/register">Create Account</a></p>
       </div>
     </div>
+
+    @if (showWelcome) {
+      <div class="welcome-overlay" (click)="dismissWelcome()">
+        <div class="welcome-modal" (click)="$event.stopPropagation()">
+          <div class="welcome-pattern"></div>
+          <div class="welcome-content">
+            <div class="welcome-emblem">🪷</div>
+            <div class="welcome-title-group">
+              <p class="welcome-namaste">ख़ुश आमदीद</p>
+              <h2 class="welcome-name">{{ welcomeName }}</h2>
+              <p class="welcome-subtitle">Welcome back to the Royal Kitchen of Rajasthan</p>
+            </div>
+            <div class="welcome-divider">
+              <span>✦</span><span>✦</span><span>✦</span>
+            </div>
+            <p class="welcome-message">
+              Every jar in our collection is crafted with <strong>centuries-old recipes</strong> from the desert kitchens of Jodhpur & Bikaner —
+              using only the finest sun-dried spices, cold-pressed mustard oil, and hand-picked ingredients straight from Rajasthan's heartland.
+            </p>
+            <div class="welcome-highlights">
+              <div class="highlight">
+                <span class="hi">🌶️</span>
+                <span>Authentic Rajasthani Masalas</span>
+              </div>
+              <div class="highlight">
+                <span class="hi">🥒</span>
+                <span>Traditional Achars & Pickles</span>
+              </div>
+              <div class="highlight">
+                <span class="hi">✋</span>
+                <span>Handcrafted with Love</span>
+              </div>
+            </div>
+            <button class="btn btn-primary welcome-cta" (click)="dismissWelcome()">
+              Explore Royal Collection →
+            </button>
+          </div>
+        </div>
+      </div>
+    }
   `,
   styles: [`
     .auth-page { min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
     .auth-card { padding: 2.5rem; width: 100%; max-width: 420px; }
-    .auth-card h1 { color: var(--maroon); margin-bottom: 0.5rem; }
-    .auth-card > p { color: var(--text-muted); margin-bottom: 2rem; }
+    .brand-header { text-align: center; margin-bottom: 2rem; }
+    .brand-lotus { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .brand-header h1 { color: var(--maroon); font-size: 2rem; letter-spacing: 4px; font-family: var(--font-display); }
+    .tagline { color: var(--text-muted); font-size: 0.85rem; font-style: italic; margin-top: 0.25rem; }
     form { display: flex; flex-direction: column; gap: 1rem; }
     .full { width: 100%; }
     .error { color: #C62828; font-size: 0.9rem; }
     .switch { text-align: center; margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem; }
+
+    /* Welcome overlay */
+    .welcome-overlay { position: fixed; inset: 0; background: rgba(44,24,16,0.75); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1rem; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .welcome-modal { background: var(--cream); border-radius: 24px; max-width: 520px; width: 100%; overflow: hidden; box-shadow: 0 24px 80px rgba(123,30,30,0.4); animation: slideUp 0.4s ease; position: relative; }
+    @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .welcome-pattern { height: 8px; background: linear-gradient(90deg, var(--maroon), var(--saffron), var(--gold), var(--saffron), var(--maroon)); }
+    .welcome-content { padding: 2.5rem; text-align: center; }
+    .welcome-emblem { font-size: 3.5rem; margin-bottom: 0.75rem; }
+    .welcome-namaste { font-size: 1rem; color: var(--saffron); font-weight: 600; letter-spacing: 2px; margin-bottom: 0.25rem; }
+    .welcome-name { font-family: var(--font-display); font-size: 2rem; color: var(--maroon); margin: 0 0 0.25rem; }
+    .welcome-subtitle { color: var(--text-muted); font-size: 0.9rem; font-style: italic; }
+    .welcome-divider { display: flex; justify-content: center; gap: 0.75rem; margin: 1.25rem 0; color: var(--gold); font-size: 0.7rem; }
+    .welcome-message { color: var(--text); line-height: 1.7; font-size: 0.95rem; margin-bottom: 1.5rem; }
+    .welcome-highlights { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .highlight { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+    .hi { font-size: 1.75rem; }
+    .welcome-cta { width: 100%; font-size: 1rem; padding: 1rem; letter-spacing: 0.5px; }
   `]
 })
 export class LoginComponent {
@@ -40,13 +105,28 @@ export class LoginComponent {
   password = '';
   error = '';
   loading = false;
+  showWelcome = false;
+  welcomeName = '';
 
   login() {
     this.loading = true;
     this.error = '';
     this.auth.login(this.email, this.password).subscribe({
-      next: res => this.router.navigate(res.role === 'Admin' ? ['/admin'] : ['/']),
+      next: res => {
+        this.loading = false;
+        if (res.role === 'Admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.welcomeName = res.fullName.split(' ')[0];
+          this.showWelcome = true;
+        }
+      },
       error: () => { this.error = 'Invalid email or password'; this.loading = false; }
     });
+  }
+
+  dismissWelcome() {
+    this.showWelcome = false;
+    this.router.navigate(['/']);
   }
 }

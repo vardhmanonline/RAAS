@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RAAS.Infrastructure.Data;
@@ -11,9 +12,11 @@ using RAAS.Infrastructure.Data;
 namespace RAAS.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(RaasDbContext))]
-    partial class RaasDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260629112141_AddProductSampleEligible")]
+    partial class AddProductSampleEligible
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

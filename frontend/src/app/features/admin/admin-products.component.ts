@@ -20,6 +20,7 @@ interface ProductForm {
   stock: number;
   spiceLevel: string;
   isBestseller: boolean;
+  isSampleEligible: boolean;
   imageUrl: string;
 }
 
@@ -104,6 +105,7 @@ interface ProductForm {
         </div>
 
         <label class="checkbox-row"><input type="checkbox" [(ngModel)]="form.isBestseller" /> Mark as Bestseller</label>
+        <label class="checkbox-row"><input type="checkbox" [(ngModel)]="form.isSampleEligible" /> 🎁 Include in New Customer Sample Pack</label>
 
         <div class="form-actions">
           <button class="btn btn-primary" (click)="saveProduct()" [disabled]="saving">{{ saving ? 'Saving…' : 'Save Product' }}</button>
@@ -270,6 +272,7 @@ export class AdminProductsComponent implements OnInit {
           stock: detail.stock,
           spiceLevel: detail.spiceLevel,
           isBestseller: detail.isBestseller,
+          isSampleEligible: (detail as any).isSampleEligible ?? false,
           imageUrl: detail.imageUrl
         };
       }
@@ -296,6 +299,7 @@ export class AdminProductsComponent implements OnInit {
       stock: this.form.stock,
       spiceLevel: this.form.spiceLevel,
       isBestseller: this.form.isBestseller,
+      isSampleEligible: this.form.isSampleEligible,
       imageUrl: this.form.imageUrl,
       galleryUrls: this.form.imageUrl ? [this.form.imageUrl] : []
     };
@@ -334,7 +338,7 @@ export class AdminProductsComponent implements OnInit {
       categoryId: '', name: '', description: '', story: '',
       healthBenefits: '', usageSuggestions: '', ingredients: '',
       mrp: 0, discountType: 'none', discountValue: 0,
-      stock: 0, spiceLevel: 'Mild', isBestseller: false, imageUrl: ''
+      stock: 0, spiceLevel: 'Mild', isBestseller: false, isSampleEligible: false, imageUrl: ''
     };
   }
 }

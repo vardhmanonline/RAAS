@@ -119,9 +119,20 @@ img { max-width: 100%; display: block; }
   font-family: var(--font-body);
   font-size: 1rem;
   background: var(--white);
+  color: var(--text);
   transition: border-color 0.2s;
+  cursor: text;
+  caret-color: var(--maroon);
 }
 .input:focus { outline: none; border-color: var(--maroon); }
+
+select.input { cursor: pointer; caret-color: transparent; }
+textarea.input { resize: vertical; cursor: text; }
+
+label { cursor: default; }
+label.checkbox-row, label.toggle { cursor: pointer; }
+
+input[type='checkbox'], input[type='radio'] { cursor: pointer; accent-color: var(--maroon); }
 
 .mandala-bg {
   background-image: radial-gradient(circle at 20% 50%, rgba(212, 160, 23, 0.06) 0%, transparent 50%),

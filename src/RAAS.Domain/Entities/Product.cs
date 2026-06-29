@@ -19,6 +19,7 @@ public class Product : BaseEntity
     public SpiceLevel SpiceLevel { get; set; } = SpiceLevel.Mild;
     public bool IsBestseller { get; set; }
     public bool IsActive { get; set; } = true;
+    public bool IsSampleEligible { get; set; } = false;
     public double Rating { get; set; } = 4.5;
     public int ReviewCount { get; set; }
     public string ImageUrl { get; set; } = string.Empty;

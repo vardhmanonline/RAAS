@@ -51,7 +51,7 @@ public class ProductService : IProductService
             p.Id, p.Name, p.Slug, p.Price, p.CompareAtPrice, p.Rating, p.ReviewCount,
             p.ImageUrl, p.IsBestseller,
             catMap.TryGetValue(p.CategoryId, out var cat) ? cat.Name : "",
-            p.SpiceLevel.ToString(), p.Stock));
+            p.SpiceLevel.ToString(), p.Stock, p.IsSampleEligible));
     }
 
     public async Task<ProductDetailDto?> GetProductBySlugAsync(string slug, Guid? userId, string? sessionId)
@@ -84,7 +84,7 @@ public class ProductService : IProductService
             product.Price, product.CompareAtPrice, product.Rating, product.ReviewCount,
             product.ImageUrl, product.GalleryUrls, product.IsBestseller,
             product.SpiceLevel.ToString(), product.Stock,
-            category?.Name ?? "", product.CategoryId);
+            category?.Name ?? "", product.CategoryId, product.IsSampleEligible);
     }
 
     public async Task<Product?> CreateProductAsync(CreateProductRequest request)
@@ -105,6 +105,7 @@ public class ProductService : IProductService
             Stock = request.Stock,
             SpiceLevel = Enum.Parse<SpiceLevel>(request.SpiceLevel, true),
             IsBestseller = request.IsBestseller,
+            IsSampleEligible = request.IsSampleEligible,
             ImageUrl = request.ImageUrl,
             GalleryUrls = request.GalleryUrls ?? Array.Empty<string>()
         };
@@ -132,6 +133,7 @@ public class ProductService : IProductService
         product.Stock = request.Stock;
         product.SpiceLevel = Enum.Parse<SpiceLevel>(request.SpiceLevel, true);
         product.IsBestseller = request.IsBestseller;
+        product.IsSampleEligible = request.IsSampleEligible;
         product.IsActive = request.IsActive;
         product.ImageUrl = request.ImageUrl;
         product.GalleryUrls = request.GalleryUrls ?? product.GalleryUrls;
