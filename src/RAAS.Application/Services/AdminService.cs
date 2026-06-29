@@ -64,6 +64,49 @@ public class AdminService : IAdminService
     }
 }
 
+public class StoreSettingsService : IStoreSettingsService
+{
+    private const string KeySampleEnabled = "SampleOrderEnabled";
+    private const string KeyFreeDelivery = "FreeDeliveryThreshold";
+
+    private readonly IUnitOfWork _uow;
+    public StoreSettingsService(IUnitOfWork uow) => _uow = uow;
+
+    public async Task<StoreSettingsDto> GetSettingsAsync()
+    {
+        var all = await _uow.Repository<StoreSettings>().GetAllAsync();
+        var map = all.ToDictionary(s => s.Key, s => s.Value);
+        return new StoreSettingsDto(
+            SampleOrderEnabled: map.TryGetValue(KeySampleEnabled, out var se) ? bool.Parse(se) : true,
+            FreeDeliveryThreshold: map.TryGetValue(KeyFreeDelivery, out var fd) ? decimal.Parse(fd) : 499m
+        );
+    }
+
+    public async Task<StoreSettingsDto> UpdateSettingsAsync(UpdateStoreSettingsRequest request)
+    {
+        await UpsertAsync(KeySampleEnabled, request.SampleOrderEnabled.ToString(), "Enable or disable free sample orders for new customers");
+        await UpsertAsync(KeyFreeDelivery, request.FreeDeliveryThreshold.ToString(), "Minimum order subtotal to waive delivery charge");
+        await _uow.SaveChangesAsync();
+        return new StoreSettingsDto(request.SampleOrderEnabled, request.FreeDeliveryThreshold);
+    }
+
+    private async Task UpsertAsync(string key, string value, string description)
+    {
+        var repo = _uow.Repository<StoreSettings>();
+        var existing = (await repo.FindAsync(s => s.Key == key)).FirstOrDefault();
+        if (existing != null)
+        {
+            existing.Value = value;
+            existing.UpdatedAt = DateTime.UtcNow;
+            await repo.UpdateAsync(existing);
+        }
+        else
+        {
+            await repo.AddAsync(new StoreSettings { Key = key, Value = value, Description = description });
+        }
+    }
+}
+
 public class UserService : IUserService
 {
     private readonly IUnitOfWork _uow;

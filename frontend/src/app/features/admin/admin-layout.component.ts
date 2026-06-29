@@ -16,6 +16,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
           <a routerLink="/admin/coupons" routerLinkActive="active">Coupons</a>
           <a routerLink="/admin/customers" routerLinkActive="active">Customers</a>
           <a routerLink="/admin/analytics" routerLinkActive="active">Analytics</a>
+          <a routerLink="/admin/settings" routerLinkActive="active">⚙️ Settings</a>
           <a routerLink="/" class="back-link">← Back to Store</a>
         </nav>
       </aside>

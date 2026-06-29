@@ -14,6 +14,9 @@ CREATE TABLE users (
     referred_by_user_id UUID REFERENCES users(id),
     loyalty_points INTEGER NOT NULL DEFAULT 0,
     referral_earnings DECIMAL(10,2) NOT NULL DEFAULT 0,
+    has_claimed_sample BOOLEAN NOT NULL DEFAULT FALSE,
+    is_guest BOOLEAN NOT NULL DEFAULT FALSE,
+    guest_email VARCHAR(255),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -105,6 +108,9 @@ CREATE TABLE orders (
     shipping_pincode VARCHAR(10) NOT NULL,
     shipped_at TIMESTAMPTZ,
     delivered_at TIMESTAMPTZ,
+    is_guest_order BOOLEAN NOT NULL DEFAULT FALSE,
+    is_sample_order BOOLEAN NOT NULL DEFAULT FALSE,
+    guest_email VARCHAR(255),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

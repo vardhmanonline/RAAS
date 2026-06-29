@@ -51,6 +51,12 @@ public class ResendEmailService : IEmailService
             EmailTemplates.AdminNewOrder(orderNumber, total, customerName),
             "AdminOrderAlert");
 
+    public Task SendGuestOrderConfirmationAsync(string to, string orderNumber, decimal total) =>
+        SendAsync(to, $"Order Confirmed — {orderNumber}", EmailTemplates.GuestOrderConfirmation(orderNumber, total), "GuestOrderPlaced");
+
+    public Task SendSampleOrderConfirmationAsync(string to, string name, string orderNumber) =>
+        SendAsync(to, "🎁 Your Free RAAS Sample Pack is Confirmed!", EmailTemplates.SampleOrderConfirmation(name, orderNumber), "SampleOrderPlaced");
+
     private async Task SendAsync(string to, string subject, string html, string eventType)
     {
         if (!_enabled)

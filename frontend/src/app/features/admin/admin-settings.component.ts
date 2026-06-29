@@ -1,0 +1,114 @@
+import { Component, OnInit, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ApiService } from '../../core/services/api.service';
+
+interface StoreSettings {
+  sampleOrderEnabled: boolean;
+  freeDeliveryThreshold: number;
+}
+
+@Component({
+  selector: 'app-admin-settings',
+  standalone: true,
+  imports: [FormsModule],
+  template: `
+    <div class="settings-page">
+      <h1>Store Settings</h1>
+
+      @if (loading) {
+        <p class="loading">Loading settings...</p>
+      } @else {
+        <div class="settings-grid">
+
+          <div class="setting-card card">
+            <div class="setting-header">
+              <div>
+                <h3>Free Sample Orders</h3>
+                <p>Allow new registered customers to claim a one-time free sample pack of all products.</p>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" [(ngModel)]="settings.sampleOrderEnabled" />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="setting-status" [class.enabled]="settings.sampleOrderEnabled">
+              {{ settings.sampleOrderEnabled ? '✅ Enabled — new customers can claim samples' : '🚫 Disabled — sample claiming is off' }}
+            </div>
+          </div>
+
+          <div class="setting-card card">
+            <h3>Free Delivery Threshold</h3>
+            <p>Orders above this amount qualify for free delivery. Currently set to <strong>₹{{ settings.freeDeliveryThreshold }}</strong>.</p>
+            <div class="threshold-input">
+              <span class="currency">₹</span>
+              <input class="input" type="number" [(ngModel)]="settings.freeDeliveryThreshold" min="0" step="50" />
+            </div>
+            <p class="hint">Set to 0 to offer free delivery on all orders.</p>
+          </div>
+
+        </div>
+
+        @if (saved) {
+          <div class="success-banner">✅ Settings saved successfully!</div>
+        }
+        @if (error) {
+          <div class="error-banner">❌ {{ error }}</div>
+        }
+
+        <button class="btn btn-primary save-btn" (click)="save()" [disabled]="saving">
+          {{ saving ? 'Saving...' : 'Save Settings' }}
+        </button>
+      }
+    </div>
+  `,
+  styles: [`
+    .settings-page h1 { color: var(--maroon); margin-bottom: 2rem; }
+    .loading { color: var(--text-muted); }
+    .settings-grid { display: flex; flex-direction: column; gap: 1.5rem; max-width: 640px; }
+    .setting-card { padding: 1.5rem; }
+    .setting-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
+    .setting-header h3 { color: var(--maroon); margin: 0 0 0.4rem; }
+    .setting-header p, .setting-card > p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin: 0; }
+    .setting-status { margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-muted); }
+    .setting-status.enabled { color: #2e7d32; }
+    .toggle { position: relative; display: inline-block; width: 52px; height: 28px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; inset: 0; background: #ccc; border-radius: 28px; cursor: pointer; transition: 0.3s; }
+    .slider:before { content: ''; position: absolute; width: 22px; height: 22px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+    input:checked + .slider { background: var(--maroon); }
+    input:checked + .slider:before { transform: translateX(24px); }
+    .threshold-input { display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem; }
+    .currency { font-size: 1.1rem; font-weight: 600; color: var(--maroon); }
+    .threshold-input .input { width: 140px; }
+    .hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; }
+    .save-btn { margin-top: 1.5rem; }
+    .success-banner { background: #e8f5e9; color: #2e7d32; padding: 0.75rem 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.9rem; }
+    .error-banner { background: #ffebee; color: #c62828; padding: 0.75rem 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.9rem; }
+  `]
+})
+export class AdminSettingsComponent implements OnInit {
+  private api = inject(ApiService);
+
+  loading = true;
+  saving = false;
+  saved = false;
+  error = '';
+  settings: StoreSettings = { sampleOrderEnabled: true, freeDeliveryThreshold: 499 };
+
+  ngOnInit() {
+    this.api.get<StoreSettings>('/admin/settings').subscribe({
+      next: s => { this.settings = s; this.loading = false; },
+      error: () => { this.error = 'Failed to load settings'; this.loading = false; }
+    });
+  }
+
+  save() {
+    this.saving = true;
+    this.saved = false;
+    this.error = '';
+    this.api.put<StoreSettings>('/admin/settings', this.settings).subscribe({
+      next: s => { this.settings = s; this.saving = false; this.saved = true; setTimeout(() => this.saved = false, 3000); },
+      error: () => { this.error = 'Failed to save settings'; this.saving = false; }
+    });
+  }
+}

@@ -6,9 +6,10 @@ export const routes: Routes = [
   { path: 'products', loadComponent: () => import('./features/products/product-list.component').then(m => m.ProductListComponent) },
   { path: 'products/:slug', loadComponent: () => import('./features/products/product-detail.component').then(m => m.ProductDetailComponent) },
   { path: 'cart', loadComponent: () => import('./features/cart/cart.component').then(m => m.CartComponent) },
-  { path: 'checkout', canActivate: [authGuard], loadComponent: () => import('./features/checkout/checkout.component').then(m => m.CheckoutComponent) },
+  { path: 'checkout', loadComponent: () => import('./features/checkout/checkout.component').then(m => m.CheckoutComponent) },
   { path: 'orders', canActivate: [authGuard], loadComponent: () => import('./features/orders/orders.component').then(m => m.OrdersComponent) },
   { path: 'orders/:id', canActivate: [authGuard], loadComponent: () => import('./features/orders/order-tracking.component').then(m => m.OrderTrackingComponent) },
+  { path: 'claim-sample', loadComponent: () => import('./features/orders/claim-sample.component').then(m => m.ClaimSampleComponent) },
   { path: 'profile', canActivate: [authGuard], loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent) },
   { path: 'referrals', canActivate: [authGuard], loadComponent: () => import('./features/referral/referral.component').then(m => m.ReferralComponent) },
   { path: 'login', loadComponent: () => import('./features/auth/login.component').then(m => m.LoginComponent) },
@@ -23,7 +24,8 @@ export const routes: Routes = [
       { path: 'orders', loadComponent: () => import('./features/admin/admin-orders.component').then(m => m.AdminOrdersComponent) },
       { path: 'coupons', loadComponent: () => import('./features/admin/admin-coupons.component').then(m => m.AdminCouponsComponent) },
       { path: 'customers', loadComponent: () => import('./features/admin/admin-customers.component').then(m => m.AdminCustomersComponent) },
-      { path: 'analytics', loadComponent: () => import('./features/analytics/analytics-dashboard.component').then(m => m.AnalyticsDashboardComponent) }
+      { path: 'analytics', loadComponent: () => import('./features/analytics/analytics-dashboard.component').then(m => m.AnalyticsDashboardComponent) },
+      { path: 'settings', loadComponent: () => import('./features/admin/admin-settings.component').then(m => m.AdminSettingsComponent) }
     ]
   },
   { path: '**', redirectTo: '' }

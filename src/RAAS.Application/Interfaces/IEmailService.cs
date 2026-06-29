@@ -8,4 +8,6 @@ public interface IEmailService
     Task SendOrderDeliveredAsync(string to, string name, string orderNumber, string referralCode);
     Task SendLowStockAlertAsync(string productName, int stock);
     Task SendAdminOrderAlertAsync(string orderNumber, decimal total, string customerName);
+    Task SendGuestOrderConfirmationAsync(string to, string orderNumber, decimal total);
+    Task SendSampleOrderConfirmationAsync(string to, string name, string orderNumber);
 }

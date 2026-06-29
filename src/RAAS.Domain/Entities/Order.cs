@@ -23,6 +23,9 @@ public class Order : BaseEntity
     public string ShippingPincode { get; set; } = string.Empty;
     public DateTime? ShippedAt { get; set; }
     public DateTime? DeliveredAt { get; set; }
+    public bool IsGuestOrder { get; set; } = false;
+    public bool IsSampleOrder { get; set; } = false;
+    public string? GuestEmail { get; set; }
 
     public User User { get; set; } = null!;
     public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();

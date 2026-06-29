@@ -14,6 +14,9 @@ public class User : BaseEntity
     public Guid? ReferredByUserId { get; set; }
     public int LoyaltyPoints { get; set; }
     public decimal ReferralEarnings { get; set; }
+    public bool HasClaimedSample { get; set; } = false;
+    public bool IsGuest { get; set; } = false;
+    public string? GuestEmail { get; set; }
 
     public User? ReferredBy { get; set; }
     public ICollection<User> Referrals { get; set; } = new List<User>();

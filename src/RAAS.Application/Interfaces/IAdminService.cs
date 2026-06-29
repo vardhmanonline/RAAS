@@ -11,6 +11,12 @@ public interface IAdminService
     Task<bool> DeactivateCouponAsync(Guid id);
 }
 
+public interface IStoreSettingsService
+{
+    Task<StoreSettingsDto> GetSettingsAsync();
+    Task<StoreSettingsDto> UpdateSettingsAsync(UpdateStoreSettingsRequest request);
+}
+
 public interface IUserService
 {
     Task<UserProfileDto?> GetProfileAsync(Guid userId);

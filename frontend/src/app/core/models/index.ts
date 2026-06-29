@@ -92,6 +92,7 @@ export interface AuthResponse {
   role: string;
   referralCode: string;
   loyaltyPoints: number;
+  hasClaimedSample: boolean;
 }
 
 export interface ReferralDashboard {

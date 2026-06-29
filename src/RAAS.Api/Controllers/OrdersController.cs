@@ -38,6 +38,34 @@ public class OrdersController : ControllerBase
         }
     }
 
+    [HttpPost("guest-checkout")]
+    public async Task<IActionResult> GuestCheckout([FromBody] GuestCheckoutRequest request)
+    {
+        try
+        {
+            return Ok(await _orders.PlaceGuestOrderAsync(request));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [Authorize]
+    [HttpPost("claim-sample")]
+    public async Task<IActionResult> ClaimSample([FromBody] ClaimSampleRequest request)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        try
+        {
+            return Ok(await _orders.ClaimSampleOrderAsync(userId, request));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     [Authorize]
     [HttpGet("my")]
     public async Task<IActionResult> MyOrders()

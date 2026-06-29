@@ -4,6 +4,7 @@ import { CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../core/services/cart.service';
 import { ApiService } from '../../core/services/api.service';
+import { AuthService } from '../../core/services/auth.service';
 import { AnalyticsTracker } from '../../core/services/analytics-tracker.service';
 
 @Component({
@@ -18,10 +19,29 @@ import { AnalyticsTracker } from '../../core/services/analytics-tracker.service'
         <span class="step" [class.active]="step >= 2">2. Payment</span>
       </div>
 
+      @if (!isLoggedIn && step === 0) {
+        <div class="guest-prompt card">
+          <h2>How would you like to checkout?</h2>
+          <div class="guest-options">
+            <button class="btn btn-primary" (click)="router.navigate(['/login'], { queryParams: { returnUrl: '/checkout' } })">
+              🔐 Login / Register
+            </button>
+            <div class="or-divider">or</div>
+            <button class="btn btn-outline" (click)="step = 1">
+              👤 Continue as Guest
+            </button>
+          </div>
+          <p class="guest-note">Guests can checkout without an account. <strong>Create an account</strong> to track orders, earn loyalty points & get 10% off with WELCOME10.</p>
+        </div>
+      }
+
       @if (step === 1) {
         <div class="checkout-layout">
           <div class="form-section card">
             <h2>Delivery Address</h2>
+            @if (!isLoggedIn) {
+              <input class="input full" type="email" [(ngModel)]="form.guestEmail" placeholder="Your Email (for order confirmation) *" style="margin-bottom:0.75rem" />
+            }
             <div class="form-grid">
               <input class="input" [(ngModel)]="form.shippingName" placeholder="Full Name" />
               <input class="input" [(ngModel)]="form.shippingPhone" placeholder="Phone Number" />
@@ -68,6 +88,9 @@ import { AnalyticsTracker } from '../../core/services/analytics-tracker.service'
           <div class="summary card">
             <h3>Delivery to</h3>
             <p>{{ form.shippingName }}<br>{{ form.shippingAddress }}<br>{{ form.shippingCity }}, {{ form.shippingState }} — {{ form.shippingPincode }}</p>
+            @if (!isLoggedIn) {
+              <p class="guest-badge">👤 Checking out as Guest</p>
+            }
           </div>
         </div>
       }
@@ -84,6 +107,7 @@ import { AnalyticsTracker } from '../../core/services/analytics-tracker.service'
     .form-section h2 { color: var(--maroon); margin-bottom: 1.25rem; }
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem; }
     .form-grid .full { grid-column: 1 / -1; }
+    .input.full { width: 100%; box-sizing: border-box; }
     .payment-options { display: flex; flex-direction: column; gap: 0.75rem; }
     .payment-option { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; border: 2px solid var(--cream-dark); border-radius: var(--radius-sm); cursor: pointer; }
     .payment-option.selected { border-color: var(--maroon); background: rgba(123,30,30,0.04); }
@@ -92,18 +116,31 @@ import { AnalyticsTracker } from '../../core/services/analytics-tracker.service'
     .summary h3 { color: var(--maroon); margin-bottom: 1rem; }
     .summary-item { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; }
     .summary-total { display: flex; justify-content: space-between; font-weight: 700; border-top: 2px solid var(--cream-dark); padding-top: 0.75rem; margin-top: 0.75rem; color: var(--maroon); }
+    .guest-prompt { max-width: 480px; margin: 0 auto; padding: 2.5rem; text-align: center; }
+    .guest-prompt h2 { color: var(--maroon); margin-bottom: 1.5rem; }
+    .guest-options { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    .or-divider { color: var(--text-muted); font-size: 0.85rem; }
+    .btn-outline { background: transparent; border: 2px solid var(--maroon); color: var(--maroon); padding: 0.75rem 2rem; border-radius: 50px; font-weight: 600; cursor: pointer; width: 100%; }
+    .btn-outline:hover { background: rgba(123,30,30,0.06); }
+    .guest-note { margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+    .guest-badge { margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-muted); }
     @media (max-width: 768px) { .checkout-layout { grid-template-columns: 1fr; } }
   `]
 })
 export class CheckoutComponent implements OnInit {
   cart = inject(CartService);
   private api = inject(ApiService);
-  private router = inject(Router);
+  readonly router = inject(Router);
+  private authSvc = inject(AuthService);
   private tracker = inject(AnalyticsTracker);
 
-  step = 1;
+  get isLoggedIn() { return this.authSvc.isLoggedIn(); }
+
+  // Guests start at step 0 (choose login vs guest), logged-in users go directly to step 1
+  step = this.authSvc.isLoggedIn() ? 1 : 0;
   placing = false;
   form = {
+    guestEmail: '',
     shippingName: '', shippingPhone: '', shippingAddress: '',
     shippingCity: '', shippingState: '', shippingPincode: '',
     paymentMethod: 'UPI', couponCode: ''
@@ -116,23 +153,54 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit() {
     this.tracker.track('CheckoutStarted');
-    this.api.post('/orders/track-checkout', {}).subscribe();
+    if (this.isLoggedIn) {
+      this.api.post('/orders/track-checkout', {}).subscribe();
+    }
   }
 
   placeOrder() {
     this.placing = true;
-    this.api.post<{ id: string }>('/orders/checkout', {
-      items: this.cart.cartItems(),
-      ...this.form
-    }).subscribe({
-      next: order => {
-        this.cart.clear();
-        this.router.navigate(['/orders', order.id]);
-      },
-      error: err => {
-        alert(err.error?.message ?? 'Order failed');
+    if (this.isLoggedIn) {
+      this.api.post<{ id: string }>('/orders/checkout', {
+        items: this.cart.cartItems(),
+        couponCode: this.form.couponCode,
+        paymentMethod: this.form.paymentMethod,
+        shippingName: this.form.shippingName,
+        shippingPhone: this.form.shippingPhone,
+        shippingAddress: this.form.shippingAddress,
+        shippingCity: this.form.shippingCity,
+        shippingState: this.form.shippingState,
+        shippingPincode: this.form.shippingPincode
+      }).subscribe({
+        next: order => { this.cart.clear(); this.router.navigate(['/orders', order.id]); },
+        error: err => { alert(err.error?.message ?? 'Order failed'); this.placing = false; }
+      });
+    } else {
+      if (!this.form.guestEmail) {
+        alert('Please enter your email to continue as guest');
+        this.step = 1;
         this.placing = false;
+        return;
       }
-    });
+      this.api.post<{ id: string; orderNumber: string }>('/orders/guest-checkout', {
+        items: this.cart.cartItems(),
+        couponCode: this.form.couponCode,
+        paymentMethod: this.form.paymentMethod,
+        shippingName: this.form.shippingName,
+        shippingPhone: this.form.shippingPhone,
+        shippingAddress: this.form.shippingAddress,
+        shippingCity: this.form.shippingCity,
+        shippingState: this.form.shippingState,
+        shippingPincode: this.form.shippingPincode,
+        guestEmail: this.form.guestEmail
+      }).subscribe({
+        next: order => {
+          this.cart.clear();
+          alert(`Order ${order.orderNumber} placed! Confirmation sent to ${this.form.guestEmail}`);
+          this.router.navigate(['/']);
+        },
+        error: err => { alert(err.error?.message ?? 'Order failed'); this.placing = false; }
+      });
+    }
   }
 }

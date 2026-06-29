@@ -74,4 +74,25 @@ internal static class EmailTemplates
           <tr><td><strong>Total</strong></td><td align=""right"" style=""color:{BrandColor};font-weight:bold;"">₹{total:F2}</td></tr>
         </table>
         <p style=""text-align:center;""><a href=""https://raas.in/admin/orders"" style=""background:{BrandColor};color:#fff;padding:12px 32px;border-radius:50px;text-decoration:none;font-weight:bold;"">View in Admin</a></p>");
+
+    public static string GuestOrderConfirmation(string orderNumber, decimal total) => Wrap($"Order Confirmed — {orderNumber}",
+        $@"<p style=""color:#333;line-height:1.7;"">Thank you for your order!</p>
+        <table width=""100%"" style=""background:{CreamBg};border-radius:8px;padding:16px;margin:16px 0;"">
+          <tr><td><strong>Order #</strong></td><td align=""right"">{orderNumber}</td></tr>
+          <tr><td><strong>Total</strong></td><td align=""right"" style=""color:{BrandColor};font-size:18px;font-weight:bold;"">₹{total:F2}</td></tr>
+        </table>
+        <p style=""color:#666;font-size:14px;"">We'll notify you when your order ships.</p>
+        <p style=""background:{CreamBg};padding:16px;border-radius:8px;text-align:center;margin:24px 0;"">
+          <strong>Create an account to track orders & earn rewards!</strong><br>
+          Use code <strong style=""color:{BrandColor};font-size:18px;"">WELCOME10</strong> for 10% off your first registered order.
+        </p>
+        <p style=""text-align:center;""><a href=""https://raas.in/register"" style=""background:{BrandColor};color:#fff;padding:12px 32px;border-radius:50px;text-decoration:none;font-weight:bold;"">Create Account</a></p>");
+
+    public static string SampleOrderConfirmation(string name, string orderNumber) => Wrap($"🎁 Your Free Sample is on its way!",
+        $@"<p style=""color:#333;line-height:1.7;"">Hi <strong>{name}</strong>,</p>
+        <p style=""color:#333;line-height:1.7;"">Great news! Your free sample pack (order <strong>{orderNumber}</strong>) has been confirmed. We're sending you one sample of each of our products so you can taste the roots of Rajasthan!</p>
+        <p style=""background:{CreamBg};padding:16px;border-radius:8px;margin:24px 0;"">
+          This is a one-time complimentary offer for new RAAS customers. We hope you love every bite!
+        </p>
+        <p style=""text-align:center;""><a href=""https://raas.in/orders"" style=""background:{BrandColor};color:#fff;padding:12px 32px;border-radius:50px;text-decoration:none;font-weight:bold;"">Track Your Order</a></p>");
 }

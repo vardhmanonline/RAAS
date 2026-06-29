@@ -13,11 +13,13 @@ public class AdminController : ControllerBase
 {
     private readonly IOrderService _orders;
     private readonly IAdminService _admin;
+    private readonly IStoreSettingsService _settings;
 
-    public AdminController(IOrderService orders, IAdminService admin)
+    public AdminController(IOrderService orders, IAdminService admin, IStoreSettingsService settings)
     {
         _orders = orders;
         _admin = admin;
+        _settings = settings;
     }
 
     [HttpGet("orders")]
@@ -43,4 +45,11 @@ public class AdminController : ControllerBase
     [HttpDelete("coupons/{id:guid}")]
     public async Task<IActionResult> DeactivateCoupon(Guid id) =>
         await _admin.DeactivateCouponAsync(id) ? NoContent() : NotFound();
+
+    [HttpGet("settings")]
+    public async Task<IActionResult> GetSettings() => Ok(await _settings.GetSettingsAsync());
+
+    [HttpPut("settings")]
+    public async Task<IActionResult> UpdateSettings([FromBody] UpdateStoreSettingsRequest request) =>
+        Ok(await _settings.UpdateSettingsAsync(request));
 }

@@ -23,6 +23,7 @@ public static class DependencyInjection
         services.AddScoped<IAnalyticsService, AnalyticsService>();
         services.AddScoped<IReferralService, ReferralService>();
         services.AddScoped<IAdminService, AdminService>();
+        services.AddScoped<IStoreSettingsService, StoreSettingsService>();
         services.AddScoped<IUserService, UserService>();
         services.AddHttpClient<IEmailService, ResendEmailService>();
 

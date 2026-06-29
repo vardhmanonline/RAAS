@@ -65,7 +65,7 @@ public class AuthService : IAuthService
         await _email.SendWelcomeEmailAsync(user.Email, user.FullName);
         await _analytics.TrackEventAsync(new DTOs.Analytics.TrackEventRequest("UserRegistered", null, null, null, null), user.Id, null, null);
 
-        return new AuthResponse(GenerateToken(user), user.Id, user.Email, user.FullName, user.Role.ToString(), user.ReferralCode, user.LoyaltyPoints);
+        return new AuthResponse(GenerateToken(user), user.Id, user.Email, user.FullName, user.Role.ToString(), user.ReferralCode, user.LoyaltyPoints, user.HasClaimedSample);
     }
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
@@ -76,7 +76,7 @@ public class AuthService : IAuthService
         if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             throw new UnauthorizedAccessException("Invalid credentials");
 
-        return new AuthResponse(GenerateToken(user), user.Id, user.Email, user.FullName, user.Role.ToString(), user.ReferralCode, user.LoyaltyPoints);
+        return new AuthResponse(GenerateToken(user), user.Id, user.Email, user.FullName, user.Role.ToString(), user.ReferralCode, user.LoyaltyPoints, user.HasClaimedSample);
     }
 
     public string GenerateToken(User user)

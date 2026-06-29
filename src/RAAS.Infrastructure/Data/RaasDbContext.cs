@@ -17,6 +17,7 @@ public class RaasDbContext : DbContext
     public DbSet<Referral> Referrals => Set<Referral>();
     public DbSet<Event> Events => Set<Event>();
     public DbSet<ProductView> ProductViews => Set<ProductView>();
+    public DbSet<StoreSettings> StoreSettings => Set<StoreSettings>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,6 +28,8 @@ public class RaasDbContext : DbContext
             e.HasIndex(u => u.Email).IsUnique();
             e.HasIndex(u => u.ReferralCode).IsUnique();
             e.Property(u => u.ReferralEarnings).HasPrecision(10, 2);
+            e.Property(u => u.HasClaimedSample).HasDefaultValue(false);
+            e.Property(u => u.IsGuest).HasDefaultValue(false);
             e.HasOne(u => u.ReferredBy).WithMany(u => u.Referrals).HasForeignKey(u => u.ReferredByUserId).OnDelete(DeleteBehavior.SetNull);
         });
 
@@ -69,6 +72,8 @@ public class RaasDbContext : DbContext
             e.Property(c => c.MaxDiscountAmount).HasPrecision(10, 2);
             e.Property(c => c.MinOrderAmount).HasPrecision(10, 2);
         });
+
+        modelBuilder.Entity<StoreSettings>(e => e.HasIndex(s => s.Key).IsUnique());
 
         SeedData(modelBuilder);
     }
