@@ -1,10 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CurrencyPipe } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
 import { Category, Product, UserProfile, Address } from '../../core/models';
 import { CartService } from '../../core/services/cart.service';
 import { AuthService } from '../../core/services/auth.service';
+import { SidebarComponent } from '../../layout/sidebar.component';
 
 interface SpecialOffer {
   id: string;
@@ -37,63 +37,39 @@ interface StoreSettings {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe],
+  imports: [RouterLink, SidebarComponent],
   template: `
     <div class="premium-layout">
       <!-- Subtle Background Pattern -->
       <div class="background-pattern"></div>
       
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <div class="sidebar-logo">
+      <!-- Sidebar Component -->
+      <app-sidebar></app-sidebar>
+
+      <!-- Header -->
+      <header class="main-header">
+        <div class="header-logo">
           <img src="/assets/images/rajasthani_ras_logo.png" alt="Rajasthani Ras" class="logo-image" />
         </div>
-        
-        <nav class="sidebar-nav">
-          <a routerLink="/" routerLinkActive="active" class="nav-item">
-            <span class="nav-icon">Home</span>
+        <div class="location-info">
+          <span class="location-icon">📍</span>
+          <span>Delivering to {{ deliveryLocation }}</span>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn">
+            <span>🔔</span>
+          </button>
+          <a routerLink="/cart" class="icon-btn cart-btn">
+            <span>🛒</span>
+            @if (cart.itemCount() > 0) {
+              <span class="cart-count">{{ cart.itemCount() }}</span>
+            }
           </a>
-          <a routerLink="/products" routerLinkActive="active" class="nav-item">
-            <span class="nav-icon">Shop</span>
-          </a>
-          <a routerLink="/products" routerLinkActive="active" class="nav-item">
-            <span class="nav-icon">Categories</span>
-          </a>
-          <a routerLink="/orders" routerLinkActive="active" class="nav-item">
-            <span class="nav-icon">Orders</span>
-          </a>
-          <a routerLink="/favorites" routerLinkActive="active" class="nav-item">
-            <span class="nav-icon">Favorites</span>
-          </a>
-          <a routerLink="/offers" routerLinkActive="active" class="nav-item">
-            <span class="nav-icon">Offers</span>
-          </a>
-          <a routerLink="/profile" routerLinkActive="active" class="nav-item">
-            <span class="nav-icon">Account</span>
-          </a>
-        </nav>
-      </aside>
+        </div>
+      </header>
 
       <!-- Main Content -->
       <main class="main-content">
-        <!-- Header -->
-        <header class="main-header">
-          <div class="location-info">
-            <span class="location-icon">📍</span>
-            <span>Delivering to {{ deliveryLocation }}</span>
-          </div>
-          <div class="header-actions">
-            <button class="icon-btn">
-              <span>🔔</span>
-            </button>
-            <a routerLink="/cart" class="icon-btn cart-btn">
-              <span>🛒</span>
-              @if (cart.itemCount() > 0) {
-                <span class="cart-count">{{ cart.itemCount() }}</span>
-              }
-            </a>
-          </div>
-        </header>
 
         <!-- Hero Section -->
         <section class="hero-section">
@@ -137,135 +113,108 @@ interface StoreSettings {
           </div>
         </section>
 
-        <!-- Floating Trust Cards -->
-        <section class="trust-cards-section">
-          <div class="trust-cards-scroll">
-            <div class="trust-card">
-              <span class="trust-icon">✨</span>
-              <span>100% Pure Ingredients</span>
-            </div>
-            <div class="trust-card">
-              <span class="trust-icon">🎨</span>
-              <span>No Artificial Colors</span>
-            </div>
-            <div class="trust-card">
-              <span class="trust-icon">🌿</span>
-              <span>No Preservatives</span>
-            </div>
-            <div class="trust-card">
-              <span class="trust-icon">🍳</span>
-              <span>Made Fresh Every Day</span>
-            </div>
-            <div class="trust-card">
-              <span class="trust-icon">🏰</span>
-              <span>Direct from Rajasthan</span>
-            </div>
-            <div class="trust-card">
-              <span class="trust-icon">👵</span>
-              <span>Traditional Family Recipes</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- Categories Section -->
-        <section class="categories-section">
+        <!-- Product Menu Section (Center) -->
+        <section class="products-menu-section">
           <div class="section-header">
-            <h2 class="section-title">Shop by Category</h2>
+            <h2 class="section-title">Our Categories</h2>
             <a routerLink="/products" class="view-all-link">View All →</a>
           </div>
-          <div class="categories-grid">
-            @for (cat of categories; track cat.id) {
-              <a [routerLink]="['/products']" [queryParams]="{category: cat.slug}" class="category-card">
-                <div class="category-icon">{{ categoryIcon(cat.slug) }}</div>
-                <h3>{{ cat.name }}</h3>
-                <p>{{ cat.description }}</p>
-                <span class="category-count">{{ cat.productCount }} products</span>
-              </a>
-            }
-          </div>
-        </section>
-
-        <!-- Bestsellers Section -->
-        <section class="bestsellers-section">
-          <div class="section-header">
-            <h2 class="section-title">Bestsellers</h2>
-            <a routerLink="/products" class="view-all-link">View All →</a>
-          </div>
-          <div class="products-scroll">
-            @for (p of bestsellers; track p.id) {
-              <a [routerLink]="['/products', p.slug]" class="product-card-premium">
-                <div class="product-image-round">
-                  <img [src]="p.imageUrl" [alt]="p.name" />
+          <div class="products-menu-grid">
+            @for (category of categories; track category.id) {
+              <a [routerLink]="['/products']" [queryParams]="{category: category.name}" class="category-menu-card">
+                <div class="category-menu-image">
+                  @if (category.imageUrl) {
+                    <img [src]="category.imageUrl" [alt]="category.name" />
+                  } @else {
+                    <div class="category-placeholder">{{ category.name.charAt(0) }}</div>
+                  }
                 </div>
-                <div class="product-info">
-                  <h3>{{ p.name }}</h3>
-                  <div class="product-meta">
-                    <span class="product-price">{{ p.price | currency:'INR':'symbol':'1.0-0' }}</span>
-                    <span class="product-rating">★ {{ p.rating }}</span>
-                  </div>
-                  <button class="quick-add-btn">+ Add</button>
+                <div class="category-menu-info">
+                  <h3>{{ category.name }}</h3>
                 </div>
               </a>
             }
           </div>
         </section>
 
-        <!-- Why Choose Us - Glassmorphism -->
-        <section class="why-choose-section">
-          <div class="glassmorphism-card">
-            <h2 class="section-title">Why Choose Us</h2>
-            <div class="features-list">
-              <div class="feature-list-item">
-                <span class="feature-check">✓</span>
+        <!-- Bottom Section Grid -->
+        <section class="bottom-section">
+          <!-- Why Choose Us - Right Bottom -->
+          <div class="why-choose-right">
+            <h2 class="section-title">Why Choose Rajasthani Ras</h2>
+            <div class="why-choose-list">
+              <div class="why-item">
+                <span class="why-icon">✓</span>
                 <span>Homemade Taste</span>
               </div>
-              <div class="feature-list-item">
-                <span class="feature-check">✓</span>
+              <div class="why-item">
+                <span class="why-icon">✓</span>
                 <span>Freshly Packed</span>
               </div>
-              <div class="feature-list-item">
-                <span class="feature-check">✓</span>
+              <div class="why-item">
+                <span class="why-icon">✓</span>
                 <span>Direct from Rajasthan</span>
               </div>
-              <div class="feature-list-item">
-                <span class="feature-check">✓</span>
+              <div class="why-item">
+                <span class="why-icon">✓</span>
                 <span>Hygienically Prepared</span>
               </div>
-              <div class="feature-list-item">
-                <span class="feature-check">✓</span>
+              <div class="why-item">
+                <span class="why-icon">✓</span>
                 <span>Premium Ingredients</span>
               </div>
-              <div class="feature-list-item">
-                <span class="feature-check">✓</span>
+              <div class="why-item">
+                <span class="why-icon">✓</span>
                 <span>Authentic Recipes</span>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Features Strip -->
-        <section class="features-strip">
-          <div class="feature-strip-item">
-            <span class="strip-icon">�</span>
-            <span>Freshly Prepared</span>
+        <!-- Footer -->
+        <footer class="footer">
+          <div class="footer-container">
+            <div class="footer-item">
+              <div class="icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 2C7 2 3 6 3 11c0 5 4 9 9 11 5-2 9-6 9-11 0-5-4-9-9-9zm-1 16c-3-2-5-5-5-8 0-3 3-6 6-6 3 0 6 3 6 6 0 3-2 6-7 8z"/>
+                </svg>
+              </div>
+              <h4>Freshly Prepared</h4>
+              <p>Made in small batches for freshness</p>
+            </div>
+
+            <div class="footer-item">
+              <div class="icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M21 8l-9-5-9 5 9 5 9-5zm-9 7l-9-5v7l9 5 9-5v-7l-9 5z"/>
+                </svg>
+              </div>
+              <h4>Shipped with Care</h4>
+              <p>Secure packaging, keep it fresh</p>
+            </div>
+
+            <div class="footer-item">
+              <div class="icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 3l10 9h-3v9h-5v-6H10v6H5v-9H2l10-9z"/>
+                </svg>
+              </div>
+              <h4>Bringing Rajasthan To Your Home</h4>
+              <p>Traditional taste, timeless love</p>
+            </div>
+
+            <div class="footer-item">
+              <div class="icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M7 11V4h2v7H7zm4 0V2h2v9h-2zm4 0V6h2v5h-2zM5 13h14l-2 8H7l-2-8z"/>
+                </svg>
+              </div>
+              <h4>Support Local Artisans</h4>
+              <p>Empowering local communities & traditions</p>
+            </div>
           </div>
-          <div class="feature-strip-item">
-            <span class="strip-icon">📦</span>
-            <span>Packed with Care</span>
-          </div>
-          <div class="feature-strip-item">
-            <span class="strip-icon">🚚</span>
-            <span>Delivered Fast</span>
-          </div>
-          <div class="feature-strip-item">
-            <span class="strip-icon">👵</span>
-            <span>Traditional Recipes</span>
-          </div>
-          <div class="feature-strip-item">
-            <span class="strip-icon">👩</span>
-            <span>Support Local Women</span>
-          </div>
-        </section>
+        </footer>
       </main>
     </div>
   `,
@@ -305,66 +254,6 @@ interface StoreSettings {
       z-index: 0;
     }
 
-    /* Sidebar - Ultra Premium */
-    .sidebar {
-      width: 260px;
-      background: linear-gradient(180deg, var(--deep-maroon) 0%, #4A1515 100%);
-      padding: 2rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      height: 100vh;
-      overflow-y: auto;
-      z-index: 100;
-      box-shadow: 4px 0 24px rgba(110, 31, 31, 0.15);
-    }
-
-    .sidebar-logo {
-      margin-bottom: 3rem;
-      display: flex;
-      justify-content: center;
-    }
-
-    .logo-image {
-      height: 60px;
-      width: auto;
-      object-fit: contain;
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-    }
-
-    .sidebar-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      flex: 1;
-    }
-
-    .nav-item {
-      padding: 1rem 1.5rem;
-      border-radius: 16px;
-      color: rgba(255, 255, 255, 0.85);
-      text-decoration: none;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      font-size: 0.95rem;
-      font-weight: 500;
-      letter-spacing: 0.3px;
-      border: 1px solid transparent;
-    }
-
-    .nav-item:hover {
-      background: rgba(200, 154, 43, 0.15);
-      color: #fff;
-      transform: translateX(4px);
-      border-color: rgba(200, 154, 43, 0.3);
-    }
-
-    .nav-item.active {
-      background: linear-gradient(135deg, var(--royal-gold) 0%, #D4A834 100%);
-      color: var(--deep-maroon);
-      font-weight: 600;
-      box-shadow: 0 4px 16px rgba(200, 154, 43, 0.3);
-    }
-
     /* Main Content */
     .main-content {
       flex: 1;
@@ -372,29 +261,51 @@ interface StoreSettings {
       overflow-y: auto;
       position: relative;
       z-index: 1;
+      padding-top: 80px;
     }
 
     /* Header - Minimal Luxury */
     .main-header {
       background: rgba(255, 248, 240, 0.95);
       backdrop-filter: blur(20px);
-      padding: 1.25rem 2.5rem;
+      padding: 1rem 2.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 2px 20px rgba(110, 31, 31, 0.05);
-      position: sticky;
+      position: fixed;
       top: 0;
+      right: 0;
+      left: 260px;
       z-index: 50;
+      gap: 2rem;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-logo .logo-image {
+      height: 55px;
+      width: auto;
+      object-fit: contain;
     }
 
     .location-info {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       color: var(--dark-brown);
-      font-size: 0.9rem;
+      font-size: 0.75rem;
       font-weight: 500;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 0.35rem 0.7rem;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-left: auto;
+      margin-right: 1rem;
+      max-width: 180px;
     }
 
     .location-icon {
@@ -403,7 +314,7 @@ interface StoreSettings {
 
     .header-actions {
       display: flex;
-      gap: 1rem;
+      gap: 0.75rem;
       align-items: center;
     }
 
@@ -447,7 +358,7 @@ interface StoreSettings {
 
     /* Hero Section - Editorial Luxury */
     .hero-section {
-      padding: 4rem 3rem 5rem;
+      padding: 2rem 3rem 4rem;
       position: relative;
       overflow: hidden;
       background: linear-gradient(135deg, var(--ivory) 0%, var(--warm-cream) 100%);
@@ -567,56 +478,14 @@ interface StoreSettings {
 
     .hero-image img {
       width: 100%;
-      height: 550px;
+      height: 500px;
       object-fit: cover;
-      border-radius: 24px;
-      box-shadow: 0 24px 48px rgba(110, 31, 31, 0.12);
-    }
-
-    /* Floating Trust Cards */
-    .trust-cards-section {
-      padding: 2rem 3rem;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .trust-cards-scroll {
-      display: flex;
-      gap: 1rem;
-      overflow-x: auto;
-      padding-bottom: 1rem;
-      scrollbar-width: none;
-    }
-
-    .trust-cards-scroll::-webkit-scrollbar {
-      display: none;
-    }
-
-    .trust-card {
-      flex-shrink: 0;
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(20px);
-      padding: 1.5rem 2rem;
       border-radius: 20px;
-      box-shadow: var(--soft-shadow);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      border: 1px solid rgba(200, 154, 43, 0.15);
-      transition: all 0.3s;
+      box-shadow: 0 20px 40px rgba(110, 31, 31, 0.12);
     }
 
-    .trust-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(110, 31, 31, 0.12);
-    }
-
-    .trust-icon {
-      font-size: 1.5rem;
-    }
-
-    /* Categories Section */
-    .categories-section {
+    /* Products Menu Section (Center) */
+    .products-menu-section {
       padding: 4rem 3rem;
       max-width: 1400px;
       margin: 0 auto;
@@ -650,227 +519,183 @@ interface StoreSettings {
       color: var(--deep-maroon);
     }
 
-    .categories-grid {
+    .products-menu-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       gap: 2rem;
     }
 
-    .category-card {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(20px);
-      padding: 2.5rem 2rem;
-      text-align: center;
-      border-radius: 24px;
+    .category-menu-card {
       text-decoration: none;
       color: inherit;
-      box-shadow: var(--soft-shadow);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      border: 1px solid rgba(200, 154, 43, 0.1);
-    }
-
-    .category-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 16px 40px rgba(110, 31, 31, 0.15);
-      border-color: var(--royal-gold);
-    }
-
-    .category-icon {
-      font-size: 3.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .category-card h3 {
-      color: var(--deep-maroon);
-      margin-bottom: 0.75rem;
-      font-size: 1.15rem;
-      font-weight: 600;
-    }
-
-    .category-card p {
-      color: var(--dark-brown);
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-      line-height: 1.5;
-      opacity: 0.75;
-    }
-
-    .category-count {
-      color: var(--terracotta);
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    /* Bestsellers - Premium Round Cards */
-    .bestsellers-section {
-      padding: 4rem 3rem;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .products-scroll {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 2rem;
-    }
-
-    .product-card-premium {
-      text-decoration: none;
-      color: inherit;
-      display: block;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(20px);
-      border-radius: 24px;
+      border-radius: 20px;
       padding: 1.5rem;
       box-shadow: var(--soft-shadow);
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       border: 1px solid rgba(200, 154, 43, 0.1);
     }
 
-    .product-card-premium:hover {
+    .category-menu-card:hover {
       transform: translateY(-8px);
       box-shadow: 0 16px 40px rgba(110, 31, 31, 0.15);
     }
 
-    .product-image-round {
-      width: 120px;
-      height: 120px;
-      margin: 0 auto 1.5rem;
+    .category-menu-image {
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       overflow: hidden;
-      box-shadow: 0 8px 24px rgba(110, 31, 31, 0.12);
-      border: 3px solid var(--warm-cream);
+      margin-bottom: 1rem;
+      background: var(--warm-cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .product-image-round img {
+    .category-menu-image img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: transform 0.4s;
     }
 
-    .product-card-premium:hover .product-image-round img {
+    .category-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--deep-maroon);
+      background: linear-gradient(135deg, var(--warm-cream) 0%, var(--ivory) 100%);
+    }
+
+    .category-menu-card:hover .category-menu-image img {
       transform: scale(1.1);
     }
 
-    .product-info {
+    .category-menu-info {
       text-align: center;
     }
 
-    .product-info h3 {
+    .category-menu-info h3 {
       color: var(--deep-maroon);
-      margin-bottom: 0.75rem;
+      margin: 0;
       font-size: 1rem;
       font-weight: 600;
     }
 
-    .product-meta {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
+    /* Bottom Section */
+    .bottom-section {
+      padding: 4rem 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
     }
 
-    .product-price {
-      font-size: 1.1rem;
-      color: var(--terracotta);
-      font-weight: 700;
-    }
-
-    .product-rating {
-      color: var(--royal-gold);
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
-    .quick-add-btn {
-      background: var(--deep-maroon);
-      color: #fff;
-      border: none;
-      padding: 0.6rem 1.5rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .quick-add-btn:hover {
-      background: var(--terracotta);
-      transform: scale(1.05);
-    }
-
-    /* Glassmorphism Why Choose Us */
-    .why-choose-section {
-      padding: 5rem 3rem;
-      position: relative;
-    }
-
-    .glassmorphism-card {
+    /* Why Choose Us - Right Bottom */
+    .why-choose-right {
       background: rgba(255, 255, 255, 0.7);
       backdrop-filter: blur(40px);
-      border-radius: 32px;
-      padding: 4rem;
+      border-radius: 24px;
+      padding: 3rem;
       box-shadow: var(--glass-shadow);
       border: 1px solid rgba(255, 255, 255, 0.5);
-      max-width: 1000px;
-      margin: 0 auto;
     }
 
-    .why-choose-section .section-title {
-      text-align: center;
-      margin-bottom: 3rem;
+    .why-choose-right .section-title {
+      margin-bottom: 2rem;
     }
 
-    .features-list {
+    .why-choose-list {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
+      gap: 1rem;
     }
 
-    .feature-list-item {
+    .why-item {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      font-size: 1.1rem;
+      gap: 0.75rem;
+      font-size: 1rem;
       color: var(--dark-brown);
       font-weight: 500;
     }
 
-    .feature-check {
+    .why-icon {
       color: var(--royal-gold);
       font-weight: 700;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
     }
 
-    /* Features Strip */
-    .features-strip {
-      background: linear-gradient(90deg, var(--deep-maroon) 0%, var(--terracotta) 100%);
-      padding: 2.5rem 3rem;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 2rem;
-      box-shadow: 0 -8px 32px rgba(110, 31, 31, 0.15);
+    /* Footer */
+    .footer {
+      background: #f7e7d3;
+      padding: 40px 20px;
+      border-top: 1px solid rgba(0,0,0,0.05);
+      font-family: system-ui, sans-serif;
     }
 
-    .feature-strip-item {
+    .footer-container {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      color: #fff;
+      justify-content: space-between;
+      align-items: stretch;
+      max-width: 1200px;
+      margin: auto;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-item {
+      flex: 1;
+      min-width: 220px;
+      background: rgba(255, 255, 255, 0.65);
+      border-radius: 16px;
+      padding: 22px;
       text-align: center;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      transition: 0.25s ease;
     }
 
-    .strip-icon {
-      font-size: 2rem;
+    .footer-item:hover {
+      transform: translateY(-6px);
     }
 
-    .feature-strip-item span:last-child {
-      font-size: 0.9rem;
-      font-weight: 500;
-      opacity: 0.95;
+    .icon {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon svg {
+      width: 28px;
+      height: 28px;
+      fill: #7a3e2c;
+    }
+
+    .footer-item h4 {
+      font-size: 15px;
+      color: #5a2a1a;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .footer-item p {
+      font-size: 13px;
+      color: #7a5a4a;
+      line-height: 1.4;
     }
 
     @media (max-width: 1200px) {
@@ -879,27 +704,26 @@ interface StoreSettings {
     }
 
     @media (max-width: 1024px) {
-      .sidebar { width: 220px; }
       .main-content { margin-left: 220px; }
       .hero-content { grid-template-columns: 1fr; gap: 2.5rem; }
       .hero-image { order: -1; }
       .hero-image img { height: 400px; }
-      .features-list { grid-template-columns: 1fr; }
-      .features-strip { grid-template-columns: repeat(3, 1fr); }
+      .why-choose-list { grid-template-columns: 1fr; }
+      .footer-container { gap: 15px; }
+      .footer-item { min-width: 180px; }
       .hero-description { max-width: 100%; }
     }
 
     @media (max-width: 768px) {
-      .sidebar { display: none; }
       .main-content { margin-left: 0; }
       .hero-section { padding: 3rem 1.5rem 4rem; }
       .hero-content { gap: 2rem; }
       .hero-image img { height: 350px; }
       .hero-features { flex-direction: column; gap: 0.75rem; }
-      .features-strip { grid-template-columns: repeat(2, 1fr); }
-      .products-scroll { grid-template-columns: repeat(2, 1fr); }
-      .categories-grid { grid-template-columns: repeat(2, 1fr); }
-      .glassmorphism-card { padding: 2.5rem 1.5rem; }
+      .footer-container { flex-direction: column; }
+      .footer-item { min-width: 100%; }
+      .products-menu-grid { grid-template-columns: repeat(2, 1fr); }
+      .why-choose-right { padding: 2rem; }
       .hero-title { font-size: 2rem; }
     }
 
@@ -908,9 +732,8 @@ interface StoreSettings {
       .hero-image img { height: 300px; }
       .hero-cta-group { flex-direction: column; }
       .cta-primary, .cta-secondary { width: 100%; text-align: center; }
-      .products-scroll { grid-template-columns: 1fr; }
-      .categories-grid { grid-template-columns: 1fr; }
-      .features-strip { grid-template-columns: 1fr; }
+      .products-menu-grid { grid-template-columns: 1fr; }
+      .why-choose-list { grid-template-columns: 1fr; }
     }
   `]
 })
