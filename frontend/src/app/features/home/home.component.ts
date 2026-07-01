@@ -42,7 +42,7 @@ interface StoreSettings {
       <!-- Sidebar -->
       <aside class="sidebar">
         <div class="sidebar-logo">
-          <span class="logo-icon">🪷</span>
+          <img src="/assets/images/rajasthani_ras_logo.png" alt="Rajasthani Ras" class="logo-image" />
           <span class="logo-text">Rajasthani Ras</span>
         </div>
         
@@ -237,7 +237,7 @@ interface StoreSettings {
     /* Sidebar */
     .sidebar { width: 280px; background: linear-gradient(180deg, #8B4513 0%, #654321 100%); padding: 1.5rem; display: flex; flex-direction: column; position: fixed; height: 100vh; overflow-y: auto; }
     .sidebar-logo { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.2); }
-    .logo-icon { font-size: 2rem; }
+    .logo-image { height: 50px; width: auto; object-fit: contain; }
     .logo-text { font-size: 1.25rem; font-weight: 700; color: #FFD700; font-family: Georgia, serif; }
     
     .sidebar-nav { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
