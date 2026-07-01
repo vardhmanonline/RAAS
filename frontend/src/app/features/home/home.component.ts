@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
 import { Category, Product, UserProfile, Address } from '../../core/models';
 import { CartService } from '../../core/services/cart.service';
@@ -37,7 +38,7 @@ interface StoreSettings {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, SidebarComponent],
+  imports: [RouterLink, CommonModule, SidebarComponent],
   template: `
     <div class="premium-layout">
       <!-- Subtle Background Pattern -->
@@ -56,19 +57,33 @@ interface StoreSettings {
               <!-- Made in Rajasthan Wax Seal -->
               <div class="wax-seal">
                 <svg viewBox="0 0 100 100" class="wax-seal-svg">
-                  <circle cx="50" cy="50" r="45" fill="none" stroke="#C9A860" stroke-width="2"/>
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="#7B1818" stroke-width="1"/>
-                  <text x="50" y="35" text-anchor="middle" font-size="6" fill="#7B1818" font-family="Playfair Display, serif">Since 2024</text>
-                  <text x="50" y="50" text-anchor="middle" font-size="5" fill="#C9A860" font-family="Noto Sans Devanagari, sans-serif">जयपुर, राजस्थान</text>
-                  <text x="50" y="65" text-anchor="middle" font-size="5" fill="#7B1818" font-family="Georgia, serif">Handcrafted</text>
+                  <defs>
+                    <filter id="waxShadow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+                    </filter>
+                  </defs>
+                  <circle cx="50" cy="50" r="48" fill="#C9A860" opacity="0.2" filter="url(#waxShadow)"/>
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="#C9A860" stroke-width="2.5"/>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="#7B1818" stroke-width="1.5" opacity="0.8"/>
+                  <text x="50" y="35" text-anchor="middle" font-size="7" fill="#7B1818" font-family="Playfair Display, serif" font-weight="600">Since 2024</text>
+                  <text x="50" y="50" text-anchor="middle" font-size="5.5" fill="#C9A860" font-family="Noto Sans Devanagari, sans-serif" font-weight="500">जयपुर, राजस्थान</text>
+                  <text x="50" y="65" text-anchor="middle" font-size="5.5" fill="#7B1818" font-family="Georgia, serif" font-weight="400">Handcrafted</text>
                 </svg>
               </div>
               
+              <!-- Hero Greeting (Lowercase, warm) -->
               <p class="hero-greeting">नमस्ते — from our kitchen in Jaipur, Rajasthan</p>
+              
+              <!-- Hindi Headline -->
               <h2 class="hero-hindi">घर का स्वाद, सीधे राजस्थान से।</h2>
-              <h1 class="hero-title">Pure.<br>Authentic.<br>Made with Love.</h1>
+              
+              <!-- Main Headline -->
+              <h1 class="hero-title">Pure. Authentic. Made with Love.</h1>
+              
+              <!-- Description -->
               <p class="hero-description">Made in small batches every Monday morning in Jaipur, shipped to your doorstep by Thursday. No preservatives. No shortcuts.</p>
               
+              <!-- CTA Buttons -->
               <div class="hero-cta-group">
                 <a routerLink="/products" class="cta-primary">Shop Now</a>
                 <a routerLink="/products" class="cta-secondary">Explore Products →</a>
@@ -90,46 +105,35 @@ interface StoreSettings {
               <!-- Illustrated Trust Badges -->
               <div class="trust-badges">
                 <div class="trust-badge">
-                  <svg viewBox="0 0 24 24" class="badge-icon">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2"/>
-                  </svg>
+                  <div class="badge-icon">🏺</div>
                   <div class="badge-content">
                     <span class="badge-label">Small Batch</span>
                     <span class="badge-desc">Made fresh every week</span>
                   </div>
                 </div>
                 <div class="trust-badge">
-                  <svg viewBox="0 0 24 24" class="badge-icon">
-                    <path d="M12 2C7 2 3 6 3 11c0 5 4 9 9 11 5-2 9-6 9-11 0-5-4-9-9-9z"/>
-                    <path d="M12 6c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4z"/>
-                  </svg>
+                  <div class="badge-icon">🌿</div>
                   <div class="badge-content">
                     <span class="badge-label">No Preservatives</span>
                     <span class="badge-desc">Pure ingredients only</span>
                   </div>
                 </div>
                 <div class="trust-badge">
-                  <svg viewBox="0 0 24 24" class="badge-icon">
-                    <path d="M20 8h-3V4H3v16h18v-8zM5 18v-7h2v7H5zm4 0v-7h2v7H9zm4 0v-7h2v7h-2zm4 0v-7h2v7h-2z"/>
-                  </svg>
+                  <div class="badge-icon">📦</div>
                   <div class="badge-content">
                     <span class="badge-label">Ship-ready</span>
                     <span class="badge-desc">Packed on order</span>
                   </div>
                 </div>
                 <div class="trust-badge">
-                  <svg viewBox="0 0 24 24" class="badge-icon">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                  </svg>
+                  <div class="badge-icon">👩‍🍳</div>
                   <div class="badge-content">
                     <span class="badge-label">Handmade</span>
                     <span class="badge-desc">Traditional family recipes</span>
                   </div>
                 </div>
                 <div class="trust-badge">
-                  <svg viewBox="0 0 24 24" class="badge-icon">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                  </svg>
+                  <div class="badge-icon">📍</div>
                   <div class="badge-content">
                     <span class="badge-label">From Jaipur</span>
                     <span class="badge-desc">Direct from Rajasthan</span>
@@ -180,61 +184,42 @@ interface StoreSettings {
                 <path d="M50 200 L50 140 L80 130 L110 145 L140 125 L170 140 L200 120 L230 135 L260 115 L290 130 L320 110 L350 125 L400 100 L400 200 Z" fill="rgba(110, 31, 31, 0.1)"/>
               </svg>
               
-              <!-- Camel Silhouette SVG -->
-              <svg class="camel-silhouette" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid meet">
-                <path d="M10 50 Q15 45 20 50 L25 40 Q30 35 35 40 L40 30 Q45 25 50 30 L55 20 Q60 15 65 20 L70 25 Q75 20 80 25 L85 30 Q90 35 85 40 L80 45 Q75 50 70 45 L65 50 Q60 55 55 50 L50 55 Q45 60 40 55 L35 50 Q30 55 25 50 L20 55 Q15 60 10 55 Z" fill="rgba(200, 154, 43, 0.2)"/>
-              </svg>
-              
               <!-- Decorative Elements -->
               <div class="sand-dunes"></div>
             </div>
             
             <div class="why-choose-content">
               <h2 class="section-title">Why Choose Rajasthani Ras</h2>
-              <div class="why-choose-list">
-                <div class="why-item">
-                  <svg class="why-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2"/>
-                  </svg>
-                  <span>Homemade Taste</span>
+              <div class="why-choose-cards">
+                <div class="why-card">
+                  <div class="why-card-icon">100%</div>
+                  <span class="why-card-title">Authentic Rajasthani Taste</span>
                 </div>
-                <div class="why-item">
-                  <svg class="why-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-                    <line x1="7" y1="7" x2="7.01" y2="7"/>
-                  </svg>
-                  <span>Freshly Packed</span>
+                <div class="why-card">
+                  <div class="why-card-icon">✓</div>
+                  <span class="why-card-title">No Preservatives or Chemicals</span>
                 </div>
-                <div class="why-item">
-                  <svg class="why-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                    <circle cx="12" cy="10" r="3"/>
-                  </svg>
-                  <span>Direct from Rajasthan</span>
+                <div class="why-card">
+                  <div class="why-card-icon">🏺</div>
+                  <span class="why-card-title">Prepared in Small Batches</span>
                 </div>
-                <div class="why-item">
-                  <svg class="why-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                    <polyline points="22 4 12 14.01 9 11.01"/>
-                  </svg>
-                  <span>Hygienically Prepared</span>
-                </div>
-                <div class="why-item">
-                  <svg class="why-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2"/>
-                  </svg>
-                  <span>Premium Ingredients</span>
-                </div>
-                <div class="why-item">
-                  <svg class="why-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 6h18"/>
-                    <path d="M3 12h18"/>
-                    <path d="M3 18h18"/>
-                  </svg>
-                  <span>Authentic Recipes</span>
+                <div class="why-card">
+                  <div class="why-card-icon">🚚</div>
+                  <span class="why-card-title">Direct from Kitchen to Home</span>
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        <!-- Free Delivery Banner -->
+        <section class="delivery-banner">
+          <div class="banner-content">
+            <span class="banner-item">Free delivery on orders above ₹499</span>
+            <span class="banner-divider">·</span>
+            <span class="banner-item">Cash on Delivery available</span>
+            <span class="banner-divider">·</span>
+            <span class="banner-item">100% secure checkout</span>
           </div>
         </section>
 
@@ -315,8 +300,7 @@ interface StoreSettings {
       height: 100%;
       background-image: 
         radial-gradient(circle at 20% 30%, rgba(232, 146, 42, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(123, 24, 24, 0.03) 0%, transparent 50%),
-        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30L30 0z' fill='none' stroke='%23C9A860' stroke-opacity='0.03'/%3E%3C/svg%3E");
+        radial-gradient(circle at 80% 70%, rgba(123, 24, 24, 0.03) 0%, transparent 50%);
       pointer-events: none;
       z-index: 0;
     }
@@ -331,12 +315,12 @@ interface StoreSettings {
       padding-top: 20px;
     }
 
-    /* Hero Section - Editorial Luxury */
+    /* Hero Section */
     .hero-section {
       padding: 2rem 3rem 4rem;
       position: relative;
       overflow: hidden;
-      background: linear-gradient(135deg, var(--ivory) 0%, var(--warm-cream) 100%);
+      background: linear-gradient(135deg, #FBF5E6 0%, var(--warm-cream) 100%);
     }
 
     .hero-content {
@@ -352,15 +336,53 @@ interface StoreSettings {
       z-index: 2;
     }
 
-    .hero-greeting {
-      color: var(--terracotta);
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+    /* Wax Seal */
+    .wax-seal {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 1.5rem;
+      animation: rotateIn 0.8s ease-out;
     }
 
+    .wax-seal-svg {
+      width: 100%;
+      height: 100%;;
+      filter: drop-shadow(0 4px 8px rgba(123, 24, 24, 0.15));
+    }
+
+    @keyframes rotateIn {
+      from {
+        opacity: 0;
+        transform: rotate(-180deg) scale(0.5);
+      }
+      to {
+        opacity: 1;
+        transform: rotate(0) scale(1);
+      }
+    }
+
+    /* Hero Greeting */
+    .hero-greeting {
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: lowercase;
+    }
+
+    /* Hindi Headline */
+    .hero-hindi {
+      font-size: 1.8rem;
+      color: var(--deep-maroon);
+      margin-bottom: 0.5rem;
+      font-family: 'Noto Sans Devanagari', Georgia, serif;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+
+    /* Main Title */
     .hero-title {
       font-size: clamp(2.5rem, 5vw, 3.5rem);
       color: var(--deep-maroon);
@@ -371,16 +393,18 @@ interface StoreSettings {
       letter-spacing: -0.5px;
     }
 
+    /* Description */
     .hero-description {
-      color: var(--dark-brown);
+      color: var(--text-primary);
       font-size: 1.05rem;
       margin-bottom: 2rem;
       max-width: 480px;
       line-height: 1.7;
       font-weight: 400;
-      opacity: 0.85;
+      opacity: 0.9;
     }
 
+    /* CTA Buttons */
     .hero-cta-group {
       display: flex;
       gap: 1rem;
@@ -391,26 +415,27 @@ interface StoreSettings {
       display: inline-block;
       background: linear-gradient(135deg, var(--deep-maroon) 0%, #4A1515 100%);
       color: #fff;
-      padding: 0.9rem 2.2rem;
+      padding: 1rem 2.5rem;
       border-radius: 50px;
       text-decoration: none;
       font-weight: 600;
       font-size: 0.95rem;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 8px 24px rgba(110, 31, 31, 0.25);
+      box-shadow: 0 8px 24px rgba(123, 24, 24, 0.25);
       letter-spacing: 0.5px;
     }
 
     .cta-primary:hover {
       transform: translateY(-3px);
-      box-shadow: 0 12px 32px rgba(110, 31, 31, 0.35);
+      box-shadow: 0 12px 32px rgba(123, 24, 24, 0.35);
+      background: linear-gradient(135deg, #4A1515 0%, #2A0E0E 100%);
     }
 
     .cta-secondary {
       display: inline-block;
       background: transparent;
       color: var(--deep-maroon);
-      padding: 0.9rem 2.2rem;
+      padding: 1rem 2.5rem;
       border-radius: 50px;
       text-decoration: none;
       font-weight: 600;
@@ -426,27 +451,122 @@ interface StoreSettings {
       transform: translateY(-3px);
     }
 
-    .hero-features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.25rem;
-    }
-
-    .feature-item {
+    /* Social Proof */
+    .social-proof {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      color: var(--dark-brown);
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      color: var(--text-primary);
       font-weight: 500;
     }
 
-    .check-icon {
-      color: var(--royal-gold);
+    .rating {
       font-weight: 700;
-      font-size: 1rem;
+      color: var(--deep-maroon);
     }
 
+    .divider {
+      color: var(--text-muted);
+    }
+
+    .trust-text {
+      color: var(--text-primary);
+    }
+
+    /* Freshness Indicator */
+    .freshness-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.75rem 1rem;
+      background: rgba(232, 146, 42, 0.08);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      font-weight: 500;
+      width: fit-content;
+      margin-bottom: 2rem;
+    }
+
+    .status-dot {
+      font-size: 0.8rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    /* Trust Badges */
+    .trust-badges {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .trust-badge {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 12px;
+      border: 1px solid rgba(201, 168, 96, 0.2);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .trust-badge:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 8px 20px rgba(123, 24, 24, 0.1);
+    }
+
+    .badge-icon {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      animation: slideInLeft 0.5s ease-out forwards;
+    }
+
+    .trust-badge:nth-child(2) .badge-icon { animation-delay: 0.1s; }
+    .trust-badge:nth-child(3) .badge-icon { animation-delay: 0.2s; }
+    .trust-badge:nth-child(4) .badge-icon { animation-delay: 0.3s; }
+    .trust-badge:nth-child(5) .badge-icon { animation-delay: 0.4s; }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .badge-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .badge-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--deep-maroon);
+    }
+
+    .badge-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    /* Hero Image */
     .hero-image {
       position: relative;
     }
@@ -456,16 +576,39 @@ interface StoreSettings {
       height: 500px;
       object-fit: cover;
       border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(110, 31, 31, 0.12);
+      box-shadow: 0 20px 40px rgba(123, 24, 24, 0.12);
+      animation: fadeInRight 0.8s ease-out;
     }
 
-    /* Products Menu Section (Left) */
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Bottom Section */
+    .bottom-section {
+      padding: 4rem 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* Products Menu Section */
     .products-menu-section {
       background: rgba(255, 255, 255, 0.7);
       backdrop-filter: blur(40px);
       border-radius: 24px;
       padding: 3rem;
-      box-shadow: 0 20px 60px rgba(110, 31, 31, 0.15);
+      box-shadow: 0 20px 60px rgba(123, 24, 24, 0.15);
       border: 1px solid rgba(255, 255, 255, 0.5);
     }
 
@@ -483,10 +626,22 @@ interface StoreSettings {
       font-family: 'Playfair Display', Georgia, serif;
       font-weight: 400;
       letter-spacing: -0.5px;
+      position: relative;
+      padding-bottom: 0.75rem;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: var(--gold);
     }
 
     .view-all-link {
-      color: var(--terracotta);
+      color: var(--saffron);
       text-decoration: none;
       font-weight: 600;
       font-size: 1rem;
@@ -515,12 +670,12 @@ interface StoreSettings {
       padding: 1.5rem;
       box-shadow: var(--soft-shadow);
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      border: 1px solid rgba(200, 154, 43, 0.1);
+      border: 1px solid rgba(201, 168, 96, 0.1);
     }
 
     .category-menu-card:hover {
       transform: translateY(-8px);
-      box-shadow: 0 16px 40px rgba(110, 31, 31, 0.15);
+      box-shadow: 0 16px 40px rgba(123, 24, 24, 0.15);
     }
 
     .category-menu-image {
@@ -547,30 +702,8 @@ interface StoreSettings {
       height: 60px;
     }
 
-    .category-svg svg {
-      width: 100%;
-      height: 100%;
-      fill: var(--royal-gold);
-    }
-
-    .category-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--deep-maroon);
-      background: linear-gradient(135deg, var(--warm-cream) 0%, var(--ivory) 100%);
-    }
-
     .category-menu-card:hover .category-menu-image img {
       transform: scale(1.1);
-    }
-
-    .category-menu-info {
-      text-align: center;
     }
 
     .category-menu-info h3 {
@@ -578,28 +711,18 @@ interface StoreSettings {
       margin: 0;
       font-size: 1rem;
       font-weight: 600;
+      text-align: center;
     }
 
-    /* Bottom Section */
-    .bottom-section {
-      padding: 4rem 3rem;
-      max-width: 1400px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      align-items: start;
-    }
-
-    /* Why Choose Us - Right Bottom */
+    /* Why Choose Us */
     .why-choose-right {
       position: relative;
       background: linear-gradient(135deg, rgba(255, 248, 240, 0.9) 0%, rgba(247, 233, 215, 0.9) 100%);
       backdrop-filter: blur(40px);
       border-radius: 24px;
       padding: 2rem;
-      box-shadow: 0 20px 60px rgba(110, 31, 31, 0.15);
-      border: 2px solid rgba(200, 154, 43, 0.2);
+      box-shadow: 0 20px 60px rgba(123, 24, 24, 0.15);
+      border: 2px solid rgba(201, 168, 96, 0.2);
       overflow: hidden;
       animation: fadeInUp 0.8s ease-out;
     }
@@ -623,15 +746,6 @@ interface StoreSettings {
       animation: fortFloat 8s ease-in-out infinite;
     }
 
-    .camel-silhouette {
-      position: absolute;
-      bottom: 10%;
-      right: 5%;
-      width: 60px;
-      height: 36px;
-      animation: camelWalk 12s linear infinite;
-    }
-
     .sand-dunes {
       position: absolute;
       bottom: 0;
@@ -649,52 +763,67 @@ interface StoreSettings {
 
     .why-choose-right .section-title {
       margin-bottom: 1.5rem;
-      position: relative;
-      z-index: 1;
       font-size: 1.5rem;
     }
 
-    .why-choose-list {
+    .why-choose-cards {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
-      position: relative;
-      z-index: 1;
+      gap: 1rem;
     }
 
-    .why-item {
+    .why-card {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      color: var(--dark-brown);
-      font-weight: 500;
-      padding: 0.5rem;
+      gap: 0.75rem;
+      padding: 1rem;
       background: rgba(255, 255, 255, 0.6);
-      border-radius: 10px;
+      border-radius: 12px;
       transition: all 0.3s ease;
       animation: slideIn 0.5s ease-out forwards;
       opacity: 0;
     }
 
-    .why-item:nth-child(1) { animation-delay: 0.1s; }
-    .why-item:nth-child(2) { animation-delay: 0.2s; }
-    .why-item:nth-child(3) { animation-delay: 0.3s; }
-    .why-item:nth-child(4) { animation-delay: 0.4s; }
-    .why-item:nth-child(5) { animation-delay: 0.5s; }
-    .why-item:nth-child(6) { animation-delay: 0.6s; }
+    .why-card:nth-child(1) { animation-delay: 0.1s; }
+    .why-card:nth-child(2) { animation-delay: 0.2s; }
+    .why-card:nth-child(3) { animation-delay: 0.3s; }
+    .why-card:nth-child(4) { animation-delay: 0.4s; }
 
-    .why-item:hover {
-      background: rgba(200, 154, 43, 0.15);
-      transform: translateX(5px);
-      box-shadow: 0 4px 12px rgba(110, 31, 31, 0.1);
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
-    .why-svg {
-      width: 16px;
-      height: 16px;
+    .why-card:hover {
+      background: rgba(201, 168, 96, 0.15);
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(123, 24, 24, 0.1);
+    }
+
+    .why-card-icon {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--saffron);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(232, 146, 42, 0.1);
+      border-radius: 50%;
       flex-shrink: 0;
-      stroke: var(--royal-gold);
+    }
+
+    .why-card-title {
+      font-size: 0.95rem;
+      color: var(--deep-maroon);
+      font-weight: 600;
     }
 
     @keyframes fadeInUp {
@@ -709,49 +838,42 @@ interface StoreSettings {
     }
 
     @keyframes fortFloat {
-      0%, 100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
     }
 
-    @keyframes camelWalk {
-      0% {
-        transform: translateX(-100px);
-      }
-      100% {
-        transform: translateX(calc(100% + 100px));
-      }
+    /* Delivery Banner */
+    .delivery-banner {
+      background: linear-gradient(135deg, var(--deep-maroon) 0%, #4A1515 100%);
+      color: var(--warm-cream);
+      padding: 1.5rem;
+      text-align: center;
+      margin: 2rem 3rem 0;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      font-weight: 500;
     }
 
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateX(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
+    .banner-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      letter-spacing: 0.05em;
     }
 
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.1);
-      }
+    .banner-divider {
+      color: var(--gold);
     }
 
     /* Footer */
     .footer {
       background: #f7e7d3;
       padding: 40px 20px;
-      border-top: 1px solid rgba(0,0,0,0.05);
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
       font-family: system-ui, sans-serif;
+      margin-top: 2rem;
     }
 
     .footer-container {
@@ -772,7 +894,7 @@ interface StoreSettings {
       padding: 20px;
       text-align: center;
       backdrop-filter: blur(8px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
       transition: 0.25s ease;
       display: flex;
       flex-direction: column;
@@ -812,6 +934,7 @@ interface StoreSettings {
       line-height: 1.4;
     }
 
+    /* Responsive */
     @media (max-width: 1200px) {
       .hero-content { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
       .hero-image img { height: 480px; }
@@ -822,10 +945,8 @@ interface StoreSettings {
       .hero-content { grid-template-columns: 1fr; gap: 2.5rem; }
       .hero-image { order: -1; }
       .hero-image img { height: 400px; }
-      .why-choose-list { grid-template-columns: 1fr; }
-      .footer-container { gap: 15px; }
-      .footer-item { min-width: 180px; }
-      .hero-description { max-width: 100%; }
+      .why-choose-cards { grid-template-columns: 1fr; }
+      .trust-badges { grid-template-columns: repeat(3, 1fr); }
     }
 
     @media (max-width: 768px) {
@@ -833,12 +954,13 @@ interface StoreSettings {
       .hero-section { padding: 3rem 1.5rem 4rem; }
       .hero-content { gap: 2rem; }
       .hero-image img { height: 350px; }
-      .hero-features { flex-direction: column; gap: 0.75rem; }
       .footer-container { flex-direction: column; }
       .footer-item { min-width: 100%; }
       .products-menu-grid { grid-template-columns: repeat(2, 1fr); }
       .why-choose-right { padding: 2rem; }
       .hero-title { font-size: 2rem; }
+      .bottom-section { grid-template-columns: 1fr; }
+      .trust-badges { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (max-width: 480px) {
@@ -847,7 +969,9 @@ interface StoreSettings {
       .hero-cta-group { flex-direction: column; }
       .cta-primary, .cta-secondary { width: 100%; text-align: center; }
       .products-menu-grid { grid-template-columns: 1fr; }
-      .why-choose-list { grid-template-columns: 1fr; }
+      .why-choose-cards { grid-template-columns: 1fr; }
+      .trust-badges { grid-template-columns: 1fr; }
+      .delivery-banner { margin: 2rem 1rem 0; }
     }
   `]
 })
@@ -872,7 +996,6 @@ export class HomeComponent implements OnInit {
     if (this.auth.isLoggedIn()) {
       this.api.get<UserProfile>('/user/profile').subscribe(profile => {
         this.userProfile = profile;
-        // Get default address or first address
         this.userAddress = profile.addresses?.find(addr => addr.isDefault) || profile.addresses?.[0] || null;
       });
     }
