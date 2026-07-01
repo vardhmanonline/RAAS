@@ -86,11 +86,11 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       display: flex;
       flex-direction: column;
       position: fixed;
-      height: 100vh;
+      height: calc(100vh - 90px);
       overflow-y: auto;
       z-index: 100;
       box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
-      top: 0;
+      top: 90px;
     }
 
     .sidebar-nav {

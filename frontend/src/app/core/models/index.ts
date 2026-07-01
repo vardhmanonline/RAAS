@@ -34,6 +34,7 @@ export interface Category {
   description: string;
   imageUrl: string;
   productCount: number;
+  svgIcon?: string;
 }
 
 export interface CartItem {

@@ -46,28 +46,6 @@ interface StoreSettings {
       <!-- Sidebar Component -->
       <app-sidebar></app-sidebar>
 
-      <!-- Header -->
-      <header class="main-header">
-        <div class="header-logo">
-          <img src="/assets/images/rajasthani_ras_logo.png" alt="Rajasthani Ras" class="logo-image" />
-        </div>
-        <div class="location-info">
-          <span class="location-icon">📍</span>
-          <span>Delivering to {{ deliveryLocation }}</span>
-        </div>
-        <div class="header-actions">
-          <button class="icon-btn">
-            <span>🔔</span>
-          </button>
-          <a routerLink="/cart" class="icon-btn cart-btn">
-            <span>🛒</span>
-            @if (cart.itemCount() > 0) {
-              <span class="cart-count">{{ cart.itemCount() }}</span>
-            }
-          </a>
-        </div>
-      </header>
-
       <!-- Main Content -->
       <main class="main-content">
 
@@ -124,7 +102,9 @@ interface StoreSettings {
               @for (category of categories; track category.id) {
                 <a [routerLink]="['/products']" [queryParams]="{category: category.name}" class="category-menu-card">
                   <div class="category-menu-image">
-                    @if (category.imageUrl) {
+                    @if (category.svgIcon) {
+                      <div class="category-svg" [innerHTML]="category.svgIcon"></div>
+                    } @else if (category.imageUrl) {
                       <img [src]="category.imageUrl" [alt]="category.name" />
                     } @else {
                       <div class="category-placeholder">{{ category.name.charAt(0) }}</div>
@@ -295,99 +275,7 @@ interface StoreSettings {
       overflow-y: auto;
       position: relative;
       z-index: 1;
-      padding-top: 80px;
-    }
-
-    /* Header - Minimal Luxury */
-    .main-header {
-      background: rgba(255, 248, 240, 0.95);
-      backdrop-filter: blur(20px);
-      padding: 1rem 2.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 20px rgba(110, 31, 31, 0.05);
-      position: fixed;
-      top: 0;
-      right: 0;
-      left: 260px;
-      z-index: 50;
-      gap: 2rem;
-    }
-
-    .header-logo {
-      display: flex;
-      align-items: center;
-    }
-
-    .header-logo .logo-image {
-      height: 55px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    .location-info {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      color: var(--dark-brown);
-      font-size: 0.75rem;
-      font-weight: 500;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 0.35rem 0.7rem;
-      border-radius: 16px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      margin-left: auto;
-      margin-right: 1rem;
-      max-width: 180px;
-    }
-
-    .location-icon {
-      font-size: 1rem;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-    }
-
-    .icon-btn {
-      position: relative;
-      padding: 0.75rem;
-      border: none;
-      background: rgba(110, 31, 31, 0.05);
-      cursor: pointer;
-      font-size: 1.1rem;
-      text-decoration: none;
-      border-radius: 12px;
-      transition: all 0.3s;
-    }
-
-    .icon-btn:hover {
-      background: rgba(110, 31, 31, 0.1);
-      transform: translateY(-2px);
-    }
-
-    .cart-btn {
-      position: relative;
-    }
-
-    .cart-count {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      background: var(--deep-maroon);
-      color: #fff;
-      font-size: 0.65rem;
-      font-weight: 700;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 8px rgba(110, 31, 31, 0.3);
+      padding-top: 20px;
     }
 
     /* Hero Section - Editorial Luxury */
@@ -599,6 +487,17 @@ interface StoreSettings {
       height: 100%;
       object-fit: cover;
       transition: transform 0.4s;
+    }
+
+    .category-svg {
+      width: 60px;
+      height: 60px;
+    }
+
+    .category-svg svg {
+      width: 100%;
+      height: 100%;
+      fill: var(--royal-gold);
     }
 
     .category-placeholder {
