@@ -1,5 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../core/services/auth.service';
 import { CartService } from '../core/services/cart.service';
@@ -14,7 +15,7 @@ interface StoreSettings {
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, FormsModule],
+  imports: [RouterLink, RouterLinkActive, FormsModule, CommonModule],
   template: `
     <header class="header">
       <div class="header-container">
@@ -43,7 +44,7 @@ interface StoreSettings {
             [(ngModel)]="searchQuery"
             (keyup.enter)="onSearch()"
           />
-          <button class="search-btn" (click)="onSearch()">
+          <button class="search-btn" (click)="onSearch()" title="Search">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"></circle>
               <path d="m21 21-4.35-4.35"></path>
@@ -91,9 +92,9 @@ interface StoreSettings {
       }
 
       <!-- WhatsApp Button (Floating) -->
-      <a href="https://wa.me/919876543210" target="_blank" class="whatsapp-btn" title="Order on WhatsApp">
+      <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" class="whatsapp-btn" title="Order on WhatsApp">
         <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-9.746 9.798c0 2.734.732 5.367 2.124 7.684L2.58 22.923l8.127-2.133a9.847 9.847 0 004.759 1.213h.004c5.428 0 9.835-4.41 9.835-9.85 0-2.631-.555-5.112-1.61-7.520a9.833 9.833 0 00-8.115-4.733zm0-2.382c3.15 0 6.083 1.229 8.301 3.447 2.218 2.219 3.44 5.165 3.44 8.283 0 6.441-5.243 11.683-11.685 11.683a11.82 11.82 0 01-5.637-1.436L.255 23.702c-.341.341-.341.893 0 1.234l1.41 1.409c.34.34.893.34 1.233 0l8.958-8.957a11.758 11.758 0 005.834-1.57c2.217-2.219 3.437-5.165 3.437-8.283 0-6.441-5.242-11.682-11.683-11.682-3.15 0-6.083 1.229-8.302 3.447-2.218 2.218-3.44 5.165-3.44 8.282 0 3.116 1.221 6.062 3.44 8.281z"/>
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-9.746 9.798c0 2.734.732 5.367 2.124 7.684L2.58 22.923l8.127-2.133a9.847 9.847 0 004.759 1.213h.004c5.428 0 9.835-4.41 9.835-9.85 0-2.631-.555-5.112-1.61-7.52a9.833 9.833 0 00-8.115-4.733zm0-2.382c3.15 0 6.083 1.229 8.301 3.447 2.218 2.219 3.44 5.165 3.44 8.283 0 6.441-5.243 11.683-11.685 11.683a11.82 11.82 0 01-5.637-1.436L.255 23.702c-.341.341-.341.893 0 1.234l1.41 1.409c.34.34.893.34 1.233 0l8.958-8.957a11.758 11.758 0 005.834-1.57c2.217-2.219 3.437-5.165 3.437-8.283 0-6.441-5.242-11.682-11.683-11.682-3.15 0-6.083 1.229-8.302 3.447-2.218 2.218-3.44 5.165-3.44 8.282 0 3.116 1.221 6.062 3.44 8.281z"/>
         </svg>
         <span class="whatsapp-text">Order on WhatsApp</span>
       </a>
@@ -135,6 +136,11 @@ interface StoreSettings {
       color: var(--deep-maroon);
       text-decoration: none;
       white-space: nowrap;
+      transition: all 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.02);
     }
 
     .logo-icon {
@@ -163,6 +169,13 @@ interface StoreSettings {
       color: var(--text-primary);
       font-weight: 500;
       white-space: nowrap;
+      border: 1px solid rgba(232, 146, 42, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .location-tag:hover {
+      background: rgba(232, 146, 42, 0.12);
+      border-color: rgba(232, 146, 42, 0.4);
     }
 
     .location-icon {
@@ -238,11 +251,23 @@ interface StoreSettings {
       color: var(--text-muted);
       font-weight: 500;
       font-size: 0.95rem;
-      transition: color 0.2s;
+      transition: all 0.2s;
+      position: relative;
     }
 
     .nav a:hover, .nav a.active {
       color: var(--deep-maroon);
+    }
+
+    .nav a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--saffron);
+      border-radius: 1px;
     }
 
     .admin-link {
@@ -291,6 +316,12 @@ interface StoreSettings {
       display: flex;
       align-items: center;
       justify-content: center;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
     }
 
     .btn-sm {
@@ -397,6 +428,9 @@ interface StoreSettings {
       .logo {
         font-size: 1.2rem;
       }
+      .logo-text {
+        display: none;
+      }
       .search-container {
         max-width: 150px;
         padding: 0.4rem 0.5rem;
@@ -449,7 +483,6 @@ export class HeaderComponent implements OnInit {
 
   onSearch() {
     if (this.searchQuery.trim()) {
-      // Route to products with search query
       window.location.href = `/products?q=${encodeURIComponent(this.searchQuery)}`;
     }
   }
