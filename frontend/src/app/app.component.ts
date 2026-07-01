@@ -29,7 +29,7 @@ import { SidebarComponent } from './layout/sidebar.component';
         <!-- Floating CTA (appears after hero) -->
         @if (showFloatingCTA()) {
           <div class="floating-cta">
-            <a href="/products" class="floating-btn">
+            <a href="/products" class="floating-btn" title="Shop Now">
               <span class="btn-icon">🛍️</span>
               <span class="btn-text">Shop Now</span>
             </a>
@@ -49,6 +49,7 @@ import { SidebarComponent } from './layout/sidebar.component';
       z-index: 1000;
       transition: width 0.1s ease;
       box-shadow: 0 0 8px rgba(232, 146, 42, 0.5);
+      width: 0%;
     }
 
     /* App Layout */
@@ -61,10 +62,13 @@ import { SidebarComponent } from './layout/sidebar.component';
     .app-main {
       flex: 1;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       scroll-behavior: smooth;
       margin-left: 260px;
       margin-top: 0;
+      margin-bottom: 0;
       position: relative;
+      padding-top: 0;
     }
 
     /* Floating CTA Button */
@@ -79,6 +83,7 @@ import { SidebarComponent } from './layout/sidebar.component';
     .floating-btn {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 0.75rem;
       padding: 1rem 1.5rem;
       background: linear-gradient(135deg, #7B1818 0%, #4A1515 100%);
@@ -91,6 +96,7 @@ import { SidebarComponent } from './layout/sidebar.component';
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       cursor: pointer;
       border: none;
+      white-space: nowrap;
     }
 
     .floating-btn:hover {
@@ -99,8 +105,13 @@ import { SidebarComponent } from './layout/sidebar.component';
       background: linear-gradient(135deg, #4A1515 0%, #2A0E0E 100%);
     }
 
+    .floating-btn:active {
+      transform: translateY(-2px);
+    }
+
     .btn-icon {
       font-size: 1.25rem;
+      flex-shrink: 0;
     }
 
     @keyframes slideInUp {
@@ -124,30 +135,41 @@ import { SidebarComponent } from './layout/sidebar.component';
     @media (max-width: 768px) {
       .app-main {
         margin-left: 0;
-        margin-bottom: 80px;
+        margin-bottom: 0;
+        padding-bottom: 80px;
       }
       .floating-cta {
-        bottom: 6rem;
+        bottom: 7.5rem;
         right: 1rem;
       }
     }
 
     @media (max-width: 480px) {
       .floating-cta {
-        bottom: 5.5rem;
+        bottom: 7rem;
         right: 0.75rem;
       }
       .floating-btn {
-        padding: 0.875rem 1.25rem;
-        font-size: 0.85rem;
+        padding: 0.75rem;
+        font-size: 0;
+        width: 56px;
+        height: 56px;
       }
       .btn-text {
         display: none;
       }
+      .btn-icon {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* Prefer reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-progress-bar,
+      .floating-cta,
       .floating-btn {
-        width: 50px;
-        height: 50px;
-        justify-content: center;
+        animation: none;
+        transition: none;
       }
     }
   `]
@@ -168,7 +190,7 @@ export class AppComponent implements OnInit {
     const target = event.target as HTMLElement;
     const scrollTop = target.scrollTop;
     const scrollHeight = target.scrollHeight - target.clientHeight;
-    const scrollPercent = (scrollTop / scrollHeight) * 100;
+    const scrollPercent = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
     
     this.scrollProgress.set(scrollPercent);
     this.isHeaderScrolled.set(scrollTop > 100);
