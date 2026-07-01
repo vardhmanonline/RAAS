@@ -81,7 +81,6 @@ interface StoreSettings {
               
               <div class="hero-cta-group">
                 <a routerLink="/products" class="cta-primary">Shop Now</a>
-                <a routerLink="/products" class="cta-secondary">Explore Collection</a>
               </div>
               
               <div class="hero-features">
@@ -113,59 +112,94 @@ interface StoreSettings {
           </div>
         </section>
 
-        <!-- Product Menu Section (Center) -->
-        <section class="products-menu-section">
-          <div class="section-header">
-            <h2 class="section-title">Our Categories</h2>
-            <a routerLink="/products" class="view-all-link">View All →</a>
-          </div>
-          <div class="products-menu-grid">
-            @for (category of categories; track category.id) {
-              <a [routerLink]="['/products']" [queryParams]="{category: category.name}" class="category-menu-card">
-                <div class="category-menu-image">
-                  @if (category.imageUrl) {
-                    <img [src]="category.imageUrl" [alt]="category.name" />
-                  } @else {
-                    <div class="category-placeholder">{{ category.name.charAt(0) }}</div>
-                  }
-                </div>
-                <div class="category-menu-info">
-                  <h3>{{ category.name }}</h3>
-                </div>
-              </a>
-            }
-          </div>
-        </section>
-
         <!-- Bottom Section Grid -->
         <section class="bottom-section">
-          <!-- Why Choose Us - Right Bottom -->
+          <!-- Product Menu Section (Left) -->
+          <div class="products-menu-section">
+            <div class="section-header">
+              <h2 class="section-title">Our Categories</h2>
+              <a routerLink="/products" class="view-all-link">View All →</a>
+            </div>
+            <div class="products-menu-grid">
+              @for (category of categories; track category.id) {
+                <a [routerLink]="['/products']" [queryParams]="{category: category.name}" class="category-menu-card">
+                  <div class="category-menu-image">
+                    @if (category.imageUrl) {
+                      <img [src]="category.imageUrl" [alt]="category.name" />
+                    } @else {
+                      <div class="category-placeholder">{{ category.name.charAt(0) }}</div>
+                    }
+                  </div>
+                  <div class="category-menu-info">
+                    <h3>{{ category.name }}</h3>
+                  </div>
+                </a>
+              }
+            </div>
+          </div>
+
+          <!-- Why Choose Us (Right) -->
           <div class="why-choose-right">
-            <h2 class="section-title">Why Choose Rajasthani Ras</h2>
-            <div class="why-choose-list">
-              <div class="why-item">
-                <span class="why-icon">✓</span>
-                <span>Homemade Taste</span>
-              </div>
-              <div class="why-item">
-                <span class="why-icon">✓</span>
-                <span>Freshly Packed</span>
-              </div>
-              <div class="why-item">
-                <span class="why-icon">✓</span>
-                <span>Direct from Rajasthan</span>
-              </div>
-              <div class="why-item">
-                <span class="why-icon">✓</span>
-                <span>Hygienically Prepared</span>
-              </div>
-              <div class="why-item">
-                <span class="why-icon">✓</span>
-                <span>Premium Ingredients</span>
-              </div>
-              <div class="why-item">
-                <span class="why-icon">✓</span>
-                <span>Authentic Recipes</span>
+            <div class="why-choose-background">
+              <!-- Amber Fort Silhouette SVG -->
+              <svg class="fort-silhouette" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice">
+                <path d="M0 200 L0 120 L30 100 L60 110 L90 90 L120 100 L150 80 L180 95 L210 75 L240 90 L270 70 L300 85 L330 65 L360 80 L400 60 L400 200 Z" fill="rgba(182, 90, 42, 0.15)"/>
+                <path d="M50 200 L50 140 L80 130 L110 145 L140 125 L170 140 L200 120 L230 135 L260 115 L290 130 L320 110 L350 125 L400 100 L400 200 Z" fill="rgba(110, 31, 31, 0.1)"/>
+              </svg>
+              
+              <!-- Camel Silhouette SVG -->
+              <svg class="camel-silhouette" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid meet">
+                <path d="M10 50 Q15 45 20 50 L25 40 Q30 35 35 40 L40 30 Q45 25 50 30 L55 20 Q60 15 65 20 L70 25 Q75 20 80 25 L85 30 Q90 35 85 40 L80 45 Q75 50 70 45 L65 50 Q60 55 55 50 L50 55 Q45 60 40 55 L35 50 Q30 55 25 50 L20 55 Q15 60 10 55 Z" fill="rgba(200, 154, 43, 0.2)"/>
+              </svg>
+              
+              <!-- Decorative Elements -->
+              <div class="sand-dunes"></div>
+            </div>
+            
+            <div class="why-choose-content">
+              <h2 class="section-title">Why Choose Rajasthani Ras</h2>
+              <div class="why-choose-list">
+                <div class="why-item">
+                  <svg class="why-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2"/>
+                  </svg>
+                  <span>Homemade Taste</span>
+                </div>
+                <div class="why-item">
+                  <svg class="why-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                    <line x1="7" y1="7" x2="7.01" y2="7"/>
+                  </svg>
+                  <span>Freshly Packed</span>
+                </div>
+                <div class="why-item">
+                  <svg class="why-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  <span>Direct from Rajasthan</span>
+                </div>
+                <div class="why-item">
+                  <svg class="why-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                  <span>Hygienically Prepared</span>
+                </div>
+                <div class="why-item">
+                  <svg class="why-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2"/>
+                  </svg>
+                  <span>Premium Ingredients</span>
+                </div>
+                <div class="why-item">
+                  <svg class="why-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 6h18"/>
+                    <path d="M3 12h18"/>
+                    <path d="M3 18h18"/>
+                  </svg>
+                  <span>Authentic Recipes</span>
+                </div>
               </div>
             </div>
           </div>
@@ -484,11 +518,14 @@ interface StoreSettings {
       box-shadow: 0 20px 40px rgba(110, 31, 31, 0.12);
     }
 
-    /* Products Menu Section (Center) */
+    /* Products Menu Section (Left) */
     .products-menu-section {
-      padding: 4rem 3rem;
-      max-width: 1400px;
-      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(40px);
+      border-radius: 24px;
+      padding: 3rem;
+      box-shadow: 0 20px 60px rgba(110, 31, 31, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.5);
     }
 
     .section-header {
@@ -597,43 +634,164 @@ interface StoreSettings {
       max-width: 1400px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 2rem;
+      align-items: start;
     }
 
     /* Why Choose Us - Right Bottom */
     .why-choose-right {
-      background: rgba(255, 255, 255, 0.7);
+      position: relative;
+      background: linear-gradient(135deg, rgba(255, 248, 240, 0.9) 0%, rgba(247, 233, 215, 0.9) 100%);
       backdrop-filter: blur(40px);
       border-radius: 24px;
-      padding: 3rem;
-      box-shadow: var(--glass-shadow);
-      border: 1px solid rgba(255, 255, 255, 0.5);
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(110, 31, 31, 0.15);
+      border: 2px solid rgba(200, 154, 43, 0.2);
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .why-choose-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .fort-silhouette {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      height: 50%;
+      animation: fortFloat 8s ease-in-out infinite;
+    }
+
+    .camel-silhouette {
+      position: absolute;
+      bottom: 10%;
+      right: 5%;
+      width: 60px;
+      height: 36px;
+      animation: camelWalk 12s linear infinite;
+    }
+
+    .sand-dunes {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 25%;
+      background: linear-gradient(to top, rgba(182, 90, 42, 0.1) 0%, transparent 100%);
+      border-radius: 0 0 24px 24px;
+    }
+
+    .why-choose-content {
+      position: relative;
+      z-index: 1;
     }
 
     .why-choose-right .section-title {
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+      font-size: 1.5rem;
     }
 
     .why-choose-list {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
+      gap: 0.75rem;
+      position: relative;
+      z-index: 1;
     }
 
     .why-item {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      font-size: 1rem;
+      gap: 0.5rem;
+      font-size: 0.85rem;
       color: var(--dark-brown);
       font-weight: 500;
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      animation: slideIn 0.5s ease-out forwards;
+      opacity: 0;
     }
 
-    .why-icon {
-      color: var(--royal-gold);
-      font-weight: 700;
-      font-size: 1.2rem;
+    .why-item:nth-child(1) { animation-delay: 0.1s; }
+    .why-item:nth-child(2) { animation-delay: 0.2s; }
+    .why-item:nth-child(3) { animation-delay: 0.3s; }
+    .why-item:nth-child(4) { animation-delay: 0.4s; }
+    .why-item:nth-child(5) { animation-delay: 0.5s; }
+    .why-item:nth-child(6) { animation-delay: 0.6s; }
+
+    .why-item:hover {
+      background: rgba(200, 154, 43, 0.15);
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(110, 31, 31, 0.1);
+    }
+
+    .why-svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      stroke: var(--royal-gold);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fortFloat {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes camelWalk {
+      0% {
+        transform: translateX(-100px);
+      }
+      100% {
+        transform: translateX(calc(100% + 100px));
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
     }
 
     /* Footer */
@@ -650,20 +808,24 @@ interface StoreSettings {
       align-items: stretch;
       max-width: 1200px;
       margin: auto;
-      gap: 20px;
-      flex-wrap: wrap;
+      gap: 15px;
+      padding: 0 20px;
     }
 
     .footer-item {
       flex: 1;
-      min-width: 220px;
+      min-width: 200px;
       background: rgba(255, 255, 255, 0.65);
       border-radius: 16px;
-      padding: 22px;
+      padding: 20px;
       text-align: center;
       backdrop-filter: blur(8px);
       box-shadow: 0 10px 25px rgba(0,0,0,0.06);
       transition: 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     .footer-item:hover {
