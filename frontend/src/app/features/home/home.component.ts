@@ -132,7 +132,7 @@ interface StoreSettings {
               </div>
             </div>
             <div class="hero-image">
-              <img src="https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800" alt="Rajasthani woman preparing food" />
+              <img src="/assets/images/hero-rajasthani-woman.jpeg" alt="Rajasthani woman preparing food" />
             </div>
           </div>
         </section>
@@ -447,15 +447,16 @@ interface StoreSettings {
 
     /* Hero Section - Editorial Luxury */
     .hero-section {
-      padding: 5rem 3rem;
+      padding: 4rem 3rem 5rem;
       position: relative;
       overflow: hidden;
+      background: linear-gradient(135deg, var(--ivory) 0%, var(--warm-cream) 100%);
     }
 
     .hero-content {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 3rem;
       align-items: center;
       max-width: 1400px;
       margin: 0 auto;
@@ -467,29 +468,29 @@ interface StoreSettings {
 
     .hero-greeting {
       color: var(--terracotta);
-      font-size: 1.1rem;
-      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
       font-weight: 600;
       letter-spacing: 1px;
       text-transform: uppercase;
     }
 
     .hero-title {
-      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
       color: var(--deep-maroon);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       font-family: 'Playfair Display', Georgia, serif;
-      line-height: 1.1;
+      line-height: 1.15;
       font-weight: 400;
-      letter-spacing: -1px;
+      letter-spacing: -0.5px;
     }
 
     .hero-description {
       color: var(--dark-brown);
-      font-size: 1.15rem;
-      margin-bottom: 2.5rem;
-      max-width: 520px;
-      line-height: 1.8;
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+      max-width: 480px;
+      line-height: 1.7;
       font-weight: 400;
       opacity: 0.85;
     }
@@ -497,18 +498,18 @@ interface StoreSettings {
     .hero-cta-group {
       display: flex;
       gap: 1rem;
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
     }
 
     .cta-primary {
       display: inline-block;
       background: linear-gradient(135deg, var(--deep-maroon) 0%, #4A1515 100%);
       color: #fff;
-      padding: 1rem 2.5rem;
+      padding: 0.9rem 2.2rem;
       border-radius: 50px;
       text-decoration: none;
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.95rem;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 8px 24px rgba(110, 31, 31, 0.25);
       letter-spacing: 0.5px;
@@ -523,11 +524,11 @@ interface StoreSettings {
       display: inline-block;
       background: transparent;
       color: var(--deep-maroon);
-      padding: 1rem 2.5rem;
+      padding: 0.9rem 2.2rem;
       border-radius: 50px;
       text-decoration: none;
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.95rem;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       border: 2px solid var(--deep-maroon);
       letter-spacing: 0.5px;
@@ -542,14 +543,14 @@ interface StoreSettings {
     .hero-features {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.5rem;
+      gap: 1.25rem;
     }
 
     .feature-item {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--dark-brown);
       font-weight: 500;
     }
@@ -557,6 +558,7 @@ interface StoreSettings {
     .check-icon {
       color: var(--royal-gold);
       font-weight: 700;
+      font-size: 1rem;
     }
 
     .hero-image {
@@ -565,10 +567,10 @@ interface StoreSettings {
 
     .hero-image img {
       width: 100%;
-      height: 500px;
+      height: 550px;
       object-fit: cover;
-      border-radius: 32px;
-      box-shadow: 0 32px 64px rgba(110, 31, 31, 0.15);
+      border-radius: 24px;
+      box-shadow: 0 24px 48px rgba(110, 31, 31, 0.12);
     }
 
     /* Floating Trust Cards */
@@ -871,24 +873,44 @@ interface StoreSettings {
       opacity: 0.95;
     }
 
+    @media (max-width: 1200px) {
+      .hero-content { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+      .hero-image img { height: 480px; }
+    }
+
     @media (max-width: 1024px) {
       .sidebar { width: 220px; }
       .main-content { margin-left: 220px; }
-      .hero-content { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-content { grid-template-columns: 1fr; gap: 2.5rem; }
       .hero-image { order: -1; }
+      .hero-image img { height: 400px; }
       .features-list { grid-template-columns: 1fr; }
       .features-strip { grid-template-columns: repeat(3, 1fr); }
+      .hero-description { max-width: 100%; }
     }
 
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .main-content { margin-left: 0; }
-      .hero-section { padding: 3rem 1.5rem; }
+      .hero-section { padding: 3rem 1.5rem 4rem; }
+      .hero-content { gap: 2rem; }
+      .hero-image img { height: 350px; }
       .hero-features { flex-direction: column; gap: 0.75rem; }
       .features-strip { grid-template-columns: repeat(2, 1fr); }
       .products-scroll { grid-template-columns: repeat(2, 1fr); }
       .categories-grid { grid-template-columns: repeat(2, 1fr); }
       .glassmorphism-card { padding: 2.5rem 1.5rem; }
+      .hero-title { font-size: 2rem; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-section { padding: 2rem 1rem 3rem; }
+      .hero-image img { height: 300px; }
+      .hero-cta-group { flex-direction: column; }
+      .cta-primary, .cta-secondary { width: 100%; text-align: center; }
+      .products-scroll { grid-template-columns: 1fr; }
+      .categories-grid { grid-template-columns: 1fr; }
+      .features-strip { grid-template-columns: 1fr; }
     }
   `]
 })
