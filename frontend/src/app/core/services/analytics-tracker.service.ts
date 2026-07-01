@@ -1,15 +1,40 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ApiService } from './api.service';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AnalyticsTracker {
-  constructor(private api: ApiService) {}
+  private api = inject(ApiService);
+  private router = inject(Router);
 
-  track(eventType: string, productId?: string, orderId?: string) {
-    this.api.post('/analytics/track', { eventType, productId, orderId, sessionId: localStorage.getItem('raas_session') }).subscribe();
+  constructor() {
+    // Track page visits on route changes
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        this.pageVisit();
+      });
   }
 
-  pageVisit() {
-    this.track('PageVisit');
+  pageVisit(path?: string) {
+    const currentPath = path || this.router.url;
+    this.api.post('/analytics/track', {
+      eventType: 'page_visit',
+      path: currentPath,
+      timestamp: new Date().toISOString()
+    }).subscribe({
+      error: () => {} // Silently fail - don't break user experience
+    });
+  }
+
+  trackEvent(eventName: string, metadata?: Record<string, any>) {
+    this.api.post('/analytics/track', {
+      eventType: eventName,
+      metadata,
+      timestamp: new Date().toISOString()
+    }).subscribe({
+      error: () => {}
+    });
   }
 }

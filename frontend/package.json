@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "node scripts/set-env.js && ng build",
+    "build": "ng build",
     "build:local": "ng build",
     "watch": "ng build --watch --configuration development"
   },
@@ -27,6 +27,7 @@
     "@angular-devkit/build-angular": "^19.2.0",
     "@angular/cli": "^19.2.0",
     "@angular/compiler-cli": "^19.2.0",
+    "sass": "^1.69.5",
     "typescript": "~5.7.2"
   }
 }
