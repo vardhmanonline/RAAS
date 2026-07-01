@@ -11,6 +11,10 @@ export interface Product {
   categoryName: string;
   spiceLevel: string;
   stock: number;
+  description?: string;
+  tags?: string[];
+  isNew?: boolean;
+  createdAt?: string;
 }
 
 export interface ProductDetail extends Product {
