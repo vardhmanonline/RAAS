@@ -50,7 +50,7 @@ interface StoreSettings {
         </div>
         <div class="hero-image">
           @if (settings?.logoUrl) {
-            <img [src]="settings.logoUrl" [alt]="settings?.companyName" />
+            <img [src]="settings?.logoUrl" [alt]="settings?.companyName" />
           } @else {
             <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600" alt="Rajasthani food" />
           }
@@ -62,27 +62,27 @@ interface StoreSettings {
       <section class="branding-section">
         <div class="container branding-content">
           @if (settings?.logoUrl) {
-            <img [src]="settings.logoUrl" [alt]="settings?.companyName" class="branding-logo" />
+            <img [src]="settings?.logoUrl" [alt]="settings?.companyName" class="branding-logo" />
           }
           @if (settings?.mainTagline) {
             <h2 class="main-tagline">{{ settings?.mainTagline }}</h2>
           }
           @if (settings?.secondaryTagline) {
-            <p class="secondary-tagline">{{ settings.secondaryTagline }}</p>
+            <p class="secondary-tagline">{{ settings?.secondaryTagline }}</p>
           }
           @if (settings?.websiteUrl || settings?.fssaiStatus || settings?.gstStatus || settings?.manufacturingLocation) {
             <div class="branding-badges">
               @if (settings?.websiteUrl) {
-                <span class="branding-badge">{{ settings.websiteUrl }}</span>
+                <span class="branding-badge">{{ settings?.websiteUrl }}</span>
               }
               @if (settings?.fssaiStatus) {
-                <span class="branding-badge">{{ settings.fssaiStatus }}</span>
+                <span class="branding-badge">{{ settings?.fssaiStatus }}</span>
               }
               @if (settings?.gstStatus) {
-                <span class="branding-badge">{{ settings.gstStatus }}</span>
+                <span class="branding-badge">{{ settings?.gstStatus }}</span>
               }
               @if (settings?.manufacturingLocation) {
-                <span class="branding-badge">{{ settings.manufacturingLocation }}</span>
+                <span class="branding-badge">{{ settings?.manufacturingLocation }}</span>
               }
             </div>
           }

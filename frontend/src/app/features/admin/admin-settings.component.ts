@@ -98,7 +98,7 @@ interface StoreSettings {
               }
               
               <label>Main Tagline (Hindi)</label>
-              <input class="input" type="text" [(ngModel)]="settings?.mainTagline" placeholder="राजस्थान का स्वाद, हर बाइट में खास!" />
+              <input class="input" type="text" [(ngModel)]="settings.mainTagline" placeholder="राजस्थान का स्वाद, हर बाइट में खास!" />
               
               <label>Secondary Tagline (Hindi)</label>
               <input class="input" type="text" [(ngModel)]="settings.secondaryTagline" placeholder="देसी स्वाद, शुद्ध विश्वास" />

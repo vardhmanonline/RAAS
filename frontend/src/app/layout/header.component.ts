@@ -19,7 +19,7 @@ interface StoreSettings {
       <div class="container header-inner">
         <a routerLink="/" class="logo">
           @if (settings?.logoUrl) {
-            <img [src]="settings.logoUrl" [alt]="settings?.companyName || 'RAAS'" class="logo-image" />
+            <img [src]="settings?.logoUrl" [alt]="settings?.companyName || 'RAAS'" class="logo-image" />
           } @else {
             <span class="logo-icon">🪷</span>
           }
@@ -52,7 +52,7 @@ interface StoreSettings {
       </div>
       @if (settings?.mainTagline) {
         <div class="tagline-bar">
-          <span class="tagline-text">{{ settings.mainTagline }}</span>
+          <span class="tagline-text">{{ settings?.mainTagline }}</span>
         </div>
       }
     </header>

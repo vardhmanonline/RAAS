@@ -32,7 +32,7 @@ interface StoreSettings {
         <div>
           <h4>Support</h4>
           <a href="mailto:{{ settings?.supportEmail }}">{{ settings?.supportEmail || 'support.rajasthan@gmail.com' }}</a>
-          <a href="tel:{{ settings?.supportPhone?.replace(/\s/g, '') }}">{{ settings?.supportPhone || '+91 84277 67533' }}</a>
+          <a href="tel:{{ formattedPhone }}">{{ settings?.supportPhone || '+91 84277 67533' }}</a>
           <a routerLink="/referrals">Refer & Earn ₹50</a>
         </div>
         <div>
@@ -78,5 +78,9 @@ export class FooterComponent implements OnInit {
         };
       }
     });
+  }
+
+  get formattedPhone(): string {
+    return this.settings?.supportPhone?.replace(/\s/g, '') || '+918427767533';
   }
 }

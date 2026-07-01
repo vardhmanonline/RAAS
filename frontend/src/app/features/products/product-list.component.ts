@@ -1,13 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
 import { Product, Category } from '../../core/models';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe],
+  imports: [RouterLink, CurrencyPipe, FormsModule],
   template: `
     <div class="products-page">
       <div class="container">
