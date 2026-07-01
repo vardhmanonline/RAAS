@@ -1,125 +1,177 @@
-import { Component, inject } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { AnalyticsTracker } from './core/services/analytics-tracker.service';
 import { CartService } from './core/services/cart.service';
+import { HeaderComponent } from './layout/header.component';
+import { SidebarComponent } from './layout/sidebar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet, HeaderComponent, SidebarComponent, CommonModule],
   template: `
-    <header class="main-header">
-      <div class="header-logo">
-        <img src="/assets/images/rajasthani_ras_logo.png" alt="Rajasthani Ras" class="logo-image" />
-      </div>
-      <div class="header-actions">
-        <button class="icon-btn">
-          <span>🔔</span>
-        </button>
-        <a routerLink="/cart" class="icon-btn cart-btn">
-          <span>🛒</span>
-          @if (cart.itemCount() > 0) {
-            <span class="cart-count">{{ cart.itemCount() }}</span>
-          }
-        </a>
-        <a routerLink="/login" class="icon-btn login-btn">
-          <span>Login</span>
-        </a>
-      </div>
-    </header>
-    <main class="main-content mandala-bg">
-      <router-outlet />
-    </main>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-bar" [style.width.%]="scrollProgress()"></div>
+
+    <!-- Header Component -->
+    <app-header [scrolled]="isHeaderScrolled()"></app-header>
+
+    <!-- Main Layout -->
+    <div class="app-layout">
+      <!-- Sidebar (Desktop) -->
+      <app-sidebar></app-sidebar>
+
+      <!-- Main Content -->
+      <main class="app-main" (scroll)="onScroll($event)">
+        <router-outlet></router-outlet>
+        
+        <!-- Floating CTA (appears after hero) -->
+        @if (showFloatingCTA()) {
+          <div class="floating-cta">
+            <a href="/products" class="floating-btn">
+              <span class="btn-icon">🛍️</span>
+              <span class="btn-text">Shop Now</span>
+            </a>
+          </div>
+        }
+      </main>
+    </div>
   `,
   styles: [`
-    .main-header {
-      background: rgba(255, 248, 240, 0.95);
-      backdrop-filter: blur(20px);
-      padding: 0.5rem 2.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 20px rgba(110, 31, 31, 0.05);
+    /* Scroll Progress Bar */
+    .scroll-progress-bar {
       position: fixed;
       top: 0;
-      right: 0;
       left: 0;
-      z-index: 50;
-      gap: 2rem;
-      height: 90px;
+      height: 3px;
+      background: linear-gradient(90deg, #E8922A 0%, #7B1818 50%, #E8922A 100%);
+      z-index: 1000;
+      transition: width 0.1s ease;
+      box-shadow: 0 0 8px rgba(232, 146, 42, 0.5);
     }
 
-    .header-logo {
+    /* App Layout */
+    .app-layout {
+      display: flex;
+      min-height: 100vh;
+      background: #FBF5E6;
+    }
+
+    .app-main {
+      flex: 1;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      margin-left: 260px;
+      margin-top: 0;
+      position: relative;
+    }
+
+    /* Floating CTA Button */
+    .floating-cta {
+      position: fixed;
+      bottom: 8rem;
+      right: 2rem;
+      z-index: 98;
+      animation: slideInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .floating-btn {
       display: flex;
       align-items: center;
-    }
-
-    .header-logo .logo-image {
-      height: 70px;
-      width: auto;
-      max-width: 200px;
-      object-fit: contain;
-    }
-
-    .header-actions {
-      display: flex;
       gap: 0.75rem;
-      align-items: center;
-    }
-
-    .icon-btn {
-      position: relative;
-      padding: 0.75rem;
-      border: none;
-      background: rgba(110, 31, 31, 0.05);
-      cursor: pointer;
-      font-size: 1.1rem;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, #7B1818 0%, #4A1515 100%);
+      color: white;
+      border-radius: 50px;
       text-decoration: none;
-      border-radius: 12px;
-      transition: all 0.3s;
-    }
-
-    .icon-btn:hover {
-      background: rgba(110, 31, 31, 0.1);
-      transform: translateY(-2px);
-    }
-
-    .cart-btn {
-      position: relative;
-    }
-
-    .cart-count {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      background: #6E1F1F;
-      color: #fff;
-      font-size: 0.65rem;
-      font-weight: 700;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .login-btn {
-      font-size: 0.85rem;
       font-weight: 600;
-      padding: 0.6rem 1rem;
+      font-size: 0.95rem;
+      box-shadow: 0 8px 24px rgba(123, 24, 24, 0.3);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      border: none;
     }
 
-    .main-content {
-      min-height: calc(100vh - 140px);
-      padding-bottom: 2rem;
-      padding-top: 100px;
+    .floating-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(123, 24, 24, 0.4);
+      background: linear-gradient(135deg, #4A1515 0%, #2A0E0E 100%);
+    }
+
+    .btn-icon {
+      font-size: 1.25rem;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .app-main {
+        margin-left: 220px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .app-main {
+        margin-left: 0;
+        margin-bottom: 80px;
+      }
+      .floating-cta {
+        bottom: 6rem;
+        right: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .floating-cta {
+        bottom: 5.5rem;
+        right: 0.75rem;
+      }
+      .floating-btn {
+        padding: 0.875rem 1.25rem;
+        font-size: 0.85rem;
+      }
+      .btn-text {
+        display: none;
+      }
+      .floating-btn {
+        width: 50px;
+        height: 50px;
+        justify-content: center;
+      }
     }
   `]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   cart = inject(CartService);
-  constructor() {
-    inject(AnalyticsTracker).pageVisit();
+  private analytics = inject(AnalyticsTracker);
+  
+  scrollProgress = signal(0);
+  isHeaderScrolled = signal(false);
+  showFloatingCTA = signal(false);
+
+  ngOnInit() {
+    this.analytics.pageVisit();
+  }
+
+  onScroll(event: Event) {
+    const target = event.target as HTMLElement;
+    const scrollTop = target.scrollTop;
+    const scrollHeight = target.scrollHeight - target.clientHeight;
+    const scrollPercent = (scrollTop / scrollHeight) * 100;
+    
+    this.scrollProgress.set(scrollPercent);
+    this.isHeaderScrolled.set(scrollTop > 100);
+    this.showFloatingCTA.set(scrollTop > 500);
   }
 }
