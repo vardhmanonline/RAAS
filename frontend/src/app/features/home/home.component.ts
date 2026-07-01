@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
 import { Category, Product } from '../../core/models';
+import { CartService } from '../../core/services/cart.service';
 
 interface SpecialOffer {
   id: string;
@@ -37,189 +38,307 @@ interface StoreSettings {
   standalone: true,
   imports: [RouterLink, CurrencyPipe],
   template: `
-    <section class="hero">
-      <div class="container hero-content">
-        <div class="hero-text">
-          <span class="hero-badge badge badge-gold">Made in Rajasthan</span>
-          <h1>Taste the Roots<br>of <em>Rajasthan</em></h1>
-          <p>Authentic pickles, papads, masalas & chutneys — crafted with generations of love from desert kitchens to your table.</p>
-          <div class="hero-cta">
-            <a routerLink="/products" class="btn btn-primary">Shop Now</a>
-            <a routerLink="/products" [queryParams]="{filter: 'bestseller'}" class="btn btn-secondary">Best Sellers</a>
+    <div class="dashboard-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-logo">
+          <span class="logo-icon">🪷</span>
+          <span class="logo-text">Rajasthani Ras</span>
+        </div>
+        
+        <nav class="sidebar-nav">
+         <a routerLink="/" routerLinkActive="active" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+          </a>
+          <a routerLink="/products" routerLinkActive="active" class="nav-item">
+            <span class="nav-icon">🛒</span>
+            <span>Shop</span>
+          </a>
+          <a routerLink="/products" routerLinkActive="active" class="nav-item">
+            <span class="nav-icon">📂</span>
+            <span>Categories</span>
+          </a>
+          <a routerLink="/orders" routerLinkActive="active" class="nav-item">
+            <span class="nav-icon">📦</span>
+            <span>Orders</span>
+          </a>
+          <a routerLink="/favorites" routerLinkActive="active" class="nav-item">
+            <span class="nav-icon">❤️</span>
+            <span>Favorites</span>
+          </a>
+          <a routerLink="/offers" routerLinkActive="active" class="nav-item">
+            <span class="nav-icon">🎁</span>
+            <span>Offers</span>
+          </a>
+          <a routerLink="/profile" routerLinkActive="active" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Account</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-promos">
+          <div class="promo-card">
+            <div class="promo-icon">🌟</div>
+            <h4>Order Freshness</h4>
+            <p>We prepare your order fresh & pack with care</p>
+          </div>
+          <div class="promo-card">
+            <div class="promo-icon">✨</div>
+            <h4>100% Pure Ingredients</h4>
+            <p>No Preservatives, No Artificial Flavours</p>
           </div>
         </div>
-        <div class="hero-image">
-          @if (settings?.logoUrl) {
-            <img [src]="settings?.logoUrl" [alt]="settings?.companyName" />
-          } @else {
-            <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600" alt="Rajasthani food" />
-          }
-        </div>
-      </div>
-    </section>
+      </aside>
 
-    @if (settings?.mainTagline || settings?.secondaryTagline) {
-      <section class="branding-section">
-        <div class="container branding-content">
-          @if (settings?.logoUrl) {
-            <img [src]="settings?.logoUrl" [alt]="settings?.companyName" class="branding-logo" />
-          }
-          @if (settings?.mainTagline) {
-            <h2 class="main-tagline">{{ settings?.mainTagline }}</h2>
-          }
-          @if (settings?.secondaryTagline) {
-            <p class="secondary-tagline">{{ settings?.secondaryTagline }}</p>
-          }
-          @if (settings?.websiteUrl || settings?.fssaiStatus || settings?.gstStatus || settings?.manufacturingLocation) {
-            <div class="branding-badges">
-              @if (settings?.websiteUrl) {
-                <span class="branding-badge">{{ settings?.websiteUrl }}</span>
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Header -->
+        <header class="main-header">
+          <div class="location-info">
+            <span class="location-icon">📍</span>
+            <span>Delivering to Jaipur, Rajasthan</span>
+          </div>
+          <div class="header-actions">
+            <button class="icon-btn">
+              <span>🔔</span>
+            </button>
+            <a routerLink="/cart" class="icon-btn cart-btn">
+              <span>🛒</span>
+              @if (cart.itemCount() > 0) {
+                <span class="cart-count">{{ cart.itemCount() }}</span>
               }
-              @if (settings?.fssaiStatus) {
-                <span class="branding-badge">{{ settings?.fssaiStatus }}</span>
-              }
-              @if (settings?.gstStatus) {
-                <span class="branding-badge">{{ settings?.gstStatus }}</span>
-              }
-              @if (settings?.manufacturingLocation) {
-                <span class="branding-badge">{{ settings?.manufacturingLocation }}</span>
-              }
-            </div>
-          }
-        </div>
-      </section>
-    }
+            </a>
+          </div>
+        </header>
 
-    @if (specialOffers.length > 0) {
-      <section class="special-offers">
-        <div class="offers-container">
-          @for (offer of specialOffers; track offer.id) {
-            <div class="offer-banner" [style.background]="offer.backgroundColor" [style.color]="offer.textColor">
-              <div class="offer-content">
-                <span class="badge {{ offer.badgeColor }}">{{ offer.badgeText }}</span>
-                <h2>{{ offer.title }}</h2>
-                <p>{{ offer.description }}</p>
-                <a [href]="offer.buttonLink" class="btn {{ offer.buttonColor }}">{{ offer.buttonText }}</a>
-              </div>
-            </div>
-          }
-        </div>
-      </section>
-    }
-
-    <section class="container section">
-      <h2 class="section-title">Shop by Category</h2>
-      <p class="section-subtitle">Handpicked traditional delicacies from every corner of Rajasthan</p>
-      <div class="grid-3 category-grid">
-        @for (cat of categories; track cat.id) {
-          <a [routerLink]="['/products']" [queryParams]="{category: cat.slug}" class="category-card card">
-            <div class="category-icon">{{ categoryIcon(cat.slug) }}</div>
-            <h3>{{ cat.name }}</h3>
-            <p>{{ cat.description }}</p>
-            <span class="category-count">{{ cat.productCount }} products</span>
-          </a>
-        }
-      </div>
-    </section>
-
-    <section class="health-strip">
-      <div class="container health-grid">
-        <div class="health-item">🌿 <strong>Ayurvedic</strong> — Natural healing spices</div>
-        <div class="health-item">💪 <strong>Immunity</strong> — Turmeric & traditional herbs</div>
-        <div class="health-item">🫁 <strong>Digestion</strong> — Probiotic-rich pickles</div>
-        <div class="health-item">🌾 <strong>100% Natural</strong> — No preservatives</div>
-      </div>
-    </section>
-
-    @if (bestsellers.length) {
-      <section class="container section">
-        <h2 class="section-title">Best Sellers</h2>
-        <p class="section-subtitle">Loved by thousands across India</p>
-        <div class="product-carousel">
-          @for (p of bestsellers; track p.id) {
-            <a [routerLink]="['/products', p.slug]" class="product-card card">
-              <div class="product-img-wrap">
-                <img [src]="p.imageUrl" [alt]="p.name" />
-                @if (p.isBestseller) { <span class="badge badge-saffron product-badge">Bestseller</span> }
-                @if (p.compareAtPrice && p.compareAtPrice > p.price) {
-                  <span class="badge badge-gold product-badge off-badge">{{ discountPercent(p) }}% OFF</span>
-                }
-                <span class="badge badge-maroon product-badge made-in">Made in Rajasthan</span>
-              </div>
-              <div class="product-info">
-                <h3>{{ p.name }}</h3>
-                <div class="product-meta">
-                  <span class="rating">★ {{ p.rating }}</span>
-                  <div class="price-block">
-                    <span class="price">{{ p.price | currency:'INR':'symbol':'1.0-0' }}</span>
-                    @if (p.compareAtPrice && p.compareAtPrice > p.price) {
-                      <span class="mrp">{{ p.compareAtPrice | currency:'INR':'symbol':'1.0-0' }}</span>
-                    }
-                  </div>
+        <!-- Hero Section -->
+        <section class="hero-section">
+          <div class="hero-content">
+            <div class="hero-text">
+              <p class="hero-greeting">Namaste! Welcome to Rajasthani Ras</p>
+              <p class="hero-tagline">Authentic Flavors from Rajasthan's Kitchen to Yours</p>
+              <h1 class="hero-title">Pure. Authentic. Made with Love.</h1>
+              <p class="hero-description">Taste the tradition of Rajasthan, made fresh in small batches.</p>
+              
+              <div class="hero-features">
+                <div class="feature-item">
+                  <span class="feature-icon">🏵️</span>
+                  <span>Made in Rajasthan</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-icon">👵</span>
+                  <span>Traditional Recipes</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-icon">🥘</span>
+                  <span>Small Batch Freshness</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-icon">🧤</span>
+                  <span>Hygienic & Handmade</span>
                 </div>
               </div>
-            </a>
-          }
-        </div>
-      </section>
-    }
+
+              <a routerLink="/products" class="hero-cta">Shop Now</a>
+            </div>
+            <div class="hero-image">
+              <img src="https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800" alt="Rajasthani woman preparing food" />
+              <div class="hero-overlay">
+                <span>From our Kitchen to your Home</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Bestsellers Section -->
+        <section class="bestsellers-section">
+          <div class="section-header">
+            <h2 class="section-title">Shop Our Bestsellers</h2>
+            <a routerLink="/products" class="view-all-link">View All →</a>
+          </div>
+          <div class="products-scroll">
+            @for (p of bestsellers; track p.id) {
+              <a [routerLink]="['/products', p.slug]" class="product-card-mini">
+                <div class="product-image">
+                  <img [src]="p.imageUrl" [alt]="p.name" />
+                </div>
+                <div class="product-name">{{ p.name }}</div>
+                <div class="product-price">{{ p.price | currency:'INR':'symbol':'1.0-0' }}</div>
+              </a>
+            }
+          </div>
+        </section>
+
+        <!-- Why Choose Section -->
+        <section class="why-choose-section">
+          <h2 class="section-title">Why Choose Rajasthani Ras?</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <span class="feature-card-icon">🎯</span>
+              <h3>100% Authentic Rajasthani Taste</h3>
+            </div>
+            <div class="feature-card">
+              <span class="feature-card-icon">🌿</span>
+              <h3>No Preservatives or Chemicals</h3>
+            </div>
+            <div class="feature-card">
+              <span class="feature-card-icon">🥣</span>
+              <h3>Prepared in Small Batches</h3>
+            </div>
+            <div class="feature-card">
+              <span class="feature-card-icon">✅</span>
+              <h3>Hygienic & Quality Assured</h3>
+            </div>
+            <div class="feature-card">
+              <span class="feature-card-icon">🚚</span>
+              <h3>Direct from Rajasthan</h3>
+            </div>
+          </div>
+        </section>
+
+        <!-- Bottom Promotional Strip -->
+        <section class="promo-strip">
+          <div class="promo-item">
+            <span class="promo-item-icon">🍽️</span>
+            <div class="promo-item-text">
+              <strong>Freshly Prepared</strong>
+              <span>Made in small batches just for you</span>
+            </div>
+          </div>
+          <div class="promo-item">
+            <span class="promo-item-icon">📦</span>
+            <div class="promo-item-text">
+              <strong>Shipped with Care</strong>
+              <span>Secure packaging to keep it fresh</span>
+            </div>
+          </div>
+          <div class="promo-item">
+            <span class="promo-item-icon">🏠</span>
+            <div class="promo-item-text">
+              <strong>Bringing Rajasthan To Your Home</strong>
+              <span>Traditional taste, Timeless love</span>
+            </div>
+          </div>
+          <div class="promo-item">
+            <span class="promo-item-icon">🤝</span>
+            <div class="promo-item-text">
+              <strong>Support Local Artisans</strong>
+              <span>Empowering local communities & preserving traditions</span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
   `,
   styles: [`
-    .hero { background: linear-gradient(135deg, var(--cream) 0%, var(--cream-dark) 100%); padding: 3rem 0; overflow: hidden; }
-    .hero-content { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; }
-    .hero-badge { margin-bottom: 1rem; }
-    .hero h1 { font-size: clamp(2.5rem, 6vw, 3.75rem); color: var(--maroon); margin-bottom: 1rem; }
-    .hero h1 em { color: var(--saffron); font-style: italic; }
-    .hero p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; max-width: 480px; }
-    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .hero-image img { border-radius: var(--radius); box-shadow: var(--shadow); width: 100%; max-height: 400px; object-fit: cover; }
-    .branding-section { background: var(--white); padding: 2rem 0; border-bottom: 1px solid var(--cream-dark); }
-    .branding-content { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-    .branding-logo { max-width: 300px; max-height: 150px; object-fit: contain; }
-    .main-tagline { font-size: 1.5rem; color: var(--maroon); font-family: var(--font-display); margin: 0; }
-    .secondary-tagline { font-size: 1.1rem; color: var(--text-muted); margin: 0; font-style: italic; }
-    .branding-badges { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem; }
-    .branding-badge { background: var(--maroon); color: var(--cream); padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; }
-    .special-offers { padding: 0; }
-    .offers-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
-    .offer-banner { padding: 2.5rem 2rem; min-height: 180px; display: flex; align-items: center; justify-content: center; }
-    .offer-content { text-align: center; max-width: 500px; }
-    .offer-content .badge { display: inline-block; margin-bottom: 1rem; }
-    .offer-content h2 { font-size: 1.75rem; margin: 0.75rem 0; }
-    .offer-content p { opacity: 0.9; margin-bottom: 1.5rem; line-height: 1.5; }
-    .section { padding: 3rem 0; }
-    .category-card { padding: 2rem 1.5rem; text-align: center; text-decoration: none; color: inherit; }
-    .category-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-    .category-card h3 { color: var(--maroon); margin-bottom: 0.5rem; }
-    .category-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem; }
-    .category-count { color: var(--saffron); font-size: 0.85rem; font-weight: 600; }
-    .health-strip { background: var(--maroon); padding: 1.25rem 0; }
-    .health-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; text-align: center; color: var(--cream); font-size: 0.9rem; }
-    .product-carousel { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.25rem; }
-    .product-card { text-decoration: none; color: inherit; }
-    .product-img-wrap { position: relative; aspect-ratio: 1; overflow: hidden; }
-    .product-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-    .product-badge { position: absolute; top: 0.75rem; left: 0.75rem; }
-    .made-in { top: auto; bottom: 0.75rem; left: 0.75rem; font-size: 0.65rem; }
-    .off-badge { top: 0.75rem; right: 0.75rem; left: auto; }
-    .price-block { display: flex; flex-direction: column; align-items: flex-end; }
-    .mrp { text-decoration: line-through; color: var(--text-muted); font-size: 0.8rem; }
-    .product-info { padding: 1rem; }
-    .product-info h3 { font-size: 1rem; margin-bottom: 0.5rem; }
-    .product-meta { display: flex; justify-content: space-between; align-items: center; }
-    .rating { color: var(--gold); font-weight: 600; }
-    .price { font-weight: 700; color: var(--maroon); font-size: 1.1rem; }
-    @media (max-width: 768px) {
-      .hero-content { grid-template-columns: 1fr; }
+    .dashboard-layout { display: flex; min-height: 100vh; background: #f8f5f0; }
+    
+    /* Sidebar */
+    .sidebar { width: 280px; background: linear-gradient(180deg, #8B4513 0%, #654321 100%); padding: 1.5rem; display: flex; flex-direction: column; position: fixed; height: 100vh; overflow-y: auto; }
+    .sidebar-logo { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.2); }
+    .logo-icon { font-size: 2rem; }
+    .logo-text { font-size: 1.25rem; font-weight: 700; color: #FFD700; font-family: Georgia, serif; }
+    
+    .sidebar-nav { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-radius: 12px; color: rgba(255,255,255,0.85); text-decoration: none; transition: all 0.3s; font-size: 0.95rem; }
+    .nav-item:hover { background: rgba(255,255,255,0.15); color: #fff; }
+    .nav-item.active { background: #FFD700; color: #654321; font-weight: 600; }
+    .nav-icon { font-size: 1.25rem; }
+    
+    .sidebar-promos { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+    .promo-card { background: rgba(255,255,255,0.1); padding: 1.25rem; border-radius: 12px; backdrop-filter: blur(10px); }
+    .promo-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .promo-card h4 { color: #FFD700; margin: 0 0 0.5rem; font-size: 0.95rem; }
+    .promo-card p { color: rgba(255,255,255,0.8); margin: 0; font-size: 0.8rem; line-height: 1.4; }
+    
+    /* Main Content */
+    .main-content { flex: 1; margin-left: 280px; overflow-y: auto; }
+    
+    /* Header */
+    .main-header { background: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+    .location-info { display: flex; align-items: center; gap: 0.5rem; color: #654321; font-size: 0.9rem; }
+    .location-icon { font-size: 1.1rem; }
+    .header-actions { display: flex; gap: 1rem; align-items: center; }
+    .icon-btn { position: relative; padding: 0.5rem; border: none; background: none; cursor: pointer; font-size: 1.25rem; text-decoration: none; }
+    .cart-btn { position: relative; }
+    .cart-count { position: absolute; top: -2px; right: -2px; background: #FFD700; color: #654321; font-size: 0.7rem; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    
+    /* Hero Section */
+    .hero-section { background: linear-gradient(135deg, #FFF8DC 0%, #F5DEB3 100%); padding: 3rem 2rem; position: relative; overflow: hidden; }
+    .hero-content { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; max-width: 1400px; margin: 0 auto; }
+    .hero-text { z-index: 2; }
+    .hero-greeting { color: #8B4513; font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 500; }
+    .hero-tagline { color: #654321; font-size: 1rem; margin-bottom: 1rem; font-style: italic; }
+    .hero-title { font-size: clamp(2rem, 4vw, 3rem); color: #8B4513; margin-bottom: 1rem; font-family: Georgia, serif; line-height: 1.2; }
+    .hero-description { color: #654321; font-size: 1.1rem; margin-bottom: 2rem; max-width: 500px; line-height: 1.6; }
+    
+    .hero-features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .feature-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #654321; }
+    .feature-icon { font-size: 1.1rem; }
+    
+    .hero-cta { display: inline-block; background: #8B4513; color: #fff; padding: 1rem 2.5rem; border-radius: 30px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3); }
+    .hero-cta:hover { background: #654321; transform: translateY(-2px); }
+    
+    .hero-image { position: relative; }
+    .hero-image img { width: 100%; height: 400px; object-fit: cover; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+    .hero-overlay { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(139, 69, 19, 0.9); color: #FFD700; padding: 0.75rem 1.5rem; border-radius: 25px; font-size: 0.9rem; font-weight: 600; backdrop-filter: blur(5px); }
+    
+    /* Bestsellers Section */
+    .bestsellers-section { padding: 3rem 2rem; max-width: 1400px; margin: 0 auto; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .section-title { font-size: 1.75rem; color: #8B4513; margin: 0; font-family: Georgia, serif; }
+    .view-all-link { color: #8B4513; text-decoration: none; font-weight: 600; font-size: 1rem; }
+    .view-all-link:hover { color: #654321; }
+    
+    .products-scroll { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.5rem; }
+    .product-card-mini { text-decoration: none; color: inherit; display: block; }
+    .product-image { aspect-ratio: 1; overflow: hidden; border-radius: 12px; background: #fff; margin-bottom: 0.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+    .product-card-mini:hover .product-image img { transform: scale(1.05); }
+    .product-name { font-size: 0.9rem; color: #654321; margin-bottom: 0.25rem; font-weight: 500; }
+    .product-price { font-size: 1rem; color: #8B4513; font-weight: 700; }
+    
+    /* Why Choose Section */
+    .why-choose-section { padding: 3rem 2rem; background: #fff; }
+    .why-choose-section .section-title { text-align: center; margin-bottom: 2rem; }
+    .features-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; max-width: 1400px; margin: 0 auto; }
+    .feature-card { text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #FFF8DC 0%, #F5DEB3 100%); border-radius: 16px; transition: transform 0.3s; }
+    .feature-card:hover { transform: translateY(-5px); }
+    .feature-card-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .feature-card h3 { font-size: 0.95rem; color: #8B4513; margin: 0; line-height: 1.4; font-weight: 600; }
+    
+    /* Promo Strip */
+    .promo-strip { background: linear-gradient(90deg, #8B4513 0%, #654321 100%); padding: 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+    .promo-item { display: flex; align-items: center; gap: 1rem; color: #fff; }
+    .promo-item-icon { font-size: 2rem; }
+    .promo-item-text { display: flex; flex-direction: column; }
+    .promo-item-text strong { font-size: 0.95rem; margin-bottom: 0.25rem; color: #FFD700; }
+    .promo-item-text span { font-size: 0.8rem; opacity: 0.9; }
+    
+    @media (max-width: 1024px) {
+      .sidebar { width: 240px; }
+      .main-content { margin-left: 240px; }
+      .hero-content { grid-template-columns: 1fr; gap: 2rem; }
       .hero-image { order: -1; }
-      .health-grid { grid-template-columns: 1fr 1fr; }
-      .offers-container { grid-template-columns: 1fr; }
-      .branding-badges { grid-template-columns: 1fr 1fr; }
+      .features-grid { grid-template-columns: repeat(3, 1fr); }
+      .promo-strip { grid-template-columns: repeat(2, 1fr); }
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
+      .hero-section { padding: 2rem 1rem; }
+      .hero-features { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .promo-strip { grid-template-columns: 1fr; }
+      .products-scroll { grid-template-columns: repeat(2, 1fr); }
     }
   `]
 })
 export class HomeComponent implements OnInit {
   private api = inject(ApiService);
+  cart = inject(CartService);
   categories: Category[] = [];
   bestsellers: Product[] = [];
   specialOffers: SpecialOffer[] = [];
