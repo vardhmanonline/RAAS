@@ -65,7 +65,7 @@ interface StoreSettings {
             <img [src]="settings.logoUrl" [alt]="settings?.companyName" class="branding-logo" />
           }
           @if (settings?.mainTagline) {
-            <h2 class="main-tagline">{{ settings.mainTagline }}</h2>
+            <h2 class="main-tagline">{{ settings?.mainTagline }}</h2>
           }
           @if (settings?.secondaryTagline) {
             <p class="secondary-tagline">{{ settings.secondaryTagline }}</p>
