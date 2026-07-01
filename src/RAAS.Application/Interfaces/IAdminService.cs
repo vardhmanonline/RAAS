@@ -11,6 +11,15 @@ public interface IAdminService
     Task<bool> DeactivateCouponAsync(Guid id);
 }
 
+public interface ISpecialOfferService
+{
+    Task<IEnumerable<SpecialOfferDto>> GetActiveOffersAsync();
+    Task<IEnumerable<SpecialOfferDto>> GetAllOffersAsync();
+    Task<SpecialOfferDto> CreateOfferAsync(CreateSpecialOfferRequest request);
+    Task<SpecialOfferDto?> UpdateOfferAsync(Guid id, UpdateSpecialOfferRequest request);
+    Task<bool> DeleteOfferAsync(Guid id);
+}
+
 public interface IStoreSettingsService
 {
     Task<StoreSettingsDto> GetSettingsAsync();

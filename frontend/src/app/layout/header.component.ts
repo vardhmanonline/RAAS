@@ -1,7 +1,14 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 import { CartService } from '../core/services/cart.service';
+import { ApiService } from '../core/services/api.service';
+
+interface StoreSettings {
+  logoUrl: string;
+  mainTagline: string;
+  companyName: string;
+}
 
 @Component({
   selector: 'app-header',
@@ -11,8 +18,12 @@ import { CartService } from '../core/services/cart.service';
     <header class="header">
       <div class="container header-inner">
         <a routerLink="/" class="logo">
-          <span class="logo-icon">🪷</span>
-          <span class="logo-text">RAAS</span>
+          @if (settings?.logoUrl) {
+            <img [src]="settings.logoUrl" [alt]="settings?.companyName || 'RAAS'" class="logo-image" />
+          } @else {
+            <span class="logo-icon">🪷</span>
+          }
+          <span class="logo-text">{{ settings?.companyName || 'RAAS' }}</span>
         </a>
         <nav class="nav">
           <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
@@ -27,7 +38,7 @@ import { CartService } from '../core/services/cart.service';
         </nav>
         <div class="header-actions">
           <a routerLink="/cart" class="cart-btn">
-            🛒
+            shopping_cart
             @if (cart.itemCount() > 0) {
               <span class="cart-badge">{{ cart.itemCount() }}</span>
             }
@@ -39,13 +50,20 @@ import { CartService } from '../core/services/cart.service';
           }
         </div>
       </div>
+      @if (settings?.mainTagline) {
+        <div class="tagline-bar">
+          <span class="tagline-text">{{ settings.mainTagline }}</span>
+        </div>
+      }
     </header>
   `,
   styles: [`
     .header { background: var(--white); box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 50; }
     .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1.25rem; gap: 1rem; }
-    .logo { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--maroon); }
+    .logo { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--maroon); text-decoration: none; }
     .logo-icon { font-size: 1.25rem; }
+    .logo-image { height: 40px; width: auto; object-fit: contain; }
+    .logo-text { color: var(--maroon); }
     .nav { display: flex; gap: 1.5rem; }
     .nav a { color: var(--text-muted); font-weight: 500; font-size: 0.95rem; transition: color 0.2s; }
     .nav a:hover, .nav a.active { color: var(--maroon); }
@@ -54,12 +72,31 @@ import { CartService } from '../core/services/cart.service';
     .cart-btn { position: relative; font-size: 1.25rem; padding: 0.5rem; }
     .cart-badge { position: absolute; top: 0; right: 0; background: var(--saffron); color: white; font-size: 0.65rem; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
     .btn-sm { padding: 0.5rem 1.25rem; font-size: 0.85rem; }
+    .tagline-bar { background: var(--maroon); color: var(--cream); text-align: center; padding: 0.5rem 0; font-size: 0.85rem; }
+    .tagline-text { font-style: italic; }
     @media (max-width: 768px) { .nav { display: none; } }
   `]
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   auth = inject(AuthService);
   cart = inject(CartService);
+  private api = inject(ApiService);
+  settings: StoreSettings | null = null;
+
+  ngOnInit() {
+    this.api.get<StoreSettings>('/store/settings').subscribe({
+      next: (settings) => this.settings = settings,
+      error: () => {
+        // Fallback to defaults if API fails
+        this.settings = {
+          logoUrl: '',
+          mainTagline: '',
+          companyName: 'RAAS'
+        };
+      }
+    });
+  }
+
   get userName() {
     return this.auth.currentUser()?.fullName?.split(' ')[0] ?? 'Profile';
   }

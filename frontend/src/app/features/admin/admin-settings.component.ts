@@ -5,6 +5,18 @@ import { ApiService } from '../../core/services/api.service';
 interface StoreSettings {
   sampleOrderEnabled: boolean;
   freeDeliveryThreshold: number;
+  supportEmail: string;
+  supportPhone: string;
+  companyName: string;
+  companyTagline: string;
+  companyDescription: string;
+  logoUrl: string;
+  mainTagline: string;
+  secondaryTagline: string;
+  websiteUrl: string;
+  fssaiStatus: string;
+  gstStatus: string;
+  manufacturingLocation: string;
 }
 
 @Component({
@@ -46,6 +58,71 @@ interface StoreSettings {
             <p class="hint">Set to 0 to offer free delivery on all orders.</p>
           </div>
 
+          <div class="setting-card card">
+            <h3>Contact Information</h3>
+            <p>Customer support contact details displayed in the footer and contact sections.</p>
+            <div class="contact-form">
+              <label>Support Email</label>
+              <input class="input" type="email" [(ngModel)]="settings.supportEmail" placeholder="support@example.com" />
+              
+              <label>Support Phone</label>
+              <input class="input" type="text" [(ngModel)]="settings.supportPhone" placeholder="+91 84277 67533" />
+            </div>
+          </div>
+
+          <div class="setting-card card">
+            <h3>Company Branding</h3>
+            <p>Company information displayed across the application.</p>
+            <div class="branding-form">
+              <label>Company Name</label>
+              <input class="input" type="text" [(ngModel)]="settings.companyName" placeholder="RAAS" />
+              
+              <label>Company Tagline</label>
+              <input class="input" type="text" [(ngModel)]="settings.companyTagline" placeholder="Taste the Roots of Rajasthan" />
+              
+              <label>Company Description</label>
+              <textarea class="input" [(ngModel)]="settings.companyDescription" rows="3" placeholder="Brief description of your company"></textarea>
+            </div>
+          </div>
+
+          <div class="setting-card card">
+            <h3>Logo & Taglines</h3>
+            <p>Logo and Hindi taglines for branding.</p>
+            <div class="branding-form">
+              <label>Logo URL</label>
+              <input class="input" type="text" [(ngModel)]="settings.logoUrl" placeholder="https://example.com/logo.png" />
+              @if (settings.logoUrl) {
+                <div class="logo-preview">
+                  <img [src]="settings.logoUrl" alt="Logo preview" />
+                </div>
+              }
+              
+              <label>Main Tagline (Hindi)</label>
+              <input class="input" type="text" [(ngModel)]="settings.mainTagline" placeholder="राजस्थान का स्वाद, हर बाइट में खास!" />
+              
+              <label>Secondary Tagline (Hindi)</label>
+              <input class="input" type="text" [(ngModel)]="settings.secondaryTagline" placeholder="देसी स्वाद, शुद्ध विश्वास" />
+            </div>
+          </div>
+
+          <div class="setting-card card">
+            <h3>Business Details</h3>
+            <p>Additional business information for certifications and location.</p>
+            <div class="branding-form">
+              <label>Website URL</label>
+              <input class="input" type="text" [(ngModel)]="settings.websiteUrl" placeholder="rajasthaniras.com" />
+              
+              <label>FSSAI Status</label>
+              <input class="input" type="text" [(ngModel)]="settings.fssaiStatus" placeholder="FSSAI Registered" />
+              
+              <label>GST Status</label>
+              <input class="input" type="text" [(ngModel)]="settings.gstStatus" placeholder="GST Registered" />
+              
+              <label>Manufacturing Location</label>
+              <input class="input" type="text" [(ngModel)]="settings.manufacturingLocation" placeholder="Made in India" />
+            </div>
+          </div>
+
         </div>
 
         @if (saved) {
@@ -81,6 +158,12 @@ interface StoreSettings {
     .currency { font-size: 1.1rem; font-weight: 600; color: var(--maroon); }
     .threshold-input .input { width: 140px; }
     .hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; }
+    .contact-form, .branding-form { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+    .contact-form label, .branding-form label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+    .contact-form .input, .branding-form .input { width: 100%; }
+    .branding-form textarea { resize: vertical; min-height: 80px; }
+    .logo-preview { margin-top: 0.5rem; padding: 1rem; border: 2px dashed var(--cream-dark); border-radius: var(--radius-sm); text-align: center; }
+    .logo-preview img { max-width: 200px; max-height: 100px; object-fit: contain; }
     .save-btn { margin-top: 1.5rem; }
     .success-banner { background: #e8f5e9; color: #2e7d32; padding: 0.75rem 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.9rem; }
     .error-banner { background: #ffebee; color: #c62828; padding: 0.75rem 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.9rem; }
@@ -93,7 +176,22 @@ export class AdminSettingsComponent implements OnInit {
   saving = false;
   saved = false;
   error = '';
-  settings: StoreSettings = { sampleOrderEnabled: true, freeDeliveryThreshold: 499 };
+  settings: StoreSettings = { 
+    sampleOrderEnabled: true, 
+    freeDeliveryThreshold: 499,
+    supportEmail: 'support.rajasthan@gmail.com',
+    supportPhone: '+91 84277 67533',
+    companyName: 'RAAS',
+    companyTagline: 'Taste the Roots of Rajasthan',
+    companyDescription: 'Authentic pickles, papads, masalas & chutneys crafted with love from Rajasthani kitchens.',
+    logoUrl: '',
+    mainTagline: 'राजस्थान का स्वाद, हर बाइट में खास!',
+    secondaryTagline: 'देसी स्वाद, शुद्ध विश्वास',
+    websiteUrl: 'rajasthaniras.com',
+    fssaiStatus: 'FSSAI Registered',
+    gstStatus: 'GST Registered',
+    manufacturingLocation: 'Made in India'
+  };
 
   ngOnInit() {
     this.api.get<StoreSettings>('/admin/settings').subscribe({

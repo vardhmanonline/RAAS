@@ -14,12 +14,14 @@ public class AdminController : ControllerBase
     private readonly IOrderService _orders;
     private readonly IAdminService _admin;
     private readonly IStoreSettingsService _settings;
+    private readonly ISpecialOfferService _specialOffers;
 
-    public AdminController(IOrderService orders, IAdminService admin, IStoreSettingsService settings)
+    public AdminController(IOrderService orders, IAdminService admin, IStoreSettingsService settings, ISpecialOfferService specialOffers)
     {
         _orders = orders;
         _admin = admin;
         _settings = settings;
+        _specialOffers = specialOffers;
     }
 
     [HttpGet("orders")]
@@ -52,4 +54,22 @@ public class AdminController : ControllerBase
     [HttpPut("settings")]
     public async Task<IActionResult> UpdateSettings([FromBody] UpdateStoreSettingsRequest request) =>
         Ok(await _settings.UpdateSettingsAsync(request));
+
+    [HttpGet("special-offers")]
+    public async Task<IActionResult> GetAllSpecialOffers() => Ok(await _specialOffers.GetAllOffersAsync());
+
+    [HttpPost("special-offers")]
+    public async Task<IActionResult> CreateSpecialOffer([FromBody] CreateSpecialOfferRequest request) =>
+        Ok(await _specialOffers.CreateOfferAsync(request));
+
+    [HttpPut("special-offers/{id:guid}")]
+    public async Task<IActionResult> UpdateSpecialOffer(Guid id, [FromBody] UpdateSpecialOfferRequest request)
+    {
+        var offer = await _specialOffers.UpdateOfferAsync(id, request);
+        return offer == null ? NotFound() : Ok(offer);
+    }
+
+    [HttpDelete("special-offers/{id:guid}")]
+    public async Task<IActionResult> DeleteSpecialOffer(Guid id) =>
+        await _specialOffers.DeleteOfferAsync(id) ? NoContent() : NotFound();
 }

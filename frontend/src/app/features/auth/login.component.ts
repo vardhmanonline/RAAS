@@ -34,7 +34,7 @@ import { AuthService } from '../../core/services/auth.service';
           <div class="welcome-content">
             <div class="welcome-emblem">🪷</div>
             <div class="welcome-title-group">
-              <p class="welcome-namaste">ख़ुश आमदीद</p>
+              <p class="welcome-namaste">Namaste!!</p>
               <h2 class="welcome-name">{{ welcomeName }}</h2>
               <p class="welcome-subtitle">Welcome back to the Royal Kitchen of Rajasthan</p>
             </div>

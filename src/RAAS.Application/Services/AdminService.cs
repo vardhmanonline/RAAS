@@ -68,6 +68,18 @@ public class StoreSettingsService : IStoreSettingsService
 {
     private const string KeySampleEnabled = "SampleOrderEnabled";
     private const string KeyFreeDelivery = "FreeDeliveryThreshold";
+    private const string KeySupportEmail = "SupportEmail";
+    private const string KeySupportPhone = "SupportPhone";
+    private const string KeyCompanyName = "CompanyName";
+    private const string KeyCompanyTagline = "CompanyTagline";
+    private const string KeyCompanyDescription = "CompanyDescription";
+    private const string KeyLogoUrl = "LogoUrl";
+    private const string KeyMainTagline = "MainTagline";
+    private const string KeySecondaryTagline = "SecondaryTagline";
+    private const string KeyWebsiteUrl = "WebsiteUrl";
+    private const string KeyFssaiStatus = "FssaiStatus";
+    private const string KeyGstStatus = "GstStatus";
+    private const string KeyManufacturingLocation = "ManufacturingLocation";
 
     private readonly IUnitOfWork _uow;
     public StoreSettingsService(IUnitOfWork uow) => _uow = uow;
@@ -78,7 +90,19 @@ public class StoreSettingsService : IStoreSettingsService
         var map = all.ToDictionary(s => s.Key, s => s.Value);
         return new StoreSettingsDto(
             SampleOrderEnabled: map.TryGetValue(KeySampleEnabled, out var se) ? bool.Parse(se) : true,
-            FreeDeliveryThreshold: map.TryGetValue(KeyFreeDelivery, out var fd) ? decimal.Parse(fd) : 499m
+            FreeDeliveryThreshold: map.TryGetValue(KeyFreeDelivery, out var fd) ? decimal.Parse(fd) : 499m,
+            SupportEmail: map.TryGetValue(KeySupportEmail, out var email) ? email : "support.rajasthan@gmail.com",
+            SupportPhone: map.TryGetValue(KeySupportPhone, out var phone) ? phone : "+91 84277 67533",
+            CompanyName: map.TryGetValue(KeyCompanyName, out var name) ? name : "RAAS",
+            CompanyTagline: map.TryGetValue(KeyCompanyTagline, out var tagline) ? tagline : "Taste the Roots of Rajasthan",
+            CompanyDescription: map.TryGetValue(KeyCompanyDescription, out var desc) ? desc : "Authentic pickles, papads, masalas & chutneys crafted with love from Rajasthani kitchens.",
+            LogoUrl: map.TryGetValue(KeyLogoUrl, out var logo) ? logo : "",
+            MainTagline: map.TryGetValue(KeyMainTagline, out var mainTag) ? mainTag : "राजस्थान का स्वाद, हर बाइट में खास!",
+            SecondaryTagline: map.TryGetValue(KeySecondaryTagline, out var secTag) ? secTag : "देसी स्वाद, शुद्ध विश्वास",
+            WebsiteUrl: map.TryGetValue(KeyWebsiteUrl, out var website) ? website : "rajasthaniras.com",
+            FssaiStatus: map.TryGetValue(KeyFssaiStatus, out var fssai) ? fssai : "FSSAI Registered",
+            GstStatus: map.TryGetValue(KeyGstStatus, out var gst) ? gst : "GST Registered",
+            ManufacturingLocation: map.TryGetValue(KeyManufacturingLocation, out var location) ? location : "Made in India"
         );
     }
 
@@ -86,8 +110,35 @@ public class StoreSettingsService : IStoreSettingsService
     {
         await UpsertAsync(KeySampleEnabled, request.SampleOrderEnabled.ToString(), "Enable or disable free sample orders for new customers");
         await UpsertAsync(KeyFreeDelivery, request.FreeDeliveryThreshold.ToString(), "Minimum order subtotal to waive delivery charge");
+        await UpsertAsync(KeySupportEmail, request.SupportEmail, "Customer support email address");
+        await UpsertAsync(KeySupportPhone, request.SupportPhone, "Customer support phone number");
+        await UpsertAsync(KeyCompanyName, request.CompanyName, "Company name displayed in footer and branding");
+        await UpsertAsync(KeyCompanyTagline, request.CompanyTagline, "Company tagline/slogan");
+        await UpsertAsync(KeyCompanyDescription, request.CompanyDescription, "Company description for about section");
+        await UpsertAsync(KeyLogoUrl, request.LogoUrl, "Company logo URL");
+        await UpsertAsync(KeyMainTagline, request.MainTagline, "Main tagline displayed in header and hero");
+        await UpsertAsync(KeySecondaryTagline, request.SecondaryTagline, "Secondary tagline for branding");
+        await UpsertAsync(KeyWebsiteUrl, request.WebsiteUrl, "Company website URL");
+        await UpsertAsync(KeyFssaiStatus, request.FssaiStatus, "FSSAI registration status");
+        await UpsertAsync(KeyGstStatus, request.GstStatus, "GST registration status");
+        await UpsertAsync(KeyManufacturingLocation, request.ManufacturingLocation, "Manufacturing location/country");
         await _uow.SaveChangesAsync();
-        return new StoreSettingsDto(request.SampleOrderEnabled, request.FreeDeliveryThreshold);
+        return new StoreSettingsDto(
+            request.SampleOrderEnabled, 
+            request.FreeDeliveryThreshold,
+            request.SupportEmail,
+            request.SupportPhone,
+            request.CompanyName,
+            request.CompanyTagline,
+            request.CompanyDescription,
+            request.LogoUrl,
+            request.MainTagline,
+            request.SecondaryTagline,
+            request.WebsiteUrl,
+            request.FssaiStatus,
+            request.GstStatus,
+            request.ManufacturingLocation
+        );
     }
 
     private async Task UpsertAsync(string key, string value, string description)
@@ -105,6 +156,108 @@ public class StoreSettingsService : IStoreSettingsService
             await repo.AddAsync(new StoreSettings { Key = key, Value = value, Description = description });
         }
     }
+}
+
+public class SpecialOfferService : ISpecialOfferService
+{
+    private readonly IUnitOfWork _uow;
+
+    public SpecialOfferService(IUnitOfWork uow) => _uow = uow;
+
+    public async Task<IEnumerable<SpecialOfferDto>> GetActiveOffersAsync()
+    {
+        var now = DateTime.UtcNow;
+        var offers = await _uow.Repository<Domain.Entities.SpecialOffer>()
+            .FindAsync(o => o.IsActive && 
+                (o.ValidFrom == null || o.ValidFrom <= now) && 
+                (o.ValidUntil == null || o.ValidUntil >= now));
+        
+        return offers.OrderBy(o => o.DisplayOrder).Select(MapToDto);
+    }
+
+    public async Task<IEnumerable<SpecialOfferDto>> GetAllOffersAsync()
+    {
+        var offers = await _uow.Repository<Domain.Entities.SpecialOffer>().GetAllAsync();
+        return offers.OrderByDescending(o => o.DisplayOrder).Select(MapToDto);
+    }
+
+    public async Task<SpecialOfferDto> CreateOfferAsync(CreateSpecialOfferRequest request)
+    {
+        var offer = new Domain.Entities.SpecialOffer
+        {
+            Title = request.Title,
+            Description = request.Description,
+            BadgeText = request.BadgeText,
+            ButtonText = request.ButtonText,
+            ButtonLink = request.ButtonLink,
+            BackgroundColor = request.BackgroundColor,
+            TextColor = request.TextColor,
+            BadgeColor = request.BadgeColor,
+            ButtonColor = request.ButtonColor,
+            DisplayOrder = request.DisplayOrder,
+            IsActive = request.IsActive,
+            ValidFrom = request.ValidFrom,
+            ValidUntil = request.ValidUntil
+        };
+
+        await _uow.Repository<Domain.Entities.SpecialOffer>().AddAsync(offer);
+        await _uow.SaveChangesAsync();
+
+        return MapToDto(offer);
+    }
+
+    public async Task<SpecialOfferDto?> UpdateOfferAsync(Guid id, UpdateSpecialOfferRequest request)
+    {
+        var offer = await _uow.Repository<Domain.Entities.SpecialOffer>().GetByIdAsync(id);
+        if (offer == null) return null;
+
+        offer.Title = request.Title;
+        offer.Description = request.Description;
+        offer.BadgeText = request.BadgeText;
+        offer.ButtonText = request.ButtonText;
+        offer.ButtonLink = request.ButtonLink;
+        offer.BackgroundColor = request.BackgroundColor;
+        offer.TextColor = request.TextColor;
+        offer.BadgeColor = request.BadgeColor;
+        offer.ButtonColor = request.ButtonColor;
+        offer.DisplayOrder = request.DisplayOrder;
+        offer.IsActive = request.IsActive;
+        offer.ValidFrom = request.ValidFrom;
+        offer.ValidUntil = request.ValidUntil;
+        offer.UpdatedAt = DateTime.UtcNow;
+
+        await _uow.Repository<Domain.Entities.SpecialOffer>().UpdateAsync(offer);
+        await _uow.SaveChangesAsync();
+
+        return MapToDto(offer);
+    }
+
+    public async Task<bool> DeleteOfferAsync(Guid id)
+    {
+        var offer = await _uow.Repository<Domain.Entities.SpecialOffer>().GetByIdAsync(id);
+        if (offer == null) return false;
+
+        await _uow.Repository<Domain.Entities.SpecialOffer>().DeleteAsync(offer);
+        await _uow.SaveChangesAsync();
+        return true;
+    }
+
+    private static SpecialOfferDto MapToDto(Domain.Entities.SpecialOffer offer) => new(
+        offer.Id,
+        offer.Title,
+        offer.Description,
+        offer.BadgeText,
+        offer.ButtonText,
+        offer.ButtonLink,
+        offer.BackgroundColor,
+        offer.TextColor,
+        offer.BadgeColor,
+        offer.ButtonColor,
+        offer.DisplayOrder,
+        offer.IsActive,
+        offer.ValidFrom,
+        offer.ValidUntil
+    );
 }
 
 public class UserService : IUserService
@@ -127,6 +280,16 @@ public class UserService : IUserService
 
     public async Task<AddressDto> AddAddressAsync(Guid userId, CreateAddressRequest request)
     {
+        var context = new System.ComponentModel.DataAnnotations.ValidationContext(request);
+        var validationResults = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+        bool isValid = System.ComponentModel.DataAnnotations.Validator.TryValidateObject(request, context, validationResults, true);
+        
+        if (!isValid)
+        {
+            var errors = string.Join(", ", validationResults.Select(v => v.ErrorMessage));
+            throw new ArgumentException($"Validation failed: {errors}");
+        }
+
         if (request.IsDefault)
         {
             var existing = await _uow.Repository<Address>().FindAsync(a => a.UserId == userId);

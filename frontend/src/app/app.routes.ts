@@ -23,6 +23,7 @@ export const routes: Routes = [
       { path: 'products', loadComponent: () => import('./features/admin/admin-products.component').then(m => m.AdminProductsComponent) },
       { path: 'orders', loadComponent: () => import('./features/admin/admin-orders.component').then(m => m.AdminOrdersComponent) },
       { path: 'coupons', loadComponent: () => import('./features/admin/admin-coupons.component').then(m => m.AdminCouponsComponent) },
+      { path: 'offers', loadComponent: () => import('./features/admin/admin-offers.component').then(m => m.AdminOffersComponent) },
       { path: 'customers', loadComponent: () => import('./features/admin/admin-customers.component').then(m => m.AdminCustomersComponent) },
       { path: 'analytics', loadComponent: () => import('./features/analytics/analytics-dashboard.component').then(m => m.AnalyticsDashboardComponent) },
       { path: 'settings', loadComponent: () => import('./features/admin/admin-settings.component').then(m => m.AdminSettingsComponent) }

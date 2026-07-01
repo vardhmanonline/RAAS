@@ -1,5 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ApiService } from '../core/services/api.service';
+
+interface StoreSettings {
+  supportEmail: string;
+  supportPhone: string;
+  companyName: string;
+  companyTagline: string;
+  companyDescription: string;
+}
 
 @Component({
   selector: 'app-footer',
@@ -9,9 +18,9 @@ import { RouterLink } from '@angular/router';
     <footer class="footer">
       <div class="container footer-grid">
         <div>
-          <h3 class="footer-logo">🪷 RAAS</h3>
-          <p class="footer-tagline">Taste the Roots of Rajasthan</p>
-          <p class="footer-desc">Authentic pickles, papads, masalas & chutneys crafted with love from Rajasthani kitchens.</p>
+          <h3 class="footer-logo">🪷 {{ settings?.companyName || 'RAAS' }}</h3>
+          <p class="footer-tagline">{{ settings?.companyTagline || 'Taste the Roots of Rajasthan' }}</p>
+          <p class="footer-desc">{{ settings?.companyDescription || 'Authentic pickles, papads, masalas & chutneys crafted with love from Rajasthani kitchens.' }}</p>
         </div>
         <div>
           <h4>Shop</h4>
@@ -22,8 +31,8 @@ import { RouterLink } from '@angular/router';
         </div>
         <div>
           <h4>Support</h4>
-          <a href="mailto:support&#64;raas.in">support&#64;raas.in</a>
-          <a href="tel:+919876543210">+91 98765 43210</a>
+          <a href="mailto:{{ settings?.supportEmail }}">{{ settings?.supportEmail || 'support.rajasthan@gmail.com' }}</a>
+          <a href="tel:{{ settings?.supportPhone?.replace(/\s/g, '') }}">{{ settings?.supportPhone || '+91 84277 67533' }}</a>
           <a routerLink="/referrals">Refer & Earn ₹50</a>
         </div>
         <div>
@@ -32,7 +41,7 @@ import { RouterLink } from '@angular/router';
         </div>
       </div>
       <div class="footer-bottom">
-        <div class="container">© 2026 RAAS. All rights reserved.</div>
+        <div class="container">© 2026 {{ settings?.companyName || 'RAAS' }}. All rights reserved.</div>
       </div>
     </footer>
   `,
@@ -51,4 +60,23 @@ import { RouterLink } from '@angular/router';
     @media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
   `]
 })
-export class FooterComponent {}
+export class FooterComponent implements OnInit {
+  private api = inject(ApiService);
+  settings: StoreSettings | null = null;
+
+  ngOnInit() {
+    this.api.get<StoreSettings>('/store/settings').subscribe({
+      next: (settings) => this.settings = settings,
+      error: () => {
+        // Fallback to defaults if API fails
+        this.settings = {
+          supportEmail: 'support.rajasthan@gmail.com',
+          supportPhone: '+91 84277 67533',
+          companyName: 'RAAS',
+          companyTagline: 'Taste the Roots of Rajasthan',
+          companyDescription: 'Authentic pickles, papads, masalas & chutneys crafted with love from Rajasthani kitchens.'
+        };
+      }
+    });
+  }
+}

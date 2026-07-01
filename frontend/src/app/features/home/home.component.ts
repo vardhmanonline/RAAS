@@ -4,6 +4,34 @@ import { CurrencyPipe } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
 import { Category, Product } from '../../core/models';
 
+interface SpecialOffer {
+  id: string;
+  title: string;
+  description: string;
+  badgeText: string;
+  buttonText: string;
+  buttonLink: string;
+  backgroundColor: string;
+  textColor: string;
+  badgeColor: string;
+  buttonColor: string;
+  displayOrder: number;
+  isActive: boolean;
+}
+
+interface StoreSettings {
+  logoUrl: string;
+  mainTagline: string;
+  secondaryTagline: string;
+  companyName: string;
+  companyTagline: string;
+  companyDescription: string;
+  websiteUrl: string;
+  fssaiStatus: string;
+  gstStatus: string;
+  manufacturingLocation: string;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -21,10 +49,63 @@ import { Category, Product } from '../../core/models';
           </div>
         </div>
         <div class="hero-image">
-          <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600" alt="Rajasthani food" />
+          @if (settings?.logoUrl) {
+            <img [src]="settings.logoUrl" [alt]="settings?.companyName" />
+          } @else {
+            <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600" alt="Rajasthani food" />
+          }
         </div>
       </div>
     </section>
+
+    @if (settings?.mainTagline || settings?.secondaryTagline) {
+      <section class="branding-section">
+        <div class="container branding-content">
+          @if (settings?.logoUrl) {
+            <img [src]="settings.logoUrl" [alt]="settings?.companyName" class="branding-logo" />
+          }
+          @if (settings?.mainTagline) {
+            <h2 class="main-tagline">{{ settings.mainTagline }}</h2>
+          }
+          @if (settings?.secondaryTagline) {
+            <p class="secondary-tagline">{{ settings.secondaryTagline }}</p>
+          }
+          @if (settings?.websiteUrl || settings?.fssaiStatus || settings?.gstStatus || settings?.manufacturingLocation) {
+            <div class="branding-badges">
+              @if (settings?.websiteUrl) {
+                <span class="branding-badge">{{ settings.websiteUrl }}</span>
+              }
+              @if (settings?.fssaiStatus) {
+                <span class="branding-badge">{{ settings.fssaiStatus }}</span>
+              }
+              @if (settings?.gstStatus) {
+                <span class="branding-badge">{{ settings.gstStatus }}</span>
+              }
+              @if (settings?.manufacturingLocation) {
+                <span class="branding-badge">{{ settings.manufacturingLocation }}</span>
+              }
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    @if (specialOffers.length > 0) {
+      <section class="special-offers">
+        <div class="offers-container">
+          @for (offer of specialOffers; track offer.id) {
+            <div class="offer-banner" [style.background]="offer.backgroundColor" [style.color]="offer.textColor">
+              <div class="offer-content">
+                <span class="badge {{ offer.badgeColor }}">{{ offer.badgeText }}</span>
+                <h2>{{ offer.title }}</h2>
+                <p>{{ offer.description }}</p>
+                <a [href]="offer.buttonLink" class="btn {{ offer.buttonColor }}">{{ offer.buttonText }}</a>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
 
     <section class="container section">
       <h2 class="section-title">Shop by Category</h2>
@@ -82,17 +163,6 @@ import { Category, Product } from '../../core/models';
         </div>
       </section>
     }
-
-    <section class="festival-offer">
-      <div class="container offer-content">
-        <div>
-          <span class="badge badge-gold">Festival Offer</span>
-          <h2>Diwali Special Combos</h2>
-          <p>Up to 25% off on curated gift packs. Perfect for gifting!</p>
-          <a routerLink="/products" [queryParams]="{category: 'combos'}" class="btn btn-gold">Explore Combos</a>
-        </div>
-      </div>
-    </section>
   `,
   styles: [`
     .hero { background: linear-gradient(135deg, var(--cream) 0%, var(--cream-dark) 100%); padding: 3rem 0; overflow: hidden; }
@@ -103,6 +173,20 @@ import { Category, Product } from '../../core/models';
     .hero p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; max-width: 480px; }
     .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
     .hero-image img { border-radius: var(--radius); box-shadow: var(--shadow); width: 100%; max-height: 400px; object-fit: cover; }
+    .branding-section { background: var(--white); padding: 2rem 0; border-bottom: 1px solid var(--cream-dark); }
+    .branding-content { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    .branding-logo { max-width: 300px; max-height: 150px; object-fit: contain; }
+    .main-tagline { font-size: 1.5rem; color: var(--maroon); font-family: var(--font-display); margin: 0; }
+    .secondary-tagline { font-size: 1.1rem; color: var(--text-muted); margin: 0; font-style: italic; }
+    .branding-badges { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem; }
+    .branding-badge { background: var(--maroon); color: var(--cream); padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; }
+    .special-offers { padding: 0; }
+    .offers-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+    .offer-banner { padding: 2.5rem 2rem; min-height: 180px; display: flex; align-items: center; justify-content: center; }
+    .offer-content { text-align: center; max-width: 500px; }
+    .offer-content .badge { display: inline-block; margin-bottom: 1rem; }
+    .offer-content h2 { font-size: 1.75rem; margin: 0.75rem 0; }
+    .offer-content p { opacity: 0.9; margin-bottom: 1.5rem; line-height: 1.5; }
     .section { padding: 3rem 0; }
     .category-card { padding: 2rem 1.5rem; text-align: center; text-decoration: none; color: inherit; }
     .category-icon { font-size: 2.5rem; margin-bottom: 1rem; }
@@ -125,14 +209,12 @@ import { Category, Product } from '../../core/models';
     .product-meta { display: flex; justify-content: space-between; align-items: center; }
     .rating { color: var(--gold); font-weight: 600; }
     .price { font-weight: 700; color: var(--maroon); font-size: 1.1rem; }
-    .festival-offer { background: linear-gradient(135deg, var(--maroon), var(--maroon-dark)); padding: 3rem 0; margin-top: 2rem; }
-    .offer-content { color: var(--cream); }
-    .offer-content h2 { font-size: 2rem; margin: 1rem 0; }
-    .offer-content p { opacity: 0.9; margin-bottom: 1.5rem; }
     @media (max-width: 768px) {
       .hero-content { grid-template-columns: 1fr; }
       .hero-image { order: -1; }
       .health-grid { grid-template-columns: 1fr 1fr; }
+      .offers-container { grid-template-columns: 1fr; }
+      .branding-badges { grid-template-columns: 1fr 1fr; }
     }
   `]
 })
@@ -140,10 +222,14 @@ export class HomeComponent implements OnInit {
   private api = inject(ApiService);
   categories: Category[] = [];
   bestsellers: Product[] = [];
+  specialOffers: SpecialOffer[] = [];
+  settings: StoreSettings | null = null;
 
   ngOnInit() {
     this.api.get<Category[]>('/products/categories').subscribe(c => this.categories = c);
     this.api.get<Product[]>('/products?filter=bestseller').subscribe(p => this.bestsellers = p);
+    this.api.get<SpecialOffer[]>('/store/special-offers').subscribe(offers => this.specialOffers = offers);
+    this.api.get<StoreSettings>('/store/settings').subscribe(settings => this.settings = settings);
   }
 
   categoryIcon(slug: string): string {
