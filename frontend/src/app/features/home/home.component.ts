@@ -2,8 +2,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
-import { Category, Product } from '../../core/models';
+import { Category, Product, UserProfile, Address } from '../../core/models';
 import { CartService } from '../../core/services/cart.service';
+import { AuthService } from '../../core/services/auth.service';
 
 interface SpecialOffer {
   id: string;
@@ -38,57 +39,39 @@ interface StoreSettings {
   standalone: true,
   imports: [RouterLink, CurrencyPipe],
   template: `
-    <div class="dashboard-layout">
+    <div class="premium-layout">
+      <!-- Subtle Background Pattern -->
+      <div class="background-pattern"></div>
+      
       <!-- Sidebar -->
       <aside class="sidebar">
         <div class="sidebar-logo">
           <img src="/assets/images/rajasthani_ras_logo.png" alt="Rajasthani Ras" class="logo-image" />
-          <span class="logo-text">Rajasthani Ras</span>
         </div>
         
         <nav class="sidebar-nav">
-         <a routerLink="/" routerLinkActive="active" class="nav-item">
-            <span class="nav-icon">🏠</span>
-            <span>Home</span>
+          <a routerLink="/" routerLinkActive="active" class="nav-item">
+            <span class="nav-icon">Home</span>
           </a>
           <a routerLink="/products" routerLinkActive="active" class="nav-item">
-            <span class="nav-icon">🛒</span>
-            <span>Shop</span>
+            <span class="nav-icon">Shop</span>
           </a>
           <a routerLink="/products" routerLinkActive="active" class="nav-item">
-            <span class="nav-icon">📂</span>
-            <span>Categories</span>
+            <span class="nav-icon">Categories</span>
           </a>
           <a routerLink="/orders" routerLinkActive="active" class="nav-item">
-            <span class="nav-icon">📦</span>
-            <span>Orders</span>
+            <span class="nav-icon">Orders</span>
           </a>
           <a routerLink="/favorites" routerLinkActive="active" class="nav-item">
-            <span class="nav-icon">❤️</span>
-            <span>Favorites</span>
+            <span class="nav-icon">Favorites</span>
           </a>
           <a routerLink="/offers" routerLinkActive="active" class="nav-item">
-            <span class="nav-icon">🎁</span>
-            <span>Offers</span>
+            <span class="nav-icon">Offers</span>
           </a>
           <a routerLink="/profile" routerLinkActive="active" class="nav-item">
-            <span class="nav-icon">👤</span>
-            <span>Account</span>
+            <span class="nav-icon">Account</span>
           </a>
         </nav>
-
-        <div class="sidebar-promos">
-          <div class="promo-card">
-            <div class="promo-icon">🌟</div>
-            <h4>Order Freshness</h4>
-            <p>We prepare your order fresh & pack with care</p>
-          </div>
-          <div class="promo-card">
-            <div class="promo-icon">✨</div>
-            <h4>100% Pure Ingredients</h4>
-            <p>No Preservatives, No Artificial Flavours</p>
-          </div>
-        </div>
       </aside>
 
       <!-- Main Content -->
@@ -97,7 +80,7 @@ interface StoreSettings {
         <header class="main-header">
           <div class="location-info">
             <span class="location-icon">📍</span>
-            <span>Delivering to Jaipur, Rajasthan</span>
+            <span>Delivering to {{ deliveryLocation }}</span>
           </div>
           <div class="header-actions">
             <button class="icon-btn">
@@ -116,239 +99,831 @@ interface StoreSettings {
         <section class="hero-section">
           <div class="hero-content">
             <div class="hero-text">
-              <p class="hero-greeting">Namaste! Welcome to Rajasthani Ras</p>
-              <p class="hero-tagline">Authentic Flavors from Rajasthan's Kitchen to Yours</p>
-              <h1 class="hero-title">Pure. Authentic. Made with Love.</h1>
-              <p class="hero-description">Taste the tradition of Rajasthan, made fresh in small batches.</p>
+              <p class="hero-greeting">Namaste 🙏</p>
+              <h1 class="hero-title">Pure.<br>Authentic.<br>Made with Love.</h1>
+              <p class="hero-description">Taste the authentic flavors of Rajasthan, prepared fresh in small batches, delivered straight from our kitchen.</p>
+              
+              <div class="hero-cta-group">
+                <a routerLink="/products" class="cta-primary">Shop Now</a>
+                <a routerLink="/products" class="cta-secondary">Explore Collection</a>
+              </div>
               
               <div class="hero-features">
                 <div class="feature-item">
-                  <span class="feature-icon">🏵️</span>
-                  <span>Made in Rajasthan</span>
+                  <span class="check-icon">✓</span>
+                  <span>Handmade</span>
                 </div>
                 <div class="feature-item">
-                  <span class="feature-icon">👵</span>
+                  <span class="check-icon">✓</span>
+                  <span>Small Batch</span>
+                </div>
+                <div class="feature-item">
+                  <span class="check-icon">✓</span>
+                  <span>No Preservatives</span>
+                </div>
+                <div class="feature-item">
+                  <span class="check-icon">✓</span>
+                  <span>Freshly Prepared</span>
+                </div>
+                <div class="feature-item">
+                  <span class="check-icon">✓</span>
                   <span>Traditional Recipes</span>
                 </div>
-                <div class="feature-item">
-                  <span class="feature-icon">🥘</span>
-                  <span>Small Batch Freshness</span>
-                </div>
-                <div class="feature-item">
-                  <span class="feature-icon">🧤</span>
-                  <span>Hygienic & Handmade</span>
-                </div>
               </div>
-
-              <a routerLink="/products" class="hero-cta">Shop Now</a>
             </div>
             <div class="hero-image">
               <img src="https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800" alt="Rajasthani woman preparing food" />
-              <div class="hero-overlay">
-                <span>From our Kitchen to your Home</span>
-              </div>
             </div>
+          </div>
+        </section>
+
+        <!-- Floating Trust Cards -->
+        <section class="trust-cards-section">
+          <div class="trust-cards-scroll">
+            <div class="trust-card">
+              <span class="trust-icon">✨</span>
+              <span>100% Pure Ingredients</span>
+            </div>
+            <div class="trust-card">
+              <span class="trust-icon">🎨</span>
+              <span>No Artificial Colors</span>
+            </div>
+            <div class="trust-card">
+              <span class="trust-icon">🌿</span>
+              <span>No Preservatives</span>
+            </div>
+            <div class="trust-card">
+              <span class="trust-icon">🍳</span>
+              <span>Made Fresh Every Day</span>
+            </div>
+            <div class="trust-card">
+              <span class="trust-icon">🏰</span>
+              <span>Direct from Rajasthan</span>
+            </div>
+            <div class="trust-card">
+              <span class="trust-icon">👵</span>
+              <span>Traditional Family Recipes</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section class="categories-section">
+          <div class="section-header">
+            <h2 class="section-title">Shop by Category</h2>
+            <a routerLink="/products" class="view-all-link">View All →</a>
+          </div>
+          <div class="categories-grid">
+            @for (cat of categories; track cat.id) {
+              <a [routerLink]="['/products']" [queryParams]="{category: cat.slug}" class="category-card">
+                <div class="category-icon">{{ categoryIcon(cat.slug) }}</div>
+                <h3>{{ cat.name }}</h3>
+                <p>{{ cat.description }}</p>
+                <span class="category-count">{{ cat.productCount }} products</span>
+              </a>
+            }
           </div>
         </section>
 
         <!-- Bestsellers Section -->
         <section class="bestsellers-section">
           <div class="section-header">
-            <h2 class="section-title">Shop Our Bestsellers</h2>
+            <h2 class="section-title">Bestsellers</h2>
             <a routerLink="/products" class="view-all-link">View All →</a>
           </div>
           <div class="products-scroll">
             @for (p of bestsellers; track p.id) {
-              <a [routerLink]="['/products', p.slug]" class="product-card-mini">
-                <div class="product-image">
+              <a [routerLink]="['/products', p.slug]" class="product-card-premium">
+                <div class="product-image-round">
                   <img [src]="p.imageUrl" [alt]="p.name" />
                 </div>
-                <div class="product-name">{{ p.name }}</div>
-                <div class="product-price">{{ p.price | currency:'INR':'symbol':'1.0-0' }}</div>
+                <div class="product-info">
+                  <h3>{{ p.name }}</h3>
+                  <div class="product-meta">
+                    <span class="product-price">{{ p.price | currency:'INR':'symbol':'1.0-0' }}</span>
+                    <span class="product-rating">★ {{ p.rating }}</span>
+                  </div>
+                  <button class="quick-add-btn">+ Add</button>
+                </div>
               </a>
             }
           </div>
         </section>
 
-        <!-- Why Choose Section -->
+        <!-- Why Choose Us - Glassmorphism -->
         <section class="why-choose-section">
-          <h2 class="section-title">Why Choose Rajasthani Ras?</h2>
-          <div class="features-grid">
-            <div class="feature-card">
-              <span class="feature-card-icon">🎯</span>
-              <h3>100% Authentic Rajasthani Taste</h3>
-            </div>
-            <div class="feature-card">
-              <span class="feature-card-icon">🌿</span>
-              <h3>No Preservatives or Chemicals</h3>
-            </div>
-            <div class="feature-card">
-              <span class="feature-card-icon">🥣</span>
-              <h3>Prepared in Small Batches</h3>
-            </div>
-            <div class="feature-card">
-              <span class="feature-card-icon">✅</span>
-              <h3>Hygienic & Quality Assured</h3>
-            </div>
-            <div class="feature-card">
-              <span class="feature-card-icon">🚚</span>
-              <h3>Direct from Rajasthan</h3>
+          <div class="glassmorphism-card">
+            <h2 class="section-title">Why Choose Us</h2>
+            <div class="features-list">
+              <div class="feature-list-item">
+                <span class="feature-check">✓</span>
+                <span>Homemade Taste</span>
+              </div>
+              <div class="feature-list-item">
+                <span class="feature-check">✓</span>
+                <span>Freshly Packed</span>
+              </div>
+              <div class="feature-list-item">
+                <span class="feature-check">✓</span>
+                <span>Direct from Rajasthan</span>
+              </div>
+              <div class="feature-list-item">
+                <span class="feature-check">✓</span>
+                <span>Hygienically Prepared</span>
+              </div>
+              <div class="feature-list-item">
+                <span class="feature-check">✓</span>
+                <span>Premium Ingredients</span>
+              </div>
+              <div class="feature-list-item">
+                <span class="feature-check">✓</span>
+                <span>Authentic Recipes</span>
+              </div>
             </div>
           </div>
         </section>
 
-        <!-- Bottom Promotional Strip -->
-        <section class="promo-strip">
-          <div class="promo-item">
-            <span class="promo-item-icon">🍽️</span>
-            <div class="promo-item-text">
-              <strong>Freshly Prepared</strong>
-              <span>Made in small batches just for you</span>
-            </div>
+        <!-- Features Strip -->
+        <section class="features-strip">
+          <div class="feature-strip-item">
+            <span class="strip-icon">�</span>
+            <span>Freshly Prepared</span>
           </div>
-          <div class="promo-item">
-            <span class="promo-item-icon">📦</span>
-            <div class="promo-item-text">
-              <strong>Shipped with Care</strong>
-              <span>Secure packaging to keep it fresh</span>
-            </div>
+          <div class="feature-strip-item">
+            <span class="strip-icon">📦</span>
+            <span>Packed with Care</span>
           </div>
-          <div class="promo-item">
-            <span class="promo-item-icon">🏠</span>
-            <div class="promo-item-text">
-              <strong>Bringing Rajasthan To Your Home</strong>
-              <span>Traditional taste, Timeless love</span>
-            </div>
+          <div class="feature-strip-item">
+            <span class="strip-icon">🚚</span>
+            <span>Delivered Fast</span>
           </div>
-          <div class="promo-item">
-            <span class="promo-item-icon">🤝</span>
-            <div class="promo-item-text">
-              <strong>Support Local Artisans</strong>
-              <span>Empowering local communities & preserving traditions</span>
-            </div>
+          <div class="feature-strip-item">
+            <span class="strip-icon">👵</span>
+            <span>Traditional Recipes</span>
+          </div>
+          <div class="feature-strip-item">
+            <span class="strip-icon">👩</span>
+            <span>Support Local Women</span>
           </div>
         </section>
       </main>
     </div>
   `,
   styles: [`
-    .dashboard-layout { display: flex; min-height: 100vh; background: #f8f5f0; }
-    
-    /* Sidebar */
-    .sidebar { width: 280px; background: linear-gradient(180deg, #8B4513 0%, #654321 100%); padding: 1.5rem; display: flex; flex-direction: column; position: fixed; height: 100vh; overflow-y: auto; }
-    .sidebar-logo { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.2); }
-    .logo-image { height: 50px; width: auto; object-fit: contain; }
-    .logo-text { font-size: 1.25rem; font-weight: 700; color: #FFD700; font-family: Georgia, serif; }
-    
-    .sidebar-nav { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
-    .nav-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-radius: 12px; color: rgba(255,255,255,0.85); text-decoration: none; transition: all 0.3s; font-size: 0.95rem; }
-    .nav-item:hover { background: rgba(255,255,255,0.15); color: #fff; }
-    .nav-item.active { background: #FFD700; color: #654321; font-weight: 600; }
-    .nav-icon { font-size: 1.25rem; }
-    
-    .sidebar-promos { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
-    .promo-card { background: rgba(255,255,255,0.1); padding: 1.25rem; border-radius: 12px; backdrop-filter: blur(10px); }
-    .promo-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
-    .promo-card h4 { color: #FFD700; margin: 0 0 0.5rem; font-size: 0.95rem; }
-    .promo-card p { color: rgba(255,255,255,0.8); margin: 0; font-size: 0.8rem; line-height: 1.4; }
-    
-    /* Main Content */
-    .main-content { flex: 1; margin-left: 280px; overflow-y: auto; }
-    
-    /* Header */
-    .main-header { background: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
-    .location-info { display: flex; align-items: center; gap: 0.5rem; color: #654321; font-size: 0.9rem; }
-    .location-icon { font-size: 1.1rem; }
-    .header-actions { display: flex; gap: 1rem; align-items: center; }
-    .icon-btn { position: relative; padding: 0.5rem; border: none; background: none; cursor: pointer; font-size: 1.25rem; text-decoration: none; }
-    .cart-btn { position: relative; }
-    .cart-count { position: absolute; top: -2px; right: -2px; background: #FFD700; color: #654321; font-size: 0.7rem; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    
-    /* Hero Section */
-    .hero-section { background: linear-gradient(135deg, #FFF8DC 0%, #F5DEB3 100%); padding: 3rem 2rem; position: relative; overflow: hidden; }
-    .hero-content { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; max-width: 1400px; margin: 0 auto; }
-    .hero-text { z-index: 2; }
-    .hero-greeting { color: #8B4513; font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 500; }
-    .hero-tagline { color: #654321; font-size: 1rem; margin-bottom: 1rem; font-style: italic; }
-    .hero-title { font-size: clamp(2rem, 4vw, 3rem); color: #8B4513; margin-bottom: 1rem; font-family: Georgia, serif; line-height: 1.2; }
-    .hero-description { color: #654321; font-size: 1.1rem; margin-bottom: 2rem; max-width: 500px; line-height: 1.6; }
-    
-    .hero-features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem; }
-    .feature-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #654321; }
-    .feature-icon { font-size: 1.1rem; }
-    
-    .hero-cta { display: inline-block; background: #8B4513; color: #fff; padding: 1rem 2.5rem; border-radius: 30px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3); }
-    .hero-cta:hover { background: #654321; transform: translateY(-2px); }
-    
-    .hero-image { position: relative; }
-    .hero-image img { width: 100%; height: 400px; object-fit: cover; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
-    .hero-overlay { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(139, 69, 19, 0.9); color: #FFD700; padding: 0.75rem 1.5rem; border-radius: 25px; font-size: 0.9rem; font-weight: 600; backdrop-filter: blur(5px); }
-    
-    /* Bestsellers Section */
-    .bestsellers-section { padding: 3rem 2rem; max-width: 1400px; margin: 0 auto; }
-    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-    .section-title { font-size: 1.75rem; color: #8B4513; margin: 0; font-family: Georgia, serif; }
-    .view-all-link { color: #8B4513; text-decoration: none; font-weight: 600; font-size: 1rem; }
-    .view-all-link:hover { color: #654321; }
-    
-    .products-scroll { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.5rem; }
-    .product-card-mini { text-decoration: none; color: inherit; display: block; }
-    .product-image { aspect-ratio: 1; overflow: hidden; border-radius: 12px; background: #fff; margin-bottom: 0.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-    .product-card-mini:hover .product-image img { transform: scale(1.05); }
-    .product-name { font-size: 0.9rem; color: #654321; margin-bottom: 0.25rem; font-weight: 500; }
-    .product-price { font-size: 1rem; color: #8B4513; font-weight: 700; }
-    
-    /* Why Choose Section */
-    .why-choose-section { padding: 3rem 2rem; background: #fff; }
-    .why-choose-section .section-title { text-align: center; margin-bottom: 2rem; }
-    .features-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; max-width: 1400px; margin: 0 auto; }
-    .feature-card { text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #FFF8DC 0%, #F5DEB3 100%); border-radius: 16px; transition: transform 0.3s; }
-    .feature-card:hover { transform: translateY(-5px); }
-    .feature-card-icon { font-size: 2rem; margin-bottom: 1rem; }
-    .feature-card h3 { font-size: 0.95rem; color: #8B4513; margin: 0; line-height: 1.4; font-weight: 600; }
-    
-    /* Promo Strip */
-    .promo-strip { background: linear-gradient(90deg, #8B4513 0%, #654321 100%); padding: 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
-    .promo-item { display: flex; align-items: center; gap: 1rem; color: #fff; }
-    .promo-item-icon { font-size: 2rem; }
-    .promo-item-text { display: flex; flex-direction: column; }
-    .promo-item-text strong { font-size: 0.95rem; margin-bottom: 0.25rem; color: #FFD700; }
-    .promo-item-text span { font-size: 0.8rem; opacity: 0.9; }
-    
-    @media (max-width: 1024px) {
-      .sidebar { width: 240px; }
-      .main-content { margin-left: 240px; }
-      .hero-content { grid-template-columns: 1fr; gap: 2rem; }
-      .hero-image { order: -1; }
-      .features-grid { grid-template-columns: repeat(3, 1fr); }
-      .promo-strip { grid-template-columns: repeat(2, 1fr); }
+    /* Ultra-Premium Luxury Design */
+    :host {
+      --ivory: #FFF8F0;
+      --warm-cream: #F7E9D7;
+      --deep-maroon: #6E1F1F;
+      --royal-gold: #C89A2B;
+      --terracotta: #B65A2A;
+      --dark-brown: #4A2A18;
+      --soft-shadow: 0 8px 32px rgba(110, 31, 31, 0.08);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
-    
+
+    .premium-layout {
+      display: flex;
+      min-height: 100vh;
+      background: var(--ivory);
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      position: relative;
+    }
+
+    /* Subtle Background Pattern */
+    .background-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(200, 154, 43, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(182, 90, 42, 0.03) 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30L30 0z' fill='none' stroke='%23C89A2B' stroke-opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Sidebar - Ultra Premium */
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(180deg, var(--deep-maroon) 0%, #4A1515 100%);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 100;
+      box-shadow: 4px 0 24px rgba(110, 31, 31, 0.15);
+    }
+
+    .sidebar-logo {
+      margin-bottom: 3rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .logo-image {
+      height: 60px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .nav-item {
+      padding: 1rem 1.5rem;
+      border-radius: 16px;
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      border: 1px solid transparent;
+    }
+
+    .nav-item:hover {
+      background: rgba(200, 154, 43, 0.15);
+      color: #fff;
+      transform: translateX(4px);
+      border-color: rgba(200, 154, 43, 0.3);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, var(--royal-gold) 0%, #D4A834 100%);
+      color: var(--deep-maroon);
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(200, 154, 43, 0.3);
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 260px;
+      overflow-y: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header - Minimal Luxury */
+    .main-header {
+      background: rgba(255, 248, 240, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 1.25rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 20px rgba(110, 31, 31, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .location-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--dark-brown);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .location-icon {
+      font-size: 1rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .icon-btn {
+      position: relative;
+      padding: 0.75rem;
+      border: none;
+      background: rgba(110, 31, 31, 0.05);
+      cursor: pointer;
+      font-size: 1.1rem;
+      text-decoration: none;
+      border-radius: 12px;
+      transition: all 0.3s;
+    }
+
+    .icon-btn:hover {
+      background: rgba(110, 31, 31, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .cart-btn {
+      position: relative;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--deep-maroon);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(110, 31, 31, 0.3);
+    }
+
+    /* Hero Section - Editorial Luxury */
+    .hero-section {
+      padding: 5rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .hero-text {
+      z-index: 2;
+    }
+
+    .hero-greeting {
+      color: var(--terracotta);
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: var(--deep-maroon);
+      margin-bottom: 1.5rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      line-height: 1.1;
+      font-weight: 400;
+      letter-spacing: -1px;
+    }
+
+    .hero-description {
+      color: var(--dark-brown);
+      font-size: 1.15rem;
+      margin-bottom: 2.5rem;
+      max-width: 520px;
+      line-height: 1.8;
+      font-weight: 400;
+      opacity: 0.85;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .cta-primary {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--deep-maroon) 0%, #4A1515 100%);
+      color: #fff;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 8px 24px rgba(110, 31, 31, 0.25);
+      letter-spacing: 0.5px;
+    }
+
+    .cta-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(110, 31, 31, 0.35);
+    }
+
+    .cta-secondary {
+      display: inline-block;
+      background: transparent;
+      color: var(--deep-maroon);
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid var(--deep-maroon);
+      letter-spacing: 0.5px;
+    }
+
+    .cta-secondary:hover {
+      background: var(--deep-maroon);
+      color: #fff;
+      transform: translateY(-3px);
+    }
+
+    .hero-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--dark-brown);
+      font-weight: 500;
+    }
+
+    .check-icon {
+      color: var(--royal-gold);
+      font-weight: 700;
+    }
+
+    .hero-image {
+      position: relative;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      border-radius: 32px;
+      box-shadow: 0 32px 64px rgba(110, 31, 31, 0.15);
+    }
+
+    /* Floating Trust Cards */
+    .trust-cards-section {
+      padding: 2rem 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .trust-cards-scroll {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+      scrollbar-width: none;
+    }
+
+    .trust-cards-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .trust-card {
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      padding: 1.5rem 2rem;
+      border-radius: 20px;
+      box-shadow: var(--soft-shadow);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border: 1px solid rgba(200, 154, 43, 0.15);
+      transition: all 0.3s;
+    }
+
+    .trust-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(110, 31, 31, 0.12);
+    }
+
+    .trust-icon {
+      font-size: 1.5rem;
+    }
+
+    /* Categories Section */
+    .categories-section {
+      padding: 4rem 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      color: var(--deep-maroon);
+      margin: 0;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 400;
+      letter-spacing: -0.5px;
+    }
+
+    .view-all-link {
+      color: var(--terracotta);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+
+    .view-all-link:hover {
+      color: var(--deep-maroon);
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 2rem;
+    }
+
+    .category-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      border-radius: 24px;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: var(--soft-shadow);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(200, 154, 43, 0.1);
+    }
+
+    .category-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(110, 31, 31, 0.15);
+      border-color: var(--royal-gold);
+    }
+
+    .category-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .category-card h3 {
+      color: var(--deep-maroon);
+      margin-bottom: 0.75rem;
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    .category-card p {
+      color: var(--dark-brown);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+      opacity: 0.75;
+    }
+
+    .category-count {
+      color: var(--terracotta);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* Bestsellers - Premium Round Cards */
+    .bestsellers-section {
+      padding: 4rem 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .products-scroll {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+
+    .product-card-premium {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 1.5rem;
+      box-shadow: var(--soft-shadow);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(200, 154, 43, 0.1);
+    }
+
+    .product-card-premium:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(110, 31, 31, 0.15);
+    }
+
+    .product-image-round {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1.5rem;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(110, 31, 31, 0.12);
+      border: 3px solid var(--warm-cream);
+    }
+
+    .product-image-round img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+
+    .product-card-premium:hover .product-image-round img {
+      transform: scale(1.1);
+    }
+
+    .product-info {
+      text-align: center;
+    }
+
+    .product-info h3 {
+      color: var(--deep-maroon);
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .product-meta {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .product-price {
+      font-size: 1.1rem;
+      color: var(--terracotta);
+      font-weight: 700;
+    }
+
+    .product-rating {
+      color: var(--royal-gold);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .quick-add-btn {
+      background: var(--deep-maroon);
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .quick-add-btn:hover {
+      background: var(--terracotta);
+      transform: scale(1.05);
+    }
+
+    /* Glassmorphism Why Choose Us */
+    .why-choose-section {
+      padding: 5rem 3rem;
+      position: relative;
+    }
+
+    .glassmorphism-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(40px);
+      border-radius: 32px;
+      padding: 4rem;
+      box-shadow: var(--glass-shadow);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .why-choose-section .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .features-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .feature-list-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.1rem;
+      color: var(--dark-brown);
+      font-weight: 500;
+    }
+
+    .feature-check {
+      color: var(--royal-gold);
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+
+    /* Features Strip */
+    .features-strip {
+      background: linear-gradient(90deg, var(--deep-maroon) 0%, var(--terracotta) 100%);
+      padding: 2.5rem 3rem;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2rem;
+      box-shadow: 0 -8px 32px rgba(110, 31, 31, 0.15);
+    }
+
+    .feature-strip-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: #fff;
+      text-align: center;
+    }
+
+    .strip-icon {
+      font-size: 2rem;
+    }
+
+    .feature-strip-item span:last-child {
+      font-size: 0.9rem;
+      font-weight: 500;
+      opacity: 0.95;
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar { width: 220px; }
+      .main-content { margin-left: 220px; }
+      .hero-content { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-image { order: -1; }
+      .features-list { grid-template-columns: 1fr; }
+      .features-strip { grid-template-columns: repeat(3, 1fr); }
+    }
+
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .main-content { margin-left: 0; }
-      .hero-section { padding: 2rem 1rem; }
-      .hero-features { grid-template-columns: 1fr; }
-      .features-grid { grid-template-columns: repeat(2, 1fr); }
-      .promo-strip { grid-template-columns: 1fr; }
+      .hero-section { padding: 3rem 1.5rem; }
+      .hero-features { flex-direction: column; gap: 0.75rem; }
+      .features-strip { grid-template-columns: repeat(2, 1fr); }
       .products-scroll { grid-template-columns: repeat(2, 1fr); }
+      .categories-grid { grid-template-columns: repeat(2, 1fr); }
+      .glassmorphism-card { padding: 2.5rem 1.5rem; }
     }
   `]
 })
 export class HomeComponent implements OnInit {
   private api = inject(ApiService);
+  private auth = inject(AuthService);
   cart = inject(CartService);
   categories: Category[] = [];
   bestsellers: Product[] = [];
   specialOffers: SpecialOffer[] = [];
   settings: StoreSettings | null = null;
+  userProfile: UserProfile | null = null;
+  userAddress: Address | null = null;
 
   ngOnInit() {
     this.api.get<Category[]>('/products/categories').subscribe(c => this.categories = c);
     this.api.get<Product[]>('/products?filter=bestseller').subscribe(p => this.bestsellers = p);
     this.api.get<SpecialOffer[]>('/store/special-offers').subscribe(offers => this.specialOffers = offers);
     this.api.get<StoreSettings>('/store/settings').subscribe(settings => this.settings = settings);
+    
+    // Fetch user profile if logged in
+    if (this.auth.isLoggedIn()) {
+      this.api.get<UserProfile>('/user/profile').subscribe(profile => {
+        this.userProfile = profile;
+        // Get default address or first address
+        this.userAddress = profile.addresses?.find(addr => addr.isDefault) || profile.addresses?.[0] || null;
+      });
+    }
+  }
+
+  get deliveryLocation(): string {
+    if (this.userAddress) {
+      return `${this.userAddress.city}, ${this.userAddress.state}`;
+    }
+    return 'Set your delivery location';
   }
 
   categoryIcon(slug: string): string {
