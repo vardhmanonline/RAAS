@@ -21,13 +21,18 @@ interface StoreSettings {
       <div class="header-container">
         <!-- Logo + Location -->
         <div class="header-left">
-          <a routerLink="/" class="logo">
-            @if (settings?.logoUrl) {
-              <img [src]="settings?.logoUrl" [alt]="settings?.companyName || 'RAAS'" class="logo-image" />
-            } @else {
-              <span class="logo-icon">🪷</span>
-            }
-            <span class="logo-text">{{ settings?.companyName || 'RAAS' }}</span>
+          <a routerLink="/" class="logo" aria-label="Go to homepage">
+            <span class="logo-mark">
+              @if (settings?.logoUrl) {
+                <img [src]="settings?.logoUrl" [alt]="settings?.companyName || 'RAAS'" class="logo-image" />
+              } @else {
+                <span class="logo-icon">🪷</span>
+              }
+            </span>
+            <span class="logo-copy">
+              <span class="logo-text">{{ settings?.companyName || 'RAAS' }}</span>
+              <span class="logo-subtitle">Rajasthan Premium Pantry</span>
+            </span>
           </a>
           <div class="location-tag">
             <span class="location-icon">📍</span>
@@ -108,6 +113,7 @@ interface StoreSettings {
       top: 0;
       z-index: 50;
       border-bottom: 1px solid rgba(200, 154, 43, 0.1);
+      padding-left: 260px;
     }
 
     .header-container {
@@ -130,33 +136,101 @@ interface StoreSettings {
     .logo {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
       font-family: var(--font-display);
       font-size: 1.5rem;
       font-weight: 400;
       color: var(--deep-maroon);
       text-decoration: none;
       white-space: nowrap;
-      transition: all 0.3s ease;
+      padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+      border-radius: 24px;
+      border: 1px solid rgba(201, 168, 96, 0.28);
+      background: linear-gradient(135deg, rgba(251, 245, 230, 0.96), rgba(255, 255, 255, 0.98));
+      box-shadow: 0 10px 28px rgba(123, 24, 24, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      transform-origin: left center;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease;
     }
 
-    .logo:hover {
-      transform: scale(1.02);
+    .logo:hover,
+    .logo:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(201, 168, 96, 0.5);
+      box-shadow: 0 18px 36px rgba(123, 24, 24, 0.16), 0 0 0 1px rgba(201, 168, 96, 0.16);
+    }
+
+    .logo-mark {
+      position: relative;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border-radius: 18px;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(123, 24, 24, 0.14), rgba(201, 168, 96, 0.3));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 10px 24px rgba(123, 24, 24, 0.12);
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .logo-mark::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      pointer-events: none;
+    }
+
+    .logo:hover .logo-mark,
+    .logo:focus-visible .logo-mark {
+      transform: scale(1.18) rotate(-6deg);
+      box-shadow: 0 18px 34px rgba(123, 24, 24, 0.22), 0 0 0 10px rgba(201, 168, 96, 0.12);
     }
 
     .logo-icon {
-      font-size: 1.25rem;
+      font-size: 1.9rem;
+      filter: drop-shadow(0 8px 14px rgba(123, 24, 24, 0.18));
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .logo-image {
-      height: 40px;
-      width: auto;
+      width: 42px;
+      height: 42px;
       object-fit: contain;
+      filter: drop-shadow(0 8px 16px rgba(123, 24, 24, 0.18));
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .logo:hover .logo-image,
+    .logo:hover .logo-icon,
+    .logo:focus-visible .logo-image,
+    .logo:focus-visible .logo-icon {
+      transform: scale(1.08);
+    }
+
+    .logo-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      min-width: 0;
     }
 
     .logo-text {
       color: var(--deep-maroon);
-      letter-spacing: 1px;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .logo-subtitle {
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(90, 69, 55, 0.82);
     }
 
     .location-tag {
@@ -405,6 +479,10 @@ interface StoreSettings {
 
     /* Responsive */
     @media (max-width: 1024px) {
+      .header {
+        padding-left: 220px;
+      }
+
       .header-container {
         gap: 0.75rem;
       }
@@ -417,6 +495,10 @@ interface StoreSettings {
     }
 
     @media (max-width: 768px) {
+      .header {
+        padding-left: 0;
+      }
+
       .header-container {
         flex-wrap: wrap;
         gap: 0.75rem;
@@ -448,6 +530,10 @@ interface StoreSettings {
         display: none;
       }
 
+      .logo-subtitle {
+        display: none;
+      }
+
       .whatsapp-btn {
         bottom: calc(80px + 1rem); /* clear mobile bottom navigation bar */
         right: 1rem;
@@ -464,6 +550,23 @@ interface StoreSettings {
 
       .logo {
         font-size: 1.2rem;
+        padding: 0.25rem;
+        gap: 0.55rem;
+      }
+
+      .logo-mark {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+      }
+
+      .logo-image {
+        width: 36px;
+        height: 36px;
+      }
+
+      .logo-icon {
+        font-size: 1.65rem;
       }
 
       .logo-text {
