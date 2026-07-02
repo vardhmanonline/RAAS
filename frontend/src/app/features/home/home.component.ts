@@ -5,7 +5,6 @@ import { ApiService } from '../../core/services/api.service';
 import { Category, Product, UserProfile, Address } from '../../core/models';
 import { CartService } from '../../core/services/cart.service';
 import { AuthService } from '../../core/services/auth.service';
-import { SidebarComponent } from '../../layout/sidebar.component';
 
 interface SpecialOffer {
   id: string;
@@ -38,14 +37,11 @@ interface StoreSettings {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, CommonModule, SidebarComponent],
+  imports: [RouterLink, CommonModule],
   template: `
     <div class="premium-layout">
       <!-- Subtle Background Pattern -->
       <div class="background-pattern"></div>
-      
-      <!-- Sidebar Component -->
-      <app-sidebar></app-sidebar>
 
       <!-- Main Content -->
       <main class="main-content">
@@ -283,7 +279,6 @@ interface StoreSettings {
     }
 
     .premium-layout {
-      display: flex;
       min-height: 100vh;
       background: var(--warm-cream);
       font-family: 'Noto Sans Devanagari', 'Playfair Display', 'Georgia', serif;
@@ -307,9 +302,6 @@ interface StoreSettings {
 
     /* Main Content */
     .main-content {
-      flex: 1;
-      margin-left: 260px;
-      overflow-y: auto;
       position: relative;
       z-index: 1;
       padding-top: 20px;
@@ -941,7 +933,6 @@ interface StoreSettings {
     }
 
     @media (max-width: 1024px) {
-      .main-content { margin-left: 220px; }
       .hero-content { grid-template-columns: 1fr; gap: 2.5rem; }
       .hero-image { order: -1; }
       .hero-image img { height: 400px; }
@@ -950,28 +941,45 @@ interface StoreSettings {
     }
 
     @media (max-width: 768px) {
-      .main-content { margin-left: 0; }
-      .hero-section { padding: 3rem 1.5rem 4rem; }
+      .hero-section { padding: 2rem 1.5rem 3rem; }
       .hero-content { gap: 2rem; }
-      .hero-image img { height: 350px; }
+      .hero-image img { height: 300px; }
       .footer-container { flex-direction: column; }
       .footer-item { min-width: 100%; }
       .products-menu-grid { grid-template-columns: repeat(2, 1fr); }
-      .why-choose-right { padding: 2rem; }
+      .products-menu-section { padding: 1.5rem; }
+      .why-choose-right { padding: 1.5rem; }
       .hero-title { font-size: 2rem; }
-      .bottom-section { grid-template-columns: 1fr; }
+      .hero-hindi { font-size: 1.4rem; }
+      .bottom-section { grid-template-columns: 1fr; padding: 2rem 1.5rem; }
       .trust-badges { grid-template-columns: repeat(2, 1fr); }
+      .delivery-banner { margin: 1.5rem 1.5rem 0; }
+      .wax-seal { width: 70px; height: 70px; }
     }
 
     @media (max-width: 480px) {
-      .hero-section { padding: 2rem 1rem 3rem; }
-      .hero-image img { height: 300px; }
+      .hero-section { padding: 1.5rem 1rem 2.5rem; }
+      .hero-image img { height: 220px; }
       .hero-cta-group { flex-direction: column; }
       .cta-primary, .cta-secondary { width: 100%; text-align: center; }
-      .products-menu-grid { grid-template-columns: 1fr; }
+      .products-menu-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .products-menu-section { padding: 1.25rem; }
       .why-choose-cards { grid-template-columns: 1fr; }
+      .trust-badges { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+      .delivery-banner { margin: 1rem 0.75rem 0; font-size: 0.85rem; }
+      .hero-title { font-size: 1.75rem; }
+      .hero-hindi { font-size: 1.25rem; }
+      .hero-greeting { font-size: 0.9rem; }
+      .hero-description { font-size: 0.95rem; }
+      .section-title { font-size: 1.5rem; }
+      .banner-item { font-size: 0.85rem; }
+      .banner-divider { display: none; }
+      .banner-content { flex-direction: column; gap: 0.5rem; }
+    }
+
+    @media (max-width: 360px) {
       .trust-badges { grid-template-columns: 1fr; }
-      .delivery-banner { margin: 2rem 1rem 0; }
+      .products-menu-grid { grid-template-columns: 1fr; }
     }
   `]
 })
