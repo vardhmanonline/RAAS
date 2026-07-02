@@ -12,7 +12,7 @@ import { AuthService } from '../../core/services/auth.service';
       <div class="auth-card card">
         <div class="brand-header">
           <div class="brand-lotus">🪷</div>
-          <h1>RAAS</h1>
+          <h1>Rajasthani Ras</h1>
           <p class="tagline">Taste the Roots of Rajasthan</p>
         </div>
         <form (ngSubmit)="login()">

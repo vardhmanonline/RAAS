@@ -11,8 +11,10 @@ import { AuthService } from '../core/services/auth.service';
     <aside class="sidebar">
       <!-- Logo / Brand -->
       <div class="sidebar-header">
-        <div class="logo">RAAS</div>
-        <p class="tagline">Rajasthan</p>
+        <div class="logo">
+          <img src="assets/images/raas-logo.jpeg" alt="RAAS Logo" />
+        </div>
+        <p class="tagline"></p>
       </div>
 
       <!-- Navigation -->

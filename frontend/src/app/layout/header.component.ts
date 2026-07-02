@@ -31,7 +31,7 @@ interface StoreSettings {
           </a>
           <div class="location-tag">
             <span class="location-icon">📍</span>
-            <span class="location-text">Jaipur, Rajasthan</span>
+            <span class="location-text">Bikaner, Rajasthan</span>
           </div>
         </div>
 
