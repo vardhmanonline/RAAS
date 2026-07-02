@@ -334,7 +334,7 @@ public class OrderService : IOrderService
         var result = new List<OrderDto>();
         foreach (var order in orders.OrderByDescending(o => o.CreatedAt))
         {
-            var items = itemsByOrderId.TryGetValue(order.Id, out var orderItems) ? orderItems : Enumerable.Empty<OrderItem>();
+            var items = itemsByOrderId.GetValueOrDefault(order.Id, new List<OrderItem>());
             result.Add(MapOrder(order, items));
         }
         return result;
@@ -361,7 +361,7 @@ public class OrderService : IOrderService
         var result = new List<OrderDto>();
         foreach (var order in orders.OrderByDescending(o => o.CreatedAt))
         {
-            var items = itemsByOrderId.TryGetValue(order.Id, out var orderItems) ? orderItems : Enumerable.Empty<OrderItem>();
+            var items = itemsByOrderId.GetValueOrDefault(order.Id, new List<OrderItem>());
             result.Add(MapOrder(order, items));
         }
         return result;
