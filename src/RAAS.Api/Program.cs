@@ -10,10 +10,22 @@ using RAAS.Infrastructure.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Load .env file if it exists (for local development)
-var envPath = Path.Combine(builder.Environment.ContentRootPath, "..", "..", ".env");
-if (File.Exists(envPath))
+var envPath = FindEnvFile(builder.Environment.ContentRootPath);
+if (!string.IsNullOrEmpty(envPath) && File.Exists(envPath))
 {
-    Env.Load(envPath);
+    try
+    {
+        Env.Load(envPath);
+        Console.WriteLine($"✓ Loaded .env file from: {envPath}");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"⚠ Warning: Failed to load .env file: {ex.Message}");
+    }
+}
+else
+{
+    Console.WriteLine("ℹ .env file not found. Using environment variables.");
 }
 
 builder.Services.AddControllers();
@@ -104,3 +116,21 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+/// <summary>
+/// Searches for .env file starting from the current directory and moving up the directory tree.
+/// This makes the path handling more robust regardless of where the application runs from.
+/// </summary>
+static string? FindEnvFile(string startPath)
+{
+    var current = new DirectoryInfo(startPath);
+    while (current != null)
+    {
+        var envFile = Path.Combine(current.FullName, ".env");
+        if (File.Exists(envFile))
+            return envFile;
+        
+        current = current.Parent;
+    }
+    return null;
+}
