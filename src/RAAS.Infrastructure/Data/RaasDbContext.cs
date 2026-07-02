@@ -18,6 +18,12 @@ public class RaasDbContext : DbContext
     public DbSet<Event> Events => Set<Event>();
     public DbSet<ProductView> ProductViews => Set<ProductView>();
     public DbSet<StoreSettings> StoreSettings => Set<StoreSettings>();
+    public DbSet<InvestorAccount> InvestorAccounts => Set<InvestorAccount>();
+    public DbSet<LandDeal> LandDeals => Set<LandDeal>();
+    public DbSet<InvestmentFlow> InvestmentFlows => Set<InvestmentFlow>();
+    public DbSet<InvestorPayout> InvestorPayouts => Set<InvestorPayout>();
+    public DbSet<ComplianceCase> ComplianceCases => Set<ComplianceCase>();
+    public DbSet<PricingPlan> PricingPlans => Set<PricingPlan>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -74,6 +80,48 @@ public class RaasDbContext : DbContext
         });
 
         modelBuilder.Entity<StoreSettings>(e => e.HasIndex(s => s.Key).IsUnique());
+
+        modelBuilder.Entity<InvestorAccount>(e =>
+        {
+            e.HasIndex(i => i.AccountCode).IsUnique();
+            e.Property(i => i.TotalCommittedCapital).HasPrecision(14, 2);
+            e.Property(i => i.PricingTierCode).HasMaxLength(64);
+        });
+
+        modelBuilder.Entity<LandDeal>(e =>
+        {
+            e.HasIndex(d => d.DealCode).IsUnique();
+            e.Property(d => d.AreaInAcres).HasPrecision(14, 2);
+            e.Property(d => d.AcquisitionCost).HasPrecision(14, 2);
+            e.Property(d => d.ExpectedRevenue).HasPrecision(14, 2);
+        });
+
+        modelBuilder.Entity<InvestmentFlow>(e =>
+        {
+            e.Property(f => f.Amount).HasPrecision(14, 2);
+            e.HasOne(f => f.InvestorAccount).WithMany(i => i.InvestmentFlows).HasForeignKey(f => f.InvestorAccountId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(f => f.LandDeal).WithMany(d => d.InvestmentFlows).HasForeignKey(f => f.LandDealId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<InvestorPayout>(e =>
+        {
+            e.Property(p => p.Amount).HasPrecision(14, 2);
+            e.HasOne(p => p.InvestorAccount).WithMany(i => i.Payouts).HasForeignKey(p => p.InvestorAccountId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(p => p.LandDeal).WithMany(d => d.Payouts).HasForeignKey(p => p.LandDealId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<ComplianceCase>(e =>
+        {
+            e.Property(c => c.AlertType).HasMaxLength(120);
+            e.HasOne(c => c.InvestorAccount).WithMany(i => i.ComplianceCases).HasForeignKey(c => c.InvestorAccountId).OnDelete(DeleteBehavior.SetNull);
+            e.HasOne(c => c.LandDeal).WithMany(d => d.ComplianceCases).HasForeignKey(c => c.LandDealId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<PricingPlan>(e =>
+        {
+            e.HasIndex(p => p.Code).IsUnique();
+            e.Property(p => p.MonthlyPrice).HasPrecision(14, 2);
+        });
 
         SeedData(modelBuilder);
     }
@@ -132,6 +180,42 @@ public class RaasDbContext : DbContext
                 SpiceLevel = Domain.Enums.SpiceLevel.Mild,
                 IsBestseller = true,
                 ImageUrl = "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800"
+            }
+        );
+
+        modelBuilder.Entity<PricingPlan>().HasData(
+            new PricingPlan
+            {
+                Id = Guid.Parse("55555555-5555-5555-5555-555555555501"),
+                Code = "BASIC_CRM",
+                Name = "Basic CRM",
+                MonthlyPrice = 14999,
+                IncludesBasicCrm = true,
+                IncludesAdvancedTracking = false,
+                IncludesComplianceDashboard = false,
+                IsActive = true
+            },
+            new PricingPlan
+            {
+                Id = Guid.Parse("55555555-5555-5555-5555-555555555502"),
+                Code = "ADVANCED_INVESTMENT",
+                Name = "Advanced Investment Tracking",
+                MonthlyPrice = 29999,
+                IncludesBasicCrm = true,
+                IncludesAdvancedTracking = true,
+                IncludesComplianceDashboard = false,
+                IsActive = true
+            },
+            new PricingPlan
+            {
+                Id = Guid.Parse("55555555-5555-5555-5555-555555555503"),
+                Code = "COMPLIANCE_DASHBOARD",
+                Name = "Compliance Dashboard Suite",
+                MonthlyPrice = 44999,
+                IncludesBasicCrm = true,
+                IncludesAdvancedTracking = true,
+                IncludesComplianceDashboard = true,
+                IsActive = true
             }
         );
 

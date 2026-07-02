@@ -81,6 +81,7 @@ npm start
 | Users | `GET /api/users/profile`, `GET /api/users/referrals` |
 | Analytics | `POST /api/analytics/track`, `GET /api/analytics/dashboard` |
 | Admin | `GET /api/admin/orders`, `PUT /api/admin/orders/{id}/status` |
+| Investor CRM | `GET /api/investorcrm/overview`, `GET /api/investorcrm/revenue-report`, `POST /api/investorcrm/investors`, `POST /api/investorcrm/deals`, `POST /api/investorcrm/investment-flows`, `POST /api/investorcrm/investor-payouts`, `POST /api/investorcrm/compliance-cases` |
 
 ## Features
 
@@ -105,6 +106,14 @@ npm start
 - Products: top sellers, category performance
 - Referrals: conversion rate, top referrers
 - Funnel: visit → view → cart → checkout → purchase
+
+### Investor CRM Scaffold (`/admin/investor-crm`)
+- Multi-investor account registry with pricing tier assignment
+- Land deal pipeline with registration state and area coverage
+- Investment flow tracking by **white** and **black** fund channels
+- Compliance monitoring queue with severity and due dates
+- Revenue reports by deal, land area, and time range (earnings, payouts, net revenue)
+- Modular pricing plans: Basic CRM, Advanced Investment Tracking, Compliance Dashboard Suite
 
 ### Email Triggers (Resend)
 | Event | Email |
