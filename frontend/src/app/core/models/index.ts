@@ -149,3 +149,56 @@ export interface AnalyticsDashboard {
     purchaseRate: number;
   };
 }
+
+
+export interface InvestorCrmOverview {
+  totalInvestors: number;
+  totalDeals: number;
+  totalCommittedCapital: number;
+  registeredLandArea: number;
+  openComplianceCases: number;
+  whiteFunds: number;
+  blackFunds: number;
+}
+
+export interface RevenueReport {
+  totalEarnings: number;
+  investorPayouts: number;
+  netRevenue: number;
+  dealCount: number;
+  totalLandArea: number;
+  whiteFunds: number;
+  blackFunds: number;
+}
+
+export interface LandDealSummary {
+  id: string;
+  dealCode: string;
+  title: string;
+  location: string;
+  areaInAcres: number;
+  acquisitionCost: number;
+  expectedRevenue: number;
+  registrationCompleted: boolean;
+}
+
+export interface PricingPlan {
+  id: string;
+  code: string;
+  name: string;
+  monthlyPrice: number;
+  includesBasicCrm: boolean;
+  includesAdvancedTracking: boolean;
+  includesComplianceDashboard: boolean;
+}
+
+export interface ComplianceCase {
+  id: string;
+  investorAccountId?: string;
+  landDealId?: string;
+  alertType: string;
+  severity: string;
+  status: string;
+  dueDate?: string;
+  createdAt: string;
+}

@@ -26,6 +26,7 @@ export const routes: Routes = [
       { path: 'offers', loadComponent: () => import('./features/admin/admin-offers.component').then(m => m.AdminOffersComponent) },
       { path: 'customers', loadComponent: () => import('./features/admin/admin-customers.component').then(m => m.AdminCustomersComponent) },
       { path: 'analytics', loadComponent: () => import('./features/analytics/analytics-dashboard.component').then(m => m.AnalyticsDashboardComponent) },
+      { path: 'investor-crm', loadComponent: () => import('./features/investor-crm/investor-crm-dashboard.component').then(m => m.InvestorCrmDashboardComponent) },
       { path: 'settings', loadComponent: () => import('./features/admin/admin-settings.component').then(m => m.AdminSettingsComponent) }
     ]
   },
