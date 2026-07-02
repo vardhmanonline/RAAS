@@ -329,7 +329,7 @@ public class OrderService : IOrderService
 
         var orderIds = orders.Select(o => o.Id).ToList();
         var allItems = (await _uow.Repository<OrderItem>().FindAsync(i => orderIds.Contains(i.OrderId))).ToList();
-        var itemsByOrderId = allItems.GroupBy(i => i.OrderId).ToDictionary(g => g.Key, g => g.AsEnumerable());
+        var itemsByOrderId = allItems.GroupBy(i => i.OrderId).ToDictionary(g => g.Key, g => g.ToList());
 
         var result = new List<OrderDto>();
         foreach (var order in orders.OrderByDescending(o => o.CreatedAt))
@@ -356,7 +356,7 @@ public class OrderService : IOrderService
 
         var orderIds = orders.Select(o => o.Id).ToList();
         var allItems = (await _uow.Repository<OrderItem>().FindAsync(i => orderIds.Contains(i.OrderId))).ToList();
-        var itemsByOrderId = allItems.GroupBy(i => i.OrderId).ToDictionary(g => g.Key, g => g.AsEnumerable());
+        var itemsByOrderId = allItems.GroupBy(i => i.OrderId).ToDictionary(g => g.Key, g => g.ToList());
 
         var result = new List<OrderDto>();
         foreach (var order in orders.OrderByDescending(o => o.CreatedAt))
