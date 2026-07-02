@@ -414,16 +414,16 @@ public class OrderService : IOrderService
     public decimal CalculateDeliveryCharge(decimal subtotal) => subtotal >= 499 ? 0 : 49;
 
     private static OrderDto MapOrder(Order order, IEnumerable<OrderItem> items) => new(
-        order.Id, order.OrderNumber, order.Status.ToString(), order.Subtotal, order.DeliveryCharge,
+        order.Id, order.OrderNumber, order.UserId, order.Status.ToString(), order.Subtotal, order.DeliveryCharge,
         order.Discount, order.Total, order.PaymentMethod.ToString(), order.PaymentStatus,
         order.CreatedAt,
         items.Select(i => new OrderItemDto(i.ProductId, i.ProductName, i.ProductImageUrl, i.Quantity, i.UnitPrice, i.TotalPrice)).ToList(),
-        order.UserId, null, null, order.IsSampleOrder, order.IsGuestOrder);
+        null, null, order.IsSampleOrder, order.IsGuestOrder);
     
     private static OrderDto MapOrder(Order order, IEnumerable<OrderItem> items, string? customerEmail, string? customerName) => new(
-        order.Id, order.OrderNumber, order.Status.ToString(), order.Subtotal, order.DeliveryCharge,
+        order.Id, order.OrderNumber, order.UserId, order.Status.ToString(), order.Subtotal, order.DeliveryCharge,
         order.Discount, order.Total, order.PaymentMethod.ToString(), order.PaymentStatus,
         order.CreatedAt,
         items.Select(i => new OrderItemDto(i.ProductId, i.ProductName, i.ProductImageUrl, i.Quantity, i.UnitPrice, i.TotalPrice)).ToList(),
-        order.UserId, customerEmail, customerName, order.IsSampleOrder, order.IsGuestOrder);
+        customerEmail, customerName, order.IsSampleOrder, order.IsGuestOrder);
 }
