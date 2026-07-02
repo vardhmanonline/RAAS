@@ -30,6 +30,7 @@ import { AuthService } from '../../core/services/auth.service';
     @if (showWelcome) {
       <div class="welcome-overlay" (click)="dismissWelcome()">
         <div class="welcome-modal" (click)="$event.stopPropagation()">
+          <button class="welcome-close" (click)="dismissWelcome()" aria-label="Close">✕</button>
           <div class="welcome-pattern"></div>
           <div class="welcome-content">
             <div class="welcome-emblem">🪷</div>
@@ -80,10 +81,12 @@ import { AuthService } from '../../core/services/auth.service';
     .switch { text-align: center; margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem; }
 
     /* Welcome overlay */
-    .welcome-overlay { position: fixed; inset: 0; background: rgba(44,24,16,0.75); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1rem; animation: fadeIn 0.3s ease; }
+    .welcome-overlay { position: fixed; inset: 0; background: rgba(44,24,16,0.75); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1rem; animation: fadeIn 0.3s ease; overflow-y: auto; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .welcome-modal { background: var(--cream); border-radius: 24px; max-width: 520px; width: 100%; overflow: hidden; box-shadow: 0 24px 80px rgba(123,30,30,0.4); animation: slideUp 0.4s ease; position: relative; }
+    .welcome-modal { background: var(--cream); border-radius: 24px; max-width: 520px; width: 100%; overflow: hidden; box-shadow: 0 24px 80px rgba(123,30,30,0.4); animation: slideUp 0.4s ease; position: relative; max-height: 90vh; overflow-y: auto; }
     @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .welcome-close { position: absolute; top: 0.75rem; right: 0.75rem; z-index: 10; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--maroon); font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
+    .welcome-close:hover, .welcome-close:active { background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transform: scale(1.1); }
     .welcome-pattern { height: 8px; background: linear-gradient(90deg, var(--maroon), var(--saffron), var(--gold), var(--saffron), var(--maroon)); }
     .welcome-content { padding: 2.5rem; text-align: center; }
     .welcome-emblem { font-size: 3.5rem; margin-bottom: 0.75rem; }
@@ -96,6 +99,15 @@ import { AuthService } from '../../core/services/auth.service';
     .highlight { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
     .hi { font-size: 1.75rem; }
     .welcome-cta { width: 100%; font-size: 1rem; padding: 1rem; letter-spacing: 0.5px; }
+    @media (max-width: 480px) {
+      .welcome-overlay { align-items: flex-start; padding: 0.5rem; }
+      .welcome-modal { border-radius: 16px; margin: auto; }
+      .welcome-content { padding: 1.5rem 1.25rem; }
+      .welcome-emblem { font-size: 2.5rem; }
+      .welcome-name { font-size: 1.5rem; }
+      .welcome-message { font-size: 0.875rem; }
+      .welcome-highlights { gap: 1rem; }
+    }
   `]
 })
 export class LoginComponent {
