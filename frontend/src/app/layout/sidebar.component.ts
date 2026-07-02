@@ -25,12 +25,11 @@ import { AuthService } from '../core/services/auth.service';
           <span class="icon">🛍️</span>
           <span class="label">Products</span>
         </a>
-        <a routerLink="/cart" routerLinkActive="active" class="nav-item">
-          <span class="icon">🛒</span>
-          <span class="label">Cart</span>
-        </a>
-
         @if (auth.isLoggedIn()) {
+          <a routerLink="/cart" routerLinkActive="active" class="nav-item">
+            <span class="icon">🛒</span>
+            <span class="label">Cart</span>
+          </a>
           <a routerLink="/orders" routerLinkActive="active" class="nav-item">
             <span class="icon">📦</span>
             <span class="label">Orders</span>
