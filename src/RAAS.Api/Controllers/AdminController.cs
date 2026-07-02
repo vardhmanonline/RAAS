@@ -25,7 +25,12 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("orders")]
-    public async Task<IActionResult> GetOrders() => Ok(await _orders.GetAllOrdersAsync());
+    public async Task<IActionResult> GetOrders()
+    {
+        // Admin endpoint should return ALL orders from ALL customers, not filtered by current user
+        var allOrders = await _orders.GetAllOrdersAsync();
+        return Ok(allOrders);
+    }
 
     [HttpPut("orders/{id:guid}/status")]
     public async Task<IActionResult> UpdateOrderStatus(Guid id, [FromBody] UpdateOrderStatusRequest request)

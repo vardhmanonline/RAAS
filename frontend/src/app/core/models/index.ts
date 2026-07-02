@@ -57,6 +57,9 @@ export interface Order {
   paymentStatus: string;
   createdAt: string;
   items: OrderItem[];
+  userId: string;
+  customerEmail?: string;
+  customerName?: string;
 }
 
 export interface OrderItem {

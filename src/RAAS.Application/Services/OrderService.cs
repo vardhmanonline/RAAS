@@ -355,14 +355,21 @@ public class OrderService : IOrderService
             return new List<OrderDto>();
 
         var orderIds = orders.Select(o => o.Id).ToList();
+        var userIds = orders.Select(o => o.UserId).Distinct().ToList();
+        
         var allItems = (await _uow.Repository<OrderItem>().FindAsync(i => orderIds.Contains(i.OrderId))).ToList();
         var itemsByOrderId = allItems.GroupBy(i => i.OrderId).ToDictionary(g => g.Key, g => g.ToList());
+        
+        // Load user information for all customers
+        var users = (await _uow.Repository<User>().FindAsync(u => userIds.Contains(u.Id))).ToList();
+        var userById = users.ToDictionary(u => u.Id);
 
         var result = new List<OrderDto>();
         foreach (var order in orders.OrderByDescending(o => o.CreatedAt))
         {
             var items = itemsByOrderId.GetValueOrDefault(order.Id, new List<OrderItem>());
-            result.Add(MapOrder(order, items));
+            var user = userById.GetValueOrDefault(order.UserId);
+            result.Add(MapOrder(order, items, user?.Email, user?.FullName));
         }
         return result;
     }
@@ -411,5 +418,12 @@ public class OrderService : IOrderService
         order.Discount, order.Total, order.PaymentMethod.ToString(), order.PaymentStatus,
         order.CreatedAt,
         items.Select(i => new OrderItemDto(i.ProductId, i.ProductName, i.ProductImageUrl, i.Quantity, i.UnitPrice, i.TotalPrice)).ToList(),
-        order.IsSampleOrder, order.IsGuestOrder);
+        order.UserId, null, null, order.IsSampleOrder, order.IsGuestOrder);
+    
+    private static OrderDto MapOrder(Order order, IEnumerable<OrderItem> items, string? customerEmail, string? customerName) => new(
+        order.Id, order.OrderNumber, order.Status.ToString(), order.Subtotal, order.DeliveryCharge,
+        order.Discount, order.Total, order.PaymentMethod.ToString(), order.PaymentStatus,
+        order.CreatedAt,
+        items.Select(i => new OrderItemDto(i.ProductId, i.ProductName, i.ProductImageUrl, i.Quantity, i.UnitPrice, i.TotalPrice)).ToList(),
+        order.UserId, customerEmail, customerName, order.IsSampleOrder, order.IsGuestOrder);
 }
