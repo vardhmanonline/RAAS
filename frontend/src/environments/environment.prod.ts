@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: process.env['API_URL'] || 'https://raas-api.render.com/api'
+  apiUrl: (globalThis as any)?.process?.env?.['API_URL'] || 'https://raas-api.render.com/api'
 };
