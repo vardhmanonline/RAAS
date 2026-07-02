@@ -207,7 +207,7 @@ export class AdminSettingsComponent implements OnInit {
     recentPurchaseCount: 23,
     recentPurchaseDays: 7,
     lowStockThreshold: 20,
-    supportEmail: 'support.rajasthan@gmail.com',
+    supportEmail: 'support.rajasthaniras@gmail.com',
     supportPhone: '+91 84277 67533',
     companyName: 'RAAS',
     companyTagline: 'Taste the Roots of Rajasthan',
