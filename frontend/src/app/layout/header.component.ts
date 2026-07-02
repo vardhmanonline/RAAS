@@ -113,6 +113,7 @@ interface StoreSettings {
       top: 0;
       z-index: 50;
       border-bottom: 1px solid rgba(200, 154, 43, 0.1);
+      padding-left: 260px;
     }
 
     .header-container {
@@ -478,6 +479,10 @@ interface StoreSettings {
 
     /* Responsive */
     @media (max-width: 1024px) {
+      .header {
+        padding-left: 220px;
+      }
+
       .header-container {
         gap: 0.75rem;
       }
@@ -490,6 +495,10 @@ interface StoreSettings {
     }
 
     @media (max-width: 768px) {
+      .header {
+        padding-left: 0;
+      }
+
       .header-container {
         flex-wrap: wrap;
         gap: 0.75rem;
