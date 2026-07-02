@@ -97,7 +97,7 @@ public class StoreSettingsService : IStoreSettingsService
             RecentPurchaseCount: map.TryGetValue(KeyRecentPurchaseCount, out var rpCount) ? int.Parse(rpCount) : 23,
             RecentPurchaseDays: map.TryGetValue(KeyRecentPurchaseDays, out var rpDays) ? int.Parse(rpDays) : 7,
             LowStockThreshold: map.TryGetValue(KeyLowStockThreshold, out var lsThreshold) ? int.Parse(lsThreshold) : 20,
-            SupportEmail: map.TryGetValue(KeySupportEmail, out var email) ? email : "support.rajasthan@gmail.com",
+            SupportEmail: map.TryGetValue(KeySupportEmail, out var email) ? email : "support.rajasthaniras@gmail.com",
             SupportPhone: map.TryGetValue(KeySupportPhone, out var phone) ? phone : "+91 84277 67533",
             CompanyName: map.TryGetValue(KeyCompanyName, out var name) ? name : "RAAS",
             CompanyTagline: map.TryGetValue(KeyCompanyTagline, out var tagline) ? tagline : "Taste the Roots of Rajasthan",
