@@ -59,8 +59,20 @@ import { AuthService } from '../core/services/auth.service';
       <!-- Auth Links -->
       <div class="sidebar-footer">
         @if (!auth.isLoggedIn()) {
-          <a routerLink="/login" class="btn-login">Login</a>
-          <a routerLink="/register" class="btn-register">Register</a>
+          <div class="info-tile">
+            <div class="tile-icon">🌿</div>
+            <div class="tile-content">
+              <p class="tile-title">Order Freshness</p>
+              <p class="tile-text">We prepare your order fresh and pack with care.</p>
+            </div>
+          </div>
+          <div class="info-tile">
+            <div class="tile-icon">🫙</div>
+            <div class="tile-content">
+              <p class="tile-title">100% Pure Ingredients</p>
+              <p class="tile-text">No preservatives. No artificial flavors.</p>
+            </div>
+          </div>
         } @else {
           <button (click)="logout()" class="btn-logout">Logout</button>
         }
@@ -155,6 +167,43 @@ import { AuthService } from '../core/services/auth.service';
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
+    }
+
+    .info-tile {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      background: rgba(255, 252, 246, 0.92);
+      border: 1px solid rgba(232, 146, 42, 0.18);
+      border-radius: 12px;
+      padding: 0.75rem;
+      box-shadow: 0 4px 12px rgba(123, 24, 24, 0.06);
+    }
+
+    .tile-icon {
+      font-size: 1rem;
+      line-height: 1;
+      margin-top: 0.1rem;
+      flex-shrink: 0;
+    }
+
+    .tile-content {
+      min-width: 0;
+    }
+
+    .tile-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #7B1818;
+      line-height: 1.2;
+      margin: 0 0 0.2rem;
+    }
+
+    .tile-text {
+      font-size: 0.72rem;
+      color: #5A4537;
+      line-height: 1.35;
+      margin: 0;
     }
 
     .btn-login, .btn-register, .btn-logout {
