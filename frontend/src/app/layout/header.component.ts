@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -458,6 +458,7 @@ interface StoreSettings {
   `]
 })
 export class HeaderComponent implements OnInit {
+  @Input() scrolled = false;
   auth = inject(AuthService);
   cart = inject(CartService);
   private api = inject(ApiService);

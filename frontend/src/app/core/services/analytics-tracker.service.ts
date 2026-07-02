@@ -37,4 +37,9 @@ export class AnalyticsTracker {
       error: () => {}
     });
   }
+
+  track(eventName: string, itemId?: string | number) {
+    const metadata = itemId !== undefined ? { itemId } : undefined;
+    this.trackEvent(eventName, metadata);
+  }
 }
