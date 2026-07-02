@@ -30,6 +30,7 @@ import { AuthService } from '../../core/services/auth.service';
     @if (showWelcome) {
       <div class="welcome-overlay" (click)="dismissWelcome()">
         <div class="welcome-modal" (click)="$event.stopPropagation()">
+          <button class="welcome-close" (click)="dismissWelcome()" aria-label="Close welcome popup">✕</button>
           <div class="welcome-pattern"></div>
           <div class="welcome-content">
             <div class="welcome-emblem">🪷</div>
@@ -84,6 +85,8 @@ import { AuthService } from '../../core/services/auth.service';
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .welcome-modal { background: var(--cream); border-radius: 24px; max-width: 520px; width: 100%; overflow: hidden; box-shadow: 0 24px 80px rgba(123,30,30,0.4); animation: slideUp 0.4s ease; position: relative; }
     @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .welcome-close { position: absolute; top: 1rem; right: 1rem; z-index: 10; width: 36px; height: 36px; border-radius: 50%; border: none; background: rgba(123,24,24,0.12); color: var(--maroon); font-size: 1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s, transform 0.2s; line-height: 1; }
+    .welcome-close:hover, .welcome-close:focus { background: rgba(123,24,24,0.22); transform: scale(1.1); outline: 2px solid var(--saffron); }
     .welcome-pattern { height: 8px; background: linear-gradient(90deg, var(--maroon), var(--saffron), var(--gold), var(--saffron), var(--maroon)); }
     .welcome-content { padding: 2.5rem; text-align: center; }
     .welcome-emblem { font-size: 3.5rem; margin-bottom: 0.75rem; }
@@ -96,6 +99,14 @@ import { AuthService } from '../../core/services/auth.service';
     .highlight { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
     .hi { font-size: 1.75rem; }
     .welcome-cta { width: 100%; font-size: 1rem; padding: 1rem; letter-spacing: 0.5px; }
+    @media (max-width: 480px) {
+      .welcome-overlay { padding: 0.75rem; align-items: flex-end; }
+      .welcome-modal { border-radius: 20px 20px 16px 16px; max-height: 90vh; overflow-y: auto; }
+      .welcome-close { top: 0.75rem; right: 0.75rem; width: 40px; height: 40px; font-size: 1.1rem; background: rgba(123,24,24,0.18); }
+      .welcome-content { padding: 1.5rem 1.25rem; }
+      .welcome-name { font-size: 1.5rem; }
+      .welcome-highlights { gap: 1rem; }
+    }
   `]
 })
 export class LoginComponent {
