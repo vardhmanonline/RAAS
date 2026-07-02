@@ -68,6 +68,9 @@ public class StoreSettingsService : IStoreSettingsService
 {
     private const string KeySampleEnabled = "SampleOrderEnabled";
     private const string KeyFreeDelivery = "FreeDeliveryThreshold";
+    private const string KeyRecentPurchaseCount = "RecentPurchaseCount";
+    private const string KeyRecentPurchaseDays = "RecentPurchaseDays";
+    private const string KeyLowStockThreshold = "LowStockThreshold";
     private const string KeySupportEmail = "SupportEmail";
     private const string KeySupportPhone = "SupportPhone";
     private const string KeyCompanyName = "CompanyName";
@@ -91,6 +94,9 @@ public class StoreSettingsService : IStoreSettingsService
         return new StoreSettingsDto(
             SampleOrderEnabled: map.TryGetValue(KeySampleEnabled, out var se) ? bool.Parse(se) : true,
             FreeDeliveryThreshold: map.TryGetValue(KeyFreeDelivery, out var fd) ? decimal.Parse(fd) : 499m,
+            RecentPurchaseCount: map.TryGetValue(KeyRecentPurchaseCount, out var rpCount) ? int.Parse(rpCount) : 23,
+            RecentPurchaseDays: map.TryGetValue(KeyRecentPurchaseDays, out var rpDays) ? int.Parse(rpDays) : 7,
+            LowStockThreshold: map.TryGetValue(KeyLowStockThreshold, out var lsThreshold) ? int.Parse(lsThreshold) : 20,
             SupportEmail: map.TryGetValue(KeySupportEmail, out var email) ? email : "support.rajasthan@gmail.com",
             SupportPhone: map.TryGetValue(KeySupportPhone, out var phone) ? phone : "+91 84277 67533",
             CompanyName: map.TryGetValue(KeyCompanyName, out var name) ? name : "RAAS",
@@ -110,6 +116,9 @@ public class StoreSettingsService : IStoreSettingsService
     {
         await UpsertAsync(KeySampleEnabled, request.SampleOrderEnabled.ToString(), "Enable or disable free sample orders for new customers");
         await UpsertAsync(KeyFreeDelivery, request.FreeDeliveryThreshold.ToString(), "Minimum order subtotal to waive delivery charge");
+        await UpsertAsync(KeyRecentPurchaseCount, request.RecentPurchaseCount.ToString(), "Social proof count shown on product pages");
+        await UpsertAsync(KeyRecentPurchaseDays, request.RecentPurchaseDays.ToString(), "Social proof time window in days shown on product pages");
+        await UpsertAsync(KeyLowStockThreshold, request.LowStockThreshold.ToString(), "Stock level threshold to show urgency message on product pages");
         await UpsertAsync(KeySupportEmail, request.SupportEmail, "Customer support email address");
         await UpsertAsync(KeySupportPhone, request.SupportPhone, "Customer support phone number");
         await UpsertAsync(KeyCompanyName, request.CompanyName, "Company name displayed in footer and branding");
@@ -126,6 +135,9 @@ public class StoreSettingsService : IStoreSettingsService
         return new StoreSettingsDto(
             request.SampleOrderEnabled, 
             request.FreeDeliveryThreshold,
+            request.RecentPurchaseCount,
+            request.RecentPurchaseDays,
+            request.LowStockThreshold,
             request.SupportEmail,
             request.SupportPhone,
             request.CompanyName,

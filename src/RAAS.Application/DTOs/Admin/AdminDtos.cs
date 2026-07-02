@@ -8,6 +8,9 @@ public record CouponDto(Guid Id, string Code, string Description, decimal Discou
 public record StoreSettingsDto(
     bool SampleOrderEnabled, 
     decimal FreeDeliveryThreshold,
+    int RecentPurchaseCount,
+    int RecentPurchaseDays,
+    int LowStockThreshold,
     string SupportEmail,
     string SupportPhone,
     string CompanyName,
@@ -23,6 +26,9 @@ public record StoreSettingsDto(
 public record UpdateStoreSettingsRequest(
     bool SampleOrderEnabled, 
     decimal FreeDeliveryThreshold,
+    int RecentPurchaseCount,
+    int RecentPurchaseDays,
+    int LowStockThreshold,
     string SupportEmail,
     string SupportPhone,
     string CompanyName,

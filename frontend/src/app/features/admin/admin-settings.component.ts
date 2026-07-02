@@ -5,6 +5,9 @@ import { ApiService } from '../../core/services/api.service';
 interface StoreSettings {
   sampleOrderEnabled: boolean;
   freeDeliveryThreshold: number;
+  recentPurchaseCount: number;
+  recentPurchaseDays: number;
+  lowStockThreshold: number;
   supportEmail: string;
   supportPhone: string;
   companyName: string;
@@ -56,6 +59,21 @@ interface StoreSettings {
               <input class="input" type="number" [(ngModel)]="settings.freeDeliveryThreshold" min="0" step="50" />
             </div>
             <p class="hint">Set to 0 to offer free delivery on all orders.</p>
+          </div>
+
+          <div class="setting-card card">
+            <h3>Product Urgency Messaging</h3>
+            <p>Configure social proof and low-stock urgency values shown on product detail pages.</p>
+            <div class="branding-form">
+              <label>Recent Buyers Count</label>
+              <input class="input" type="number" [(ngModel)]="settings.recentPurchaseCount" min="0" step="1" />
+              
+              <label>Recent Buyers Days Window</label>
+              <input class="input" type="number" [(ngModel)]="settings.recentPurchaseDays" min="1" step="1" />
+              
+              <label>Low Stock Alert Threshold</label>
+              <input class="input" type="number" [(ngModel)]="settings.lowStockThreshold" min="0" step="1" />
+            </div>
           </div>
 
           <div class="setting-card card">
@@ -179,6 +197,9 @@ export class AdminSettingsComponent implements OnInit {
   settings: StoreSettings = { 
     sampleOrderEnabled: true, 
     freeDeliveryThreshold: 499,
+    recentPurchaseCount: 23,
+    recentPurchaseDays: 7,
+    lowStockThreshold: 20,
     supportEmail: 'support.rajasthan@gmail.com',
     supportPhone: '+91 84277 67533',
     companyName: 'RAAS',
