@@ -6,6 +6,12 @@ import { CartService } from '../../core/services/cart.service';
 import { AnalyticsTracker } from '../../core/services/analytics-tracker.service';
 import { ProductDetail } from '../../core/models';
 
+interface ProductUrgencySettings {
+  recentPurchaseCount: number;
+  recentPurchaseDays: number;
+  lowStockThreshold: number;
+}
+
 @Component({
   selector: 'app-product-detail',
   standalone: true,
@@ -43,6 +49,14 @@ import { ProductDetail } from '../../core/models';
                 <button (click)="qty = Math.min(product.stock, qty + 1)">+</button>
               </div>
               <span class="stock">{{ product.stock }} in stock</span>
+            </div>
+            <div class="urgency-messages">
+              @if (urgencySettings.recentPurchaseCount > 0 && urgencySettings.recentPurchaseDays > 0) {
+                <p>🔥 {{ urgencySettings.recentPurchaseCount }} folks bought this in last {{ urgencySettings.recentPurchaseDays }} day{{ urgencySettings.recentPurchaseDays === 1 ? '' : 's' }}</p>
+              }
+              @if (product.stock <= urgencySettings.lowStockThreshold) {
+                <p>⚠️ Hurry up! Only {{ product.stock }} left in stock.</p>
+              }
             </div>
           </div>
         </div>
@@ -95,6 +109,8 @@ import { ProductDetail } from '../../core/models';
     .qty-control button { width: 40px; height: 40px; border: none; background: var(--cream); cursor: pointer; font-size: 1.25rem; }
     .qty-control span { width: 40px; text-align: center; font-weight: 600; }
     .stock { color: var(--text-muted); font-size: 0.85rem; }
+    .urgency-messages { margin-top: 0.75rem; display: grid; gap: 0.35rem; }
+    .urgency-messages p { margin: 0; font-size: 0.9rem; font-weight: 600; color: var(--maroon); }
     .story-section { padding: 2rem; margin-bottom: 1.5rem; }
     .story-section h2 { color: var(--maroon); margin-bottom: 1rem; }
     .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
@@ -129,6 +145,11 @@ export class ProductDetailComponent implements OnInit {
   allImages: string[] = [];
   qty = 1;
   Math = Math;
+  urgencySettings: ProductUrgencySettings = {
+    recentPurchaseCount: 23,
+    recentPurchaseDays: 7,
+    lowStockThreshold: 20
+  };
 
   get discountPercent(): number {
     if (!this.product?.compareAtPrice || this.product.compareAtPrice <= this.product.price) return 0;
@@ -136,6 +157,16 @@ export class ProductDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.api.get<ProductUrgencySettings>('/store/settings').subscribe({
+      next: settings => {
+        this.urgencySettings = {
+          recentPurchaseCount: Math.max(0, settings.recentPurchaseCount ?? this.urgencySettings.recentPurchaseCount),
+          recentPurchaseDays: Math.max(1, settings.recentPurchaseDays ?? this.urgencySettings.recentPurchaseDays),
+          lowStockThreshold: Math.max(0, settings.lowStockThreshold ?? this.urgencySettings.lowStockThreshold)
+        };
+      }
+    });
+
     this.api.get<ProductDetail>(`/products/${this.slug()}`).subscribe({
       next: p => {
         this.product = p;
