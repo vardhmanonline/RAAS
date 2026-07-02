@@ -24,6 +24,7 @@ public static class DependencyInjection
         services.AddScoped<IReferralService, ReferralService>();
         services.AddScoped<IAdminService, AdminService>();
         services.AddScoped<IStoreSettingsService, StoreSettingsService>();
+        services.AddScoped<ISpecialOfferService, SpecialOfferService>();
         services.AddScoped<IUserService, UserService>();
         services.AddHttpClient<IEmailService, ResendEmailService>();
 

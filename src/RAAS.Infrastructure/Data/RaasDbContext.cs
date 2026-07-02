@@ -18,6 +18,7 @@ public class RaasDbContext : DbContext
     public DbSet<Event> Events => Set<Event>();
     public DbSet<ProductView> ProductViews => Set<ProductView>();
     public DbSet<StoreSettings> StoreSettings => Set<StoreSettings>();
+    public DbSet<SpecialOffer> SpecialOffers => Set<SpecialOffer>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
