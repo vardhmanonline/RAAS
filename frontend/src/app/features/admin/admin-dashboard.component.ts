@@ -38,6 +38,13 @@ import { Order } from '../../core/models';
     .quick-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
     .link-card { padding: 1.5rem; text-align: center; text-decoration: none; color: inherit; font-weight: 600; }
     .order-row { display: flex; justify-content: space-between; padding: 1rem 1.25rem; margin-bottom: 0.5rem; }
+    @media (max-width: 768px) {
+      .quick-stats, .quick-links { grid-template-columns: 1fr; }
+      .order-row {
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+    }
   `]
 })
 export class AdminDashboardComponent implements OnInit {

@@ -209,8 +209,9 @@ import { AuthService } from '../core/services/auth.service';
     @media (max-width: 768px) {
       .sidebar {
         width: 100%;
-        height: auto;
+        height: 72px;
         position: fixed;
+        top: auto;
         bottom: 0;
         left: 0;
         right: 0;
@@ -231,7 +232,8 @@ import { AuthService } from '../core/services/auth.service';
         display: flex;
         flex: 1;
         gap: 0;
-        padding: 0.25rem 0;
+        padding: 0.2rem 0;
+        height: 100%;
         overflow-x: auto;
         scrollbar-width: none;
       }
@@ -243,7 +245,7 @@ import { AuthService } from '../core/services/auth.service';
       .nav-item {
         flex: 1;
         min-width: 56px;
-        padding: 0.5rem;
+        padding: 0.35rem 0.25rem;
         flex-direction: column;
         align-items: center;
         justify-content: center;
@@ -255,7 +257,7 @@ import { AuthService } from '../core/services/auth.service';
 
       .nav-item:hover {
         /* Reset desktop padding-left override; keep uniform padding */
-        padding: 0.5rem;
+        padding: 0.35rem 0.25rem;
         border-left: none;
         border-bottom-color: #E8922A;
         background: rgba(123, 24, 24, 0.04);
@@ -281,6 +283,29 @@ import { AuthService } from '../core/services/auth.service';
 
       .sidebar-footer {
         display: none;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .sidebar-nav {
+        padding: 0.15rem 0;
+      }
+
+      .nav-item {
+        min-width: 52px;
+        padding: 0.3rem 0.2rem;
+      }
+
+      .nav-item:hover {
+        padding: 0.3rem 0.2rem;
+      }
+
+      .icon {
+        font-size: 1.2rem;
+      }
+
+      .label {
+        font-size: 0.62rem;
       }
     }
   `]

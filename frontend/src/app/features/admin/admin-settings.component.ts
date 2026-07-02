@@ -185,6 +185,13 @@ interface StoreSettings {
     .save-btn { margin-top: 1.5rem; }
     .success-banner { background: #e8f5e9; color: #2e7d32; padding: 0.75rem 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.9rem; }
     .error-banner { background: #ffebee; color: #c62828; padding: 0.75rem 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.9rem; }
+    @media (max-width: 768px) {
+      .settings-grid { max-width: none; }
+      .setting-card { padding: 1rem; }
+      .setting-header { flex-direction: column; align-items: stretch; }
+      .threshold-input .input { width: 100%; }
+      .save-btn { width: 100%; }
+    }
   `]
 })
 export class AdminSettingsComponent implements OnInit {

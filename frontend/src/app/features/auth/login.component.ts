@@ -99,6 +99,14 @@ import { AuthService } from '../../core/services/auth.service';
     .highlight { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
     .hi { font-size: 1.75rem; }
     .welcome-cta { width: 100%; font-size: 1rem; padding: 1rem; letter-spacing: 0.5px; }
+
+    @media (max-width: 480px) {
+      .auth-page { padding: 1rem; min-height: auto; }
+      .auth-card { padding: 1.25rem; }
+      .brand-header { margin-bottom: 1.25rem; }
+      .brand-header h1 { font-size: 1.6rem; letter-spacing: 2px; }
+    }
+
     @media (max-width: 480px) {
       .welcome-overlay { align-items: flex-start; padding: 0.5rem; }
       .welcome-modal { border-radius: 16px; margin: auto; }
@@ -107,6 +115,12 @@ import { AuthService } from '../../core/services/auth.service';
       .welcome-name { font-size: 1.5rem; }
       .welcome-message { font-size: 0.875rem; }
       .welcome-highlights { gap: 1rem; }
+    }
+
+    @media (max-width: 360px) {
+      .auth-card { padding: 1rem; }
+      .welcome-content { padding: 1.1rem 0.9rem; }
+      .welcome-cta { font-size: 0.9rem; }
     }
   `]
 })

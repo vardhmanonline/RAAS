@@ -8,25 +8,29 @@ import { ApiService } from '../../core/services/api.service';
   imports: [CurrencyPipe, DatePipe],
   template: `
     <h1>Customer Management</h1>
-    <table class="data-table card">
-      <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Orders</th><th>Total Spent</th><th>Joined</th></tr></thead>
-      <tbody>
-        @for (c of customers; track c.id) {
-          <tr>
-            <td><strong>{{ c.fullName }}</strong></td>
-            <td>{{ c.email }}</td>
-            <td>{{ c.phone ?? '—' }}</td>
-            <td>{{ c.orderCount }}</td>
-            <td>{{ c.totalSpent | currency:'INR':'symbol':'1.0-0' }}</td>
-            <td>{{ c.joinedAt | date:'mediumDate' }}</td>
-          </tr>
-        }
-      </tbody>
-    </table>
+    <div class="table-wrap card">
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Orders</th><th>Total Spent</th><th>Joined</th></tr></thead>
+        <tbody>
+          @for (c of customers; track c.id) {
+            <tr>
+              <td><strong>{{ c.fullName }}</strong></td>
+              <td>{{ c.email }}</td>
+              <td>{{ c.phone ?? '—' }}</td>
+              <td>{{ c.orderCount }}</td>
+              <td>{{ c.totalSpent | currency:'INR':'symbol':'1.0-0' }}</td>
+              <td>{{ c.joinedAt | date:'mediumDate' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   `,
   styles: [`
     h1 { color: var(--maroon); margin-bottom: 1.5rem; }
+    .table-wrap { overflow-x: auto; }
     .data-table { width: 100%; }
+    .data-table th { white-space: nowrap; }
     .data-table th, .data-table td { padding: 0.875rem 1rem; text-align: left; border-bottom: 1px solid var(--cream-dark); }
     .data-table th { background: var(--cream); font-weight: 600; color: var(--maroon); }
   `]

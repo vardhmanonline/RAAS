@@ -52,6 +52,16 @@ import { AuthService } from '../../core/services/auth.service';
     .sample-banner p { color: var(--text-muted); line-height: 1.6; margin-bottom: 2rem; }
     .banner-actions { display: flex; flex-direction: column; gap: 0.75rem; align-items: center; }
     .btn-skip { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.9rem; text-decoration: underline; }
+    @media (max-width: 480px) {
+      .auth-page { padding: 1rem; min-height: auto; }
+      .auth-card { padding: 1.25rem; }
+      .sample-banner { padding: 1.25rem; }
+      .banner-icon { font-size: 2.5rem; }
+    }
+    @media (max-width: 360px) {
+      .auth-card { padding: 1rem; }
+      .sample-banner { padding: 1rem; }
+    }
   `]
 })
 export class RegisterComponent implements OnInit {

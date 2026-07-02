@@ -81,7 +81,22 @@ import { ApiService } from '../../core/services/api.service';
     .full-width { width: 100%; margin-top: 1rem; }
     .empty-cart { text-align: center; padding: 4rem; }
     .empty-cart p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 1.1rem; }
-    @media (max-width: 768px) { .cart-layout { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) {
+      .cart-layout { grid-template-columns: 1fr; }
+      .cart-item {
+        grid-template-columns: 72px 1fr auto;
+        grid-template-areas:
+          'image info remove'
+          'image qty total';
+        gap: 0.75rem;
+      }
+      .cart-item img { grid-area: image; width: 72px; height: 72px; }
+      .item-info { grid-area: info; min-width: 0; }
+      .qty-control { grid-area: qty; width: fit-content; }
+      .item-total { grid-area: total; justify-self: end; }
+      .remove-btn { grid-area: remove; align-self: start; }
+      .coupon-row { flex-direction: column; }
+    }
   `]
 })
 export class CartComponent {

@@ -157,7 +157,7 @@ interface SpecialOffer {
     .form-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
     .offers-list { display: flex; flex-direction: column; gap: 1rem; }
     .offer-card { display: grid; grid-template-columns: 300px 1fr; gap: 1.5rem; padding: 1.5rem; }
-    .offer-card.inactive { opacity: 0.6; }
+    .offer-card.inactive { opacity: 0.82; }
     .offer-preview { padding: 1.5rem; border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 0.75rem; min-height: 150px; }
     .preview-badge { align-self: flex-start; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
     .preview-btn { align-self: flex-start; padding: 0.5rem 1rem; border-radius: var(--radius-sm); border: none; cursor: pointer; font-weight: 600; }
@@ -168,7 +168,22 @@ interface SpecialOffer {
     .offer-actions { display: flex; gap: 0.5rem; }
     .btn-small { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
     .empty-state { text-align: center; color: var(--text-muted); padding: 3rem; }
-    @media (max-width: 768px) { .offer-card { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) {
+      .page-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+      }
+      .form-grid { grid-template-columns: 1fr; }
+      .offer-card { grid-template-columns: 1fr; }
+      .offer-actions {
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+      .form-actions {
+        flex-direction: column;
+      }
+    }
   `]
 })
 export class AdminOffersComponent implements OnInit {

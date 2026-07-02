@@ -90,7 +90,14 @@ import { AnalyticsDashboard } from '../../core/models';
     .funnel-bar { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(123,30,30,0.1); z-index: 0; }
     .funnel-label, .funnel-count { position: relative; z-index: 1; }
     .funnel-count { float: right; font-weight: 600; color: var(--maroon); }
-    @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr; }
+      .metrics-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+      .row {
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+    }
   `]
 })
 export class AnalyticsDashboardComponent implements OnInit {

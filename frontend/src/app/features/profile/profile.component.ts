@@ -75,8 +75,8 @@ import { UserProfile } from '../../core/models';
     .profile-card h2 { color: var(--maroon); margin-bottom: 0.5rem; }
     .profile-card p { color: var(--text-muted); font-size: 0.9rem; }
     .phone-section { margin: 1rem 0; }
-    .phone-edit { display: flex; gap: 0.5rem; justify-content: center; align-items: center; }
-    .phone-edit input { width: 150px; }
+    .phone-edit { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; align-items: center; }
+    .phone-edit input { width: 100%; max-width: 220px; }
     .btn-small { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
     .btn-outline { background: transparent; border: 1px solid var(--maroon); color: var(--maroon); border-radius: var(--radius-sm); cursor: pointer; margin-top: 0.5rem; }
     .btn-outline:hover { background: rgba(123,30,30,0.06); }
@@ -93,6 +93,13 @@ import { UserProfile } from '../../core/models';
     .checkbox-label input { accent-color: var(--maroon); }
     .error { color: #dc3545; font-size: 0.85rem; margin: 0.25rem 0; }
     @media (max-width: 768px) { .profile-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 480px) {
+      .phone-edit input,
+      .phone-edit .btn-small {
+        max-width: none;
+        width: 100%;
+      }
+    }
   `]
 })
 export class ProfileComponent implements OnInit {

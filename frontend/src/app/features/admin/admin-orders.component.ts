@@ -13,37 +13,48 @@ import { Order } from '../../core/models';
       <h1>Order Management</h1>
       <button class="btn btn-secondary" (click)="exportOrders()">Export CSV</button>
     </div>
-    <table class="data-table card">
-      <thead><tr><th>Order</th><th>Date</th><th>Total</th><th>Payment</th><th>Status</th><th>Action</th></tr></thead>
-      <tbody>
-        @for (order of orders; track order.id) {
-          <tr>
-            <td><strong>{{ order.orderNumber }}</strong></td>
-            <td>{{ order.createdAt | date:'short' }}</td>
-            <td>{{ order.total | currency:'INR':'symbol':'1.0-0' }}</td>
-            <td>{{ order.paymentMethod }}</td>
-            <td>
-              <select class="status-select" [ngModel]="order.status" (ngModelChange)="updateStatus(order.id, $event)">
-                <option value="Pending">Pending</option>
-                <option value="Packed">Packed</option>
-                <option value="Shipped">Shipped</option>
-                <option value="Delivered">Delivered</option>
-                <option value="Cancelled">Cancelled</option>
-              </select>
-            </td>
-            <td>{{ order.items.length }} items</td>
-          </tr>
-        }
-      </tbody>
-    </table>
+    <div class="table-wrap card">
+      <table class="data-table">
+        <thead><tr><th>Order</th><th>Date</th><th>Total</th><th>Payment</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          @for (order of orders; track order.id) {
+            <tr>
+              <td><strong>{{ order.orderNumber }}</strong></td>
+              <td>{{ order.createdAt | date:'short' }}</td>
+              <td>{{ order.total | currency:'INR':'symbol':'1.0-0' }}</td>
+              <td>{{ order.paymentMethod }}</td>
+              <td>
+                <select class="status-select" [ngModel]="order.status" (ngModelChange)="updateStatus(order.id, $event)">
+                  <option value="Pending">Pending</option>
+                  <option value="Packed">Packed</option>
+                  <option value="Shipped">Shipped</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </td>
+              <td>{{ order.items.length }} items</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   `,
   styles: [`
     .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     h1 { color: var(--maroon); }
+    .table-wrap { overflow-x: auto; }
     .data-table { width: 100%; }
+    .data-table th { white-space: nowrap; }
     .data-table th, .data-table td { padding: 0.875rem 1rem; text-align: left; border-bottom: 1px solid var(--cream-dark); }
     .data-table th { background: var(--cream); font-weight: 600; color: var(--maroon); }
     .status-select { padding: 0.35rem 0.5rem; border-radius: 6px; border: 1px solid var(--cream-dark); }
+    @media (max-width: 768px) {
+      .header-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+      }
+    }
   `]
 })
 export class AdminOrdersComponent implements OnInit {

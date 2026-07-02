@@ -57,10 +57,12 @@ import { SidebarComponent } from './layout/sidebar.component';
       display: flex;
       min-height: 100vh;
       background: #FBF5E6;
+      overflow-x: clip;
     }
 
     .app-main {
       flex: 1;
+      min-width: 0;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       scroll-behavior: smooth;
@@ -133,6 +135,10 @@ import { SidebarComponent } from './layout/sidebar.component';
     }
 
     @media (max-width: 768px) {
+      .app-layout {
+        display: block;
+      }
+
       .app-main {
         margin-left: 0;
         margin-bottom: 0;
@@ -160,6 +166,12 @@ import { SidebarComponent } from './layout/sidebar.component';
       }
       .btn-icon {
         font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .floating-cta {
+        display: none;
       }
     }
 

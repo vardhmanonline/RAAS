@@ -124,6 +124,7 @@ interface StoreSettings {
       display: flex;
       align-items: center;
       gap: 1rem;
+      min-width: 0;
     }
 
     .logo {
@@ -192,6 +193,7 @@ interface StoreSettings {
       align-items: center;
       flex: 1;
       max-width: 400px;
+      min-width: 0;
       background: var(--warm-cream);
       border: 2px solid var(--gold);
       border-radius: 50px;
@@ -234,6 +236,15 @@ interface StoreSettings {
     .search-btn:hover {
       color: var(--deep-maroon);
       transform: scale(1.1);
+    }
+
+    .search-btn:focus-visible,
+    .search-input:focus-visible,
+    .cart-btn:focus-visible,
+    .whatsapp-btn:focus-visible {
+      outline: 3px solid rgba(232, 146, 42, 0.9);
+      outline-offset: 2px;
+      border-radius: 10px;
     }
 
     .search-btn svg {
@@ -280,6 +291,7 @@ interface StoreSettings {
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      flex-shrink: 0;
     }
 
     .cart-btn {
@@ -327,6 +339,11 @@ interface StoreSettings {
     .btn-sm {
       padding: 0.5rem 1.25rem;
       font-size: 0.85rem;
+    }
+
+    .btn-sm:focus-visible {
+      outline: 3px solid rgba(232, 146, 42, 0.9);
+      outline-offset: 2px;
     }
 
     /* Tagline Bar */
@@ -400,18 +417,37 @@ interface StoreSettings {
     }
 
     @media (max-width: 768px) {
+      .header-container {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .header-left {
+        flex: 1;
+      }
+
       .nav {
         display: none;
       }
+
       .search-container {
-        max-width: 200px;
+        order: 3;
+        flex: 1 1 100%;
+        max-width: 100%;
       }
+
       .search-input {
         font-size: 0.85rem;
       }
+
+      .header-actions {
+        margin-left: auto;
+      }
+
       .location-tag {
         display: none;
       }
+
       .whatsapp-btn {
         bottom: calc(80px + 1rem); /* clear mobile bottom navigation bar */
         right: 1rem;
@@ -425,34 +461,65 @@ interface StoreSettings {
         gap: 0.5rem;
         padding: 0.75rem 1rem;
       }
+
       .logo {
         font-size: 1.2rem;
       }
+
       .logo-text {
         display: none;
       }
+
       .search-container {
-        max-width: 150px;
-        padding: 0.4rem 0.5rem;
+        padding: 0.35rem 0.5rem;
       }
+
       .search-input {
         font-size: 0.8rem;
       }
+
       .search-input::placeholder {
         font-size: 0.75rem;
       }
-      .btn-sm {
-        padding: 0.4rem 1rem;
-        font-size: 0.8rem;
+
+      .header-actions {
+        gap: 0.35rem;
       }
+
+      .btn-sm {
+        padding: 0.38rem 0.7rem;
+        font-size: 0.78rem;
+      }
+
       .whatsapp-text {
         display: none;
       }
+
       .whatsapp-btn {
         width: 50px;
         height: 50px;
         padding: 0;
         justify-content: center;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .header-container {
+        padding: 0.625rem 0.75rem;
+      }
+
+      .search-container {
+        padding: 0.3rem 0.45rem;
+      }
+
+      .header-actions .btn-sm {
+        max-width: 84px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .cart-btn {
+        padding: 0.35rem;
       }
     }
   `]

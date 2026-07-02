@@ -24,30 +24,42 @@ import { ApiService } from '../../core/services/api.service';
         <button class="btn btn-primary" (click)="createCoupon()">Create</button>
       </div>
     }
-    <table class="data-table card">
-      <thead><tr><th>Code</th><th>Discount</th><th>Min Order</th><th>Usage</th><th>Valid Until</th><th>Status</th></tr></thead>
-      <tbody>
-        @for (c of coupons; track c.id) {
-          <tr>
-            <td><strong>{{ c.code }}</strong></td>
-            <td>{{ c.discountPercent }}%</td>
-            <td>₹{{ c.minOrderAmount }}</td>
-            <td>{{ c.usageCount }}/{{ c.usageLimit }}</td>
-            <td>{{ c.validUntil | date:'mediumDate' }}</td>
-            <td><span class="badge" [class.badge-maroon]="c.isActive">{{ c.isActive ? 'Active' : 'Inactive' }}</span></td>
-          </tr>
-        }
-      </tbody>
-    </table>
+    <div class="table-wrap card">
+      <table class="data-table">
+        <thead><tr><th>Code</th><th>Discount</th><th>Min Order</th><th>Usage</th><th>Valid Until</th><th>Status</th></tr></thead>
+        <tbody>
+          @for (c of coupons; track c.id) {
+            <tr>
+              <td><strong>{{ c.code }}</strong></td>
+              <td>{{ c.discountPercent }}%</td>
+              <td>₹{{ c.minOrderAmount }}</td>
+              <td>{{ c.usageCount }}/{{ c.usageLimit }}</td>
+              <td>{{ c.validUntil | date:'mediumDate' }}</td>
+              <td><span class="badge" [class.badge-maroon]="c.isActive">{{ c.isActive ? 'Active' : 'Inactive' }}</span></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   `,
   styles: [`
     .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     h1 { color: var(--maroon); }
     .form-card { padding: 1.5rem; margin-bottom: 1.5rem; }
     .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
+    .table-wrap { overflow-x: auto; }
     .data-table { width: 100%; }
+    .data-table th { white-space: nowrap; }
     .data-table th, .data-table td { padding: 0.875rem 1rem; text-align: left; border-bottom: 1px solid var(--cream-dark); }
     .data-table th { background: var(--cream); font-weight: 600; color: var(--maroon); }
+    @media (max-width: 768px) {
+      .header-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+      }
+      .form-grid { grid-template-columns: 1fr; }
+    }
   `]
 })
 export class AdminCouponsComponent implements OnInit {

@@ -115,41 +115,43 @@ interface ProductForm {
       </div>
     }
 
-    <table class="data-table card">
-      <thead>
-        <tr>
-          <th>Product</th>
-          <th>MRP</th>
-          <th>Selling</th>
-          <th>Discount</th>
-          <th>Stock</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (p of products; track p.id) {
+    <div class="table-wrap card">
+      <table class="data-table">
+        <thead>
           <tr>
-            <td>
-              <img [src]="p.imageUrl" class="thumb" alt="" />
-              {{ p.name }}
-              @if (p.isBestseller) { <span class="badge badge-saffron">Bestseller</span> }
-            </td>
-            <td>{{ p.compareAtPrice ? (p.compareAtPrice | currency:'INR':'symbol':'1.0-0') : '—' }}</td>
-            <td><strong>{{ p.price | currency:'INR':'symbol':'1.0-0' }}</strong></td>
-            <td>
-              @if (p.compareAtPrice && p.compareAtPrice > p.price) {
-                <span class="disc-badge">{{ calcDiscount(p) }}% OFF</span>
-              } @else { — }
-            </td>
-            <td>{{ p.stock }}</td>
-            <td class="actions">
-              <button class="btn-edit" (click)="editProduct(p)">Edit</button>
-              <button class="btn-sm" (click)="deleteProduct(p.id)">Delete</button>
-            </td>
+            <th>Product</th>
+            <th>MRP</th>
+            <th>Selling</th>
+            <th>Discount</th>
+            <th>Stock</th>
+            <th>Actions</th>
           </tr>
-        }
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          @for (p of products; track p.id) {
+            <tr>
+              <td>
+                <img [src]="p.imageUrl" class="thumb" alt="" />
+                {{ p.name }}
+                @if (p.isBestseller) { <span class="badge badge-saffron">Bestseller</span> }
+              </td>
+              <td>{{ p.compareAtPrice ? (p.compareAtPrice | currency:'INR':'symbol':'1.0-0') : '—' }}</td>
+              <td><strong>{{ p.price | currency:'INR':'symbol':'1.0-0' }}</strong></td>
+              <td>
+                @if (p.compareAtPrice && p.compareAtPrice > p.price) {
+                  <span class="disc-badge">{{ calcDiscount(p) }}% OFF</span>
+                } @else { — }
+              </td>
+              <td>{{ p.stock }}</td>
+              <td class="actions">
+                <button class="btn-edit" (click)="editProduct(p)">Edit</button>
+                <button class="btn-sm" (click)="deleteProduct(p.id)">Delete</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   `,
   styles: [`
     .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
@@ -168,7 +170,9 @@ interface ProductForm {
     .checkbox-row { display: flex; align-items: center; gap: 0.5rem; margin: 1rem 0; cursor: pointer; }
     .form-actions { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
     .error { color: #C62828; margin-top: 0.75rem; font-size: 0.9rem; }
+    .table-wrap { overflow-x: auto; }
     .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th { white-space: nowrap; }
     .data-table th, .data-table td { padding: 0.875rem 1rem; text-align: left; border-bottom: 1px solid var(--cream-dark); vertical-align: middle; }
     .data-table th { background: var(--cream); font-weight: 600; color: var(--maroon); }
     .thumb { width: 40px; height: 40px; object-fit: cover; border-radius: 8px; vertical-align: middle; margin-right: 0.5rem; }
@@ -176,7 +180,20 @@ interface ProductForm {
     .actions { display: flex; gap: 0.5rem; }
     .btn-edit { padding: 0.35rem 0.75rem; border: 1px solid var(--maroon); color: var(--maroon); background: white; border-radius: 6px; cursor: pointer; }
     .btn-sm { padding: 0.35rem 0.75rem; border: 1px solid #C62828; color: #C62828; background: white; border-radius: 6px; cursor: pointer; }
-    @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) {
+      .header-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+      }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-actions {
+        flex-direction: column;
+      }
+      .actions {
+        flex-wrap: wrap;
+      }
+    }
   `]
 })
 export class AdminProductsComponent implements OnInit {
