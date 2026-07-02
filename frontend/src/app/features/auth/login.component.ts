@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
@@ -30,6 +30,7 @@ import { AuthService } from '../../core/services/auth.service';
     @if (showWelcome) {
       <div class="welcome-overlay" (click)="dismissWelcome()">
         <div class="welcome-modal" (click)="$event.stopPropagation()">
+          <button type="button" class="welcome-close" (click)="dismissWelcome()" aria-label="Close welcome popup">✕</button>
           <div class="welcome-pattern"></div>
           <div class="welcome-content">
             <div class="welcome-emblem">🪷</div>
@@ -80,10 +81,12 @@ import { AuthService } from '../../core/services/auth.service';
     .switch { text-align: center; margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem; }
 
     /* Welcome overlay */
-    .welcome-overlay { position: fixed; inset: 0; background: rgba(44,24,16,0.75); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1rem; animation: fadeIn 0.3s ease; }
+    .welcome-overlay { position: fixed; inset: 0; background: rgba(44,24,16,0.75); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1rem; animation: fadeIn 0.3s ease; overflow-y: auto; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .welcome-modal { background: var(--cream); border-radius: 24px; max-width: 520px; width: 100%; overflow: hidden; box-shadow: 0 24px 80px rgba(123,30,30,0.4); animation: slideUp 0.4s ease; position: relative; }
+    .welcome-modal { background: var(--cream); border-radius: 24px; max-width: 520px; width: 100%; overflow: hidden; box-shadow: 0 24px 80px rgba(123,30,30,0.4); animation: slideUp 0.4s ease; position: relative; max-height: calc(100vh - 2rem); overflow-y: auto; }
     @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .welcome-close { position: absolute; top: 0.75rem; right: 0.75rem; width: 44px; height: 44px; border: none; border-radius: 50%; background: rgba(123,24,24,0.1); color: var(--maroon); font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2; line-height: 1; }
+    .welcome-close:hover { background: rgba(123,24,24,0.2); }
     .welcome-pattern { height: 8px; background: linear-gradient(90deg, var(--maroon), var(--saffron), var(--gold), var(--saffron), var(--maroon)); }
     .welcome-content { padding: 2.5rem; text-align: center; }
     .welcome-emblem { font-size: 3.5rem; margin-bottom: 0.75rem; }
@@ -95,10 +98,18 @@ import { AuthService } from '../../core/services/auth.service';
     .welcome-highlights { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
     .highlight { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
     .hi { font-size: 1.75rem; }
-    .welcome-cta { width: 100%; font-size: 1rem; padding: 1rem; letter-spacing: 0.5px; }
+    .welcome-cta { width: 100%; font-size: 1rem; padding: 1rem; letter-spacing: 0.5px; min-height: 48px; }
+    @media (max-width: 480px) {
+      .welcome-overlay { align-items: flex-end; padding: 0; }
+      .welcome-modal { border-radius: 20px 20px 0 0; max-height: 90vh; max-width: 100%; }
+      .welcome-content { padding: 1.5rem 1rem 1.25rem; }
+      .welcome-name { font-size: 1.6rem; }
+      .welcome-message { font-size: 0.9rem; }
+      .highlight { width: calc(50% - 0.75rem); font-size: 0.75rem; }
+    }
   `]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private auth = inject(AuthService);
   private router = inject(Router);
   email = '';
@@ -107,6 +118,12 @@ export class LoginComponent {
   loading = false;
   showWelcome = false;
   welcomeName = '';
+
+  ngOnInit() {
+    if (this.auth.isLoggedIn()) {
+      this.router.navigate(['/']);
+    }
+  }
 
   login() {
     this.loading = true;
