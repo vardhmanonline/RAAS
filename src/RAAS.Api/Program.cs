@@ -7,14 +7,14 @@ using Microsoft.OpenApi.Models;
 using RAAS.Infrastructure;
 using RAAS.Infrastructure.Data;
 
+var builder = WebApplication.CreateBuilder(args);
+
 // Load .env file if it exists (for local development)
-var envPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", ".env");
+var envPath = Path.Combine(builder.Environment.ContentRootPath, "..", "..", ".env");
 if (File.Exists(envPath))
 {
-    DotNetEnv.Env.Load(envPath);
+    Env.Load(envPath);
 }
-
-var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
