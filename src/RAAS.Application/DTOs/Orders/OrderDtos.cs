@@ -16,8 +16,8 @@ public record ClaimSampleRequest(
     string ShippingName, string ShippingPhone, string ShippingAddress,
     string ShippingCity, string ShippingState, string ShippingPincode);
 public record OrderDto(
-    Guid Id, string OrderNumber, string Status, decimal Subtotal, decimal DeliveryCharge,
+    Guid Id, string OrderNumber, Guid UserId, string Status, decimal Subtotal, decimal DeliveryCharge,
     decimal Discount, decimal Total, string PaymentMethod, string PaymentStatus,
-    DateTime CreatedAt, List<OrderItemDto> Items, bool IsSampleOrder = false, bool IsGuestOrder = false);
+    DateTime CreatedAt, List<OrderItemDto> Items, string? CustomerEmail = null, string? CustomerName = null, bool IsSampleOrder = false, bool IsGuestOrder = false);
 public record OrderItemDto(Guid ProductId, string ProductName, string ProductImageUrl, int Quantity, decimal UnitPrice, decimal TotalPrice);
 public record UpdateOrderStatusRequest(string Status);

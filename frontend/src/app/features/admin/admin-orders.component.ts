@@ -15,11 +15,12 @@ import { Order } from '../../core/models';
     </div>
     <div class="table-wrap card">
       <table class="data-table">
-        <thead><tr><th>Order</th><th>Date</th><th>Total</th><th>Payment</th><th>Status</th><th>Action</th></tr></thead>
+        <thead><tr><th>Order</th><th>Customer</th><th>Date</th><th>Total</th><th>Payment</th><th>Status</th><th>Action</th></tr></thead>
         <tbody>
           @for (order of orders; track order.id) {
             <tr>
               <td><strong>{{ order.orderNumber }}</strong></td>
+              <td>{{ order.customerName || 'N/A' }}<br><small>{{ order.customerEmail || '' }}</small></td>
               <td>{{ order.createdAt | date:'short' }}</td>
               <td>{{ order.total | currency:'INR':'symbol':'1.0-0' }}</td>
               <td>{{ order.paymentMethod }}</td>
@@ -48,6 +49,7 @@ import { Order } from '../../core/models';
     .data-table th, .data-table td { padding: 0.875rem 1rem; text-align: left; border-bottom: 1px solid var(--cream-dark); }
     .data-table th { background: var(--cream); font-weight: 600; color: var(--maroon); }
     .status-select { padding: 0.35rem 0.5rem; border-radius: 6px; border: 1px solid var(--cream-dark); }
+    small { color: var(--text-muted); font-size: 0.85rem; display: block; }
     @media (max-width: 768px) {
       .header-row {
         flex-direction: column;
@@ -68,8 +70,8 @@ export class AdminOrdersComponent implements OnInit {
   }
 
   exportOrders() {
-    const csv = ['Order,Date,Total,Status,Payment', ...this.orders.map(o =>
-      `${o.orderNumber},${o.createdAt},${o.total},${o.status},${o.paymentMethod}`
+    const csv = ['Order,Customer,Date,Total,Status,Payment', ...this.orders.map(o =>
+      `${o.orderNumber},"${o.customerName || 'N/A'}",${o.createdAt},${o.total},${o.status},${o.paymentMethod}`
     )].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const a = document.createElement('a');
