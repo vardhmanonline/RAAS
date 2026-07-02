@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Load .env file if it exists (for local development)
 var envPath = FindEnvFile(builder.Environment.ContentRootPath);
-if (!string.IsNullOrEmpty(envPath) && File.Exists(envPath))
+if (!string.IsNullOrEmpty(envPath))
 {
     try
     {
@@ -121,6 +121,8 @@ app.Run();
 /// Searches for .env file starting from the current directory and moving up the directory tree.
 /// This makes the path handling more robust regardless of where the application runs from.
 /// </summary>
+/// <param name="startPath">The starting directory path from which to search upward for the .env file.</param>
+/// <returns>The full path to the .env file if found; otherwise, null.</returns>
 static string? FindEnvFile(string startPath)
 {
     var current = new DirectoryInfo(startPath);
