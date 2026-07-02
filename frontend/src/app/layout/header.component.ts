@@ -31,7 +31,7 @@ interface StoreSettings {
             </span>
             <span class="logo-copy">
               <span class="logo-text">{{ settings?.companyName || 'RAAS' }}</span>
-              <span class="logo-subtitle">Rajasthan premium pantry</span>
+              <span class="logo-subtitle">Rajasthan Premium Pantry</span>
             </span>
           </a>
           <div class="location-tag">
