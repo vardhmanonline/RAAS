@@ -323,11 +323,18 @@ public class OrderService : IOrderService
 
     public async Task<IEnumerable<OrderDto>> GetUserOrdersAsync(Guid userId)
     {
-        var orders = await _uow.Repository<Order>().FindAsync(o => o.UserId == userId);
+        var orders = (await _uow.Repository<Order>().FindAsync(o => o.UserId == userId)).ToList();
+        if (orders.Count == 0)
+            return new List<OrderDto>();
+
+        var orderIds = orders.Select(o => o.Id).ToList();
+        var allItems = (await _uow.Repository<OrderItem>().FindAsync(i => orderIds.Contains(i.OrderId))).ToList();
+        var itemsByOrderId = allItems.GroupBy(i => i.OrderId).ToDictionary(g => g.Key, g => g.ToList());
+
         var result = new List<OrderDto>();
         foreach (var order in orders.OrderByDescending(o => o.CreatedAt))
         {
-            var items = await _uow.Repository<OrderItem>().FindAsync(i => i.OrderId == order.Id);
+            var items = itemsByOrderId.GetValueOrDefault(order.Id, new List<OrderItem>());
             result.Add(MapOrder(order, items));
         }
         return result;
@@ -343,11 +350,18 @@ public class OrderService : IOrderService
 
     public async Task<IEnumerable<OrderDto>> GetAllOrdersAsync()
     {
-        var orders = await _uow.Repository<Order>().GetAllAsync();
+        var orders = (await _uow.Repository<Order>().GetAllAsync()).ToList();
+        if (orders.Count == 0)
+            return new List<OrderDto>();
+
+        var orderIds = orders.Select(o => o.Id).ToList();
+        var allItems = (await _uow.Repository<OrderItem>().FindAsync(i => orderIds.Contains(i.OrderId))).ToList();
+        var itemsByOrderId = allItems.GroupBy(i => i.OrderId).ToDictionary(g => g.Key, g => g.ToList());
+
         var result = new List<OrderDto>();
         foreach (var order in orders.OrderByDescending(o => o.CreatedAt))
         {
-            var items = await _uow.Repository<OrderItem>().FindAsync(i => i.OrderId == order.Id);
+            var items = itemsByOrderId.GetValueOrDefault(order.Id, new List<OrderItem>());
             result.Add(MapOrder(order, items));
         }
         return result;
