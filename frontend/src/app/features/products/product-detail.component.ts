@@ -103,6 +103,16 @@ import { ProductDetail } from '../../core/models';
     .info-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; }
     @media (max-width: 768px) {
       .product-layout, .info-grid { grid-template-columns: 1fr; }
+      .product-details h1 { font-size: 1.5rem; }
+      .price { font-size: 1.5rem; }
+      .page { padding-bottom: 10rem; /* account for sticky-cta above mobile bottom nav */ }
+      .thumbnails img { width: 56px; height: 56px; }
+    }
+    @media (max-width: 480px) {
+      .product-details h1 { font-size: 1.25rem; }
+      .price { font-size: 1.25rem; }
+      .story-section { padding: 1.25rem; }
+      .info-card { padding: 1.25rem; }
     }
   `]
 })

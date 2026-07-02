@@ -413,8 +413,8 @@ interface StoreSettings {
         display: none;
       }
       .whatsapp-btn {
-        bottom: 1.5rem;
-        right: 1.5rem;
+        bottom: calc(80px + 1rem); /* clear mobile bottom navigation bar */
+        right: 1rem;
         padding: 0.6rem 1rem;
         font-size: 0.8rem;
       }

@@ -215,9 +215,12 @@ import { AuthService } from '../core/services/auth.service';
         left: 0;
         right: 0;
         border-right: none;
-        border-top: 1px solid rgba(123, 24, 24, 0.1);
+        border-top: 2px solid rgba(123, 24, 24, 0.08);
         flex-direction: row;
-        align-items: center;
+        align-items: stretch;
+        background: rgba(251, 245, 230, 0.97);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
       }
 
       .sidebar-header {
@@ -226,27 +229,54 @@ import { AuthService } from '../core/services/auth.service';
 
       .sidebar-nav {
         display: flex;
+        flex: 1;
         gap: 0;
-        padding: 0.5rem;
+        padding: 0.25rem 0;
         overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .sidebar-nav::-webkit-scrollbar {
+        display: none;
       }
 
       .nav-item {
-        padding: 0.75rem 1rem;
+        flex: 1;
+        min-width: 56px;
+        padding: 0.5rem;
         flex-direction: column;
-        gap: 0.3rem;
+        align-items: center;
+        justify-content: center;
+        gap: 0.2rem;
         border-left: none;
         border-bottom: 3px solid transparent;
+        text-align: center;
       }
 
       .nav-item:hover {
+        /* Reset desktop padding-left override; keep uniform padding */
+        padding: 0.5rem;
         border-left: none;
         border-bottom-color: #E8922A;
+        background: rgba(123, 24, 24, 0.04);
       }
 
       .nav-item.active {
         border-left: none;
         border-bottom-color: #E8922A;
+        background: rgba(232, 146, 42, 0.08);
+      }
+
+      .icon {
+        font-size: 1.4rem;
+      }
+
+      .label {
+        font-size: 0.65rem;
+        font-weight: 600;
+        color: inherit;
+        letter-spacing: 0;
+        line-height: 1;
       }
 
       .sidebar-footer {

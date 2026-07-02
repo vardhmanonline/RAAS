@@ -42,9 +42,23 @@ import { Product, Category } from '../../core/models';
           </div>
         </div>
 
+        <!-- Mobile Filter Toggle -->
+        <div class="mobile-filter-bar">
+          <button class="mobile-filter-btn" (click)="showMobileFilters = !showMobileFilters">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 4h18M7 9h10M10 14h4M12 19h0"/>
+            </svg>
+            Filters
+            @if (activeFiltersCount > 0) {
+              <span class="mobile-filter-count">{{ activeFiltersCount }}</span>
+            }
+          </button>
+          <div class="mobile-results-info">{{ filteredProducts.length }} products</div>
+        </div>
+
         <div class="products-layout">
           <!-- Premium Sidebar -->
-          <aside class="sidebar">
+          <aside class="sidebar" [class.mobile-open]="showMobileFilters">
             <div class="filter-section glass-effect">
               <div class="section-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -969,6 +983,70 @@ import { Product, Category } from '../../core/models';
       .sidebar {
         display: none;
       }
+      .sidebar.mobile-open {
+        display: block;
+        margin-bottom: 1.5rem;
+      }
+    }
+
+    /* Mobile Filter Bar */
+    .mobile-filter-bar {
+      display: none;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-filter-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        gap: 1rem;
+      }
+    }
+
+    .mobile-filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.25rem;
+      background: linear-gradient(135deg, var(--deep-maroon) 0%, var(--terracotta) 100%);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(110, 31, 31, 0.25);
+    }
+
+    .mobile-filter-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .mobile-filter-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(110, 31, 31, 0.35);
+    }
+
+    .mobile-filter-count {
+      background: white;
+      color: var(--deep-maroon);
+      font-size: 0.75rem;
+      font-weight: 700;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-results-info {
+      color: var(--deep-maroon);
+      font-weight: 600;
+      font-size: 0.95rem;
     }
 
     @media (max-width: 768px) {
@@ -983,7 +1061,13 @@ import { Product, Category } from '../../core/models';
         gap: 1rem;
       }
       .section-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
+      }
+      .section-subtitle {
+        font-size: 0.95rem;
+      }
+      .products-page {
+        padding: 1.5rem 0;
       }
     }
 
@@ -993,6 +1077,14 @@ import { Product, Category } from '../../core/models';
       }
       .container {
         padding: 0 1rem;
+      }
+      .section-title {
+        font-size: 1.5rem;
+      }
+      .results-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
       }
     }
   `]
@@ -1006,6 +1098,7 @@ export class ProductListComponent implements OnInit {
   selectedCategory = '';
   searchQuery = '';
   sortBy = 'default';
+  showMobileFilters = false;
   
   filters = {
     bestseller: false,
