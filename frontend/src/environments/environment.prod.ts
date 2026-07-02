@@ -4,5 +4,5 @@ const configuredApiUrl =
 
 export const environment = {
   production: true,
-  apiUrl: configuredApiUrl || 'https://raas-api.render.com/api'
+  apiUrl: configuredApiUrl || 'https://raas-api.onrender.com/api'
 };
