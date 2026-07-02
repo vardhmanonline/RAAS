@@ -84,8 +84,7 @@ export class FooterComponent implements OnInit {
           supportPhone: '+91 84277 67533',
           companyName: 'RAAS',
           companyTagline: 'Taste the Roots of Rajasthan',
-          companyDescription: 'Authentic pickles, papads, masalas & chutneys crafted with love from Rajasthani kitchens.',
-          logoUrl: ''
+          companyDescription: 'Authentic pickles, papads, masalas & chutneys crafted with love from Rajasthani kitchens.'
         };
       }
     });
